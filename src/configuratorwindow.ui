@@ -1,0 +1,1351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConfiguratorWindow</class>
+ <widget class="QMainWindow" name="ConfiguratorWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>471</width>
+    <height>621</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>471</width>
+    <height>621</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>471</width>
+    <height>621</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icons/icons/active64.png</normaloff>
+    <normalon>:/icons/icons/active64.png</normalon>
+    <disabledoff>:/icons/icons/greyed64.png</disabledoff>
+    <disabledon>:/icons/icons/greyed64.png</disabledon>
+    <activeoff>:/icons/icons/active64.png</activeoff>
+    <activeon>:/icons/icons/active64.png</activeon>
+    <selectedoff>:/icons/icons/selected64.png</selectedoff>
+    <selectedon>:/icons/icons/selected64.png</selectedon>:/icons/icons/active64.png</iconset>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>9</y>
+      <width>459</width>
+      <height>526</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tabGeneral">
+     <attribute name="title">
+      <string>General</string>
+     </attribute>
+     <widget class="QLineEdit" name="lineEditSerial">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>90</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxLength">
+       <number>30</number>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelPID">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>137</y>
+        <width>105</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Product ID:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelVID">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>137</y>
+        <width>105</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Vendor ID:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelManufacturer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>17</y>
+        <width>105</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Manufacturer:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelSerial">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>97</y>
+        <width>105</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Serial number:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditManufacturer">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>10</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxLength">
+       <number>62</number>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelProduct">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>57</y>
+        <width>105</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Product:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditProduct">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>50</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxLength">
+       <number>62</number>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelMaxPower">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>217</y>
+        <width>215</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Max. power consumption (mA):</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelMajVersion">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>177</y>
+        <width>105</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Major version:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelMinVersion">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>177</y>
+        <width>105</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Minor version:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBoxPowerMode">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>250</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Bus-powered with regulator enabled</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Bus-powered with regulator disabled</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Self-powered with regulator enabled</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="labelPowerMode">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>257</y>
+        <width>105</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Power mode:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelPowerTransferPrio">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>297</y>
+        <width>215</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Data transfer priority:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBoxTransferPrio">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>290</y>
+        <width>211</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>High priority read</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>High priority write</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QSpinBox" name="spinBoxMajVersion">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>170</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="maximum">
+       <number>255</number>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBoxMinVersion">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>170</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="maximum">
+       <number>255</number>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditVID">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>130</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxLength">
+       <number>4</number>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string>0x</string>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditPID">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>130</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxLength">
+       <number>4</number>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string>0x</string>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditMaxPowerHex">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>210</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxLength">
+       <number>2</number>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string>0x</string>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditMaxPower">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>210</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tabPinConfig">
+     <attribute name="title">
+      <string>Pin Configuration</string>
+     </attribute>
+     <widget class="QComboBox" name="comboBoxGPIO0">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>10</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Open-drain output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Push-pull output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Chip select</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxGPIO1">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>50</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Open-drain output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Push-pull output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Chip select</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxGPIO2">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>90</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Open-drain output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Push-pull output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Chip select</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxGPIO3">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>130</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Open-drain output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Push-pull output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Chip select</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>!RTR input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>RTR input</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxGPIO4">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>170</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Open-drain output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Push-pull output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Chip select</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>EVTCNTR rising edge input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>EVTCNTR falling edge input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>EVTCNTR negative pulse input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>EVTCNTR positive pulse input</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxGPIO5">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>210</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Open-drain output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Push-pull output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Chip select</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>CLKOUT push-pull output</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxGPIO6">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>250</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Open-drain output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Push-pull output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Chip select</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxGPIO7">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>290</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Open-drain output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Push-pull output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Chip select</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxGPIO8">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>330</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Open-drain output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Push-pull output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Chip select</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SPIACT push-pull output</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxGPIO9">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>370</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Open-drain output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Push-pull output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Chip select</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SUSPEND push-pull output</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxGPIO10">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>410</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Input</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Open-drain output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Push-pull output</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Chip select</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>!SUSPEND push-pull output</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="labelGPIO0">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>17</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GPIO.0:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelGPIO1">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>57</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GPIO.1:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelGPIO2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>97</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GPIO.2:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelGPIO3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>137</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GPIO.3:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelGPIO4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>177</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GPIO.4:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelGPIO5">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>217</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GPIO.5:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelGPIO6">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>257</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GPIO.6:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelGPIO7">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>297</y>
+        <width>185</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GPIO.7:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelGPIO8">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>337</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GPIO.8:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelGPIO9">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>377</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GPIO.9:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelGPIO10">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>417</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GPIO.10:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBoxDivider">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>450</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="maximum">
+       <number>255</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelDivider">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>457</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Clock divider:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tabSuspendLevels">
+     <attribute name="title">
+      <string>Suspend/Resume Levels</string>
+     </attribute>
+     <widget class="QLabel" name="labelSuspendLevel">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>17</y>
+        <width>215</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Suspend level:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelSuspendMode">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>57</y>
+        <width>215</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Suspend mode:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelResumeMask">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>97</y>
+        <width>215</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Resume mask:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelResumeMatch">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>137</y>
+        <width>215</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Resume match:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditSuspendLevel">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>10</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxLength">
+       <number>4</number>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string>0x</string>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditSuspendMode">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>50</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxLength">
+       <number>4</number>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string>0x</string>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditResumeMask">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>90</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxLength">
+       <number>4</number>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string>0x</string>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditResumeMatch">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>130</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxLength">
+       <number>4</number>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string>0x</string>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButtonRevert">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>550</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Revert</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonWrite">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>550</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Write</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBoxVerify">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>555</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Verify</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBoxLock">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>555</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Lock</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>471</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuDevice">
+    <property name="title">
+     <string>&amp;Device</string>
+    </property>
+    <addaction name="actionInformation"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+   </widget>
+   <addaction name="menuDevice"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <action name="actionInformation">
+   <property name="text">
+    <string>&amp;Information</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>&amp;Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionClose</sender>
+   <signal>triggered()</signal>
+   <receiver>ConfiguratorWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>235</x>
+     <y>310</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
