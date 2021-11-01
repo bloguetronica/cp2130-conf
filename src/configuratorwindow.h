@@ -80,8 +80,9 @@ private:
     Configuration deviceConfig_, editedConfig_;
     QString serialstr_;
     quint16 lockWord_, pid_, vid_;
-    bool error_, requiresReset_;
+    bool configerr_, requiresReset_;
 
+    void configureDevice();
     void disableView();
     void displayConfiguration(const Configuration &config);
     void displayManufacturer(const QString &manufacturer);

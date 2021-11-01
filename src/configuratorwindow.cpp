@@ -19,6 +19,7 @@
 
 
 // Includes
+#include <cstring>
 #include <QMessageBox>
 #include <QMetaObject>
 #include <QProgressDialog>
@@ -236,58 +237,23 @@ void ConfiguratorWindow::on_pushButtonWrite_clicked()
         if (editedConfig_ == deviceConfig_ && !ui->checkBoxLock->isChecked()) {
             QMessageBox::information(this, tr("No changes done"), tr("No changes were effected, because no values were modified."));
         } else {
-            int qmret = QMessageBox::question(this, tr("Write configuration?"), tr("This will write the changes to the OTP ROM of your device. These changes will be permanent.\n\nDo you wish to proceed?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-            if (qmret == QMessageBox::Yes)
-            {
-                error_ = false;
-                requiresReset_ = false;
-                QStringList tasks = prepareTaskList();
-                int nTasks = tasks.size();
-                QProgressDialog configProgress(tr("Configuring device..."), tr("Abort"), 0, nTasks, this);
-                configProgress.setWindowModality(Qt::WindowModal);
-                configProgress.setValue(0);
-                configProgress.show();
-                for (int i = 0; i < nTasks; ++i) {
-                    if (configProgress.wasCanceled()) {
-                        break;
-                    }
-                    QMetaObject::invokeMethod(this, tasks[i].toStdString().c_str());
-                    if (error_) {
-                        QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
-                        break;
-                    }
-                    configProgress.setValue(i + 1);
-                }
-                if (!error_) {
-                    if (ui->checkBoxVerify->isChecked()) {
-                        QMessageBox::information(this, tr("Device configured"), tr("Device was successfully configured and verified."));
-                    } else {
-                        QMessageBox::information(this, tr("Device configured"), tr("Device was successfully configured."));
-                    }
-                }
-                if (requiresReset_) {
-                    QProgressDialog resetProgress(tr("Reseting device..."), tr("Abort"), 0, 1, this);
-                    resetProgress.setWindowModality(Qt::WindowModal);
-                    resetProgress.setValue(0);
-                    resetProgress.show();
-                    resetDevice();
-                    resetProgress.setValue(1);
-                }
-            }
+            configureDevice();
         }
     }
 }
 
+//
 void ConfiguratorWindow::verifyConfiguration()
 {
     resetDevice();
     if (deviceConfig_ != editedConfig_) {
         QMessageBox::critical(this, tr("Error"), tr("Failed verification."));
-        error_ = true;
+        configerr_ = true;
     }
     requiresReset_ = false;
 }
 
+//
 void ConfiguratorWindow::writeManufacturerDesc()
 {
     int errcnt = 0;
@@ -297,6 +263,7 @@ void ConfiguratorWindow::writeManufacturerDesc()
     requiresReset_ = true;
 }
 
+//
 void ConfiguratorWindow::writeMaxPower()
 {
     int errcnt = 0;
@@ -306,19 +273,21 @@ void ConfiguratorWindow::writeMaxPower()
     requiresReset_ = true;
 }
 
+//
 void ConfiguratorWindow::writePID()
 {
     int errcnt = 0;
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWPID), errcnt, errstr);
     opCheck(tr("write-pid-op"), errcnt, errstr);  // The string "write-pid-op" should be translated to "Write PID"
-    if (error_ == false)
+    if (!configerr_)
     {
         pid_ = editedConfig_.usbconfig.pid;  // If the previous operation was successful, it is safe to assume that the PID changed to the new value
     }
     requiresReset_ = true;
 }
 
+//
 void ConfiguratorWindow::writePinConfig()
 {
     int errcnt = 0;
@@ -328,6 +297,7 @@ void ConfiguratorWindow::writePinConfig()
     requiresReset_ = true;
 }
 
+//
 void ConfiguratorWindow::writePowerMode()
 {
     int errcnt = 0;
@@ -337,6 +307,7 @@ void ConfiguratorWindow::writePowerMode()
     requiresReset_ = true;
 }
 
+//
 void ConfiguratorWindow::writeProductDesc()
 {
     int errcnt = 0;
@@ -346,6 +317,7 @@ void ConfiguratorWindow::writeProductDesc()
     requiresReset_ = true;
 }
 
+//
 void ConfiguratorWindow::writeReleaseVersion()
 {
     int errcnt = 0;
@@ -355,19 +327,21 @@ void ConfiguratorWindow::writeReleaseVersion()
     requiresReset_ = true;
 }
 
+//
 void ConfiguratorWindow::writeSerialDesc()
 {
     int errcnt = 0;
     QString errstr;
     cp2130_.writeSerialDesc(editedConfig_.serial, errcnt, errstr);
     opCheck(tr("write-serial-desc-op"), errcnt, errstr);  // The string "write-serial-desc-op" should be translated to "Write serial descriptor"
-    if (error_ == false)
+    if (!configerr_)
     {
         serialstr_ = editedConfig_.serial;  // If the previous operation was successful, it is safe to assume that the serial string changed to the new value
     }
     requiresReset_ = true;
 }
 
+//
 void ConfiguratorWindow::writeTransferPrio()
 {
     int errcnt = 0;
@@ -377,18 +351,67 @@ void ConfiguratorWindow::writeTransferPrio()
     requiresReset_ = true;
 }
 
+//
 void ConfiguratorWindow::writeVID()
 {
     int errcnt = 0;
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWVID), errcnt, errstr);
     opCheck(tr("write-vid-op"), errcnt, errstr);  // The string "write-vid-op" should be translated to "Write VID"
-    if (error_ == false)
+    if (!configerr_)
     {
         vid_ = editedConfig_.usbconfig.vid;  // If the previous operation was successful, it is safe to assume that the VID changed to the new value
     }
     requiresReset_ = true;
 }
+
+//
+void ConfiguratorWindow::configureDevice()
+{
+    int qmret = QMessageBox::question(this, tr("Write configuration?"), tr("This will write the changes to the OTP ROM of your device. These changes will be permanent.\n\nDo you wish to proceed?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (qmret == QMessageBox::Yes)
+    {
+        configerr_ = false;
+        requiresReset_ = false;
+        QStringList tasks = prepareTaskList();  // Create a new task list
+        int nTasks = tasks.size();
+        QProgressDialog configProgress(tr("Configuring device..."), tr("Abort"), 0, nTasks, this);
+        configProgress.setWindowModality(Qt::WindowModal);
+        configProgress.setMinimumDuration(0);
+        configProgress.setValue(0);  // This, along with setMinimumDuration(), will cause the progress dialog to display immediately
+        for (int i = 0; i < nTasks; ++i) {  // Iterate through the newly created task list
+            if (configProgress.wasCanceled()) {  // If user clicked "Abort"
+                break;  // Abort the configuration
+            }
+            QMetaObject::invokeMethod(this, tasks[i].toStdString().c_str());  // The task list entry is converted to a C string
+            if (!cp2130_.isOpen() || configerr_) {  // If an error has occured
+                QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
+                break;  // Abort the configuration
+            }
+            configProgress.setValue(i + 1);  // Update the progress bar for each task done
+        }
+        if (cp2130_.isOpen()) {  // Important!
+            if (!configerr_) {  // On success
+                if (ui->checkBoxVerify->isChecked()) {
+                    QMessageBox::information(this, tr("Device configured"), tr("Device was successfully configured and verified."));
+                } else {
+                    QMessageBox::information(this, tr("Device configured"), tr("Device was successfully configured."));
+                }
+            }
+            if (requiresReset_) {
+                QProgressDialog resetProgress(tr("Resetting device..."), tr("Cancel"), 0, 1, this);
+                resetProgress.setWindowModality(Qt::WindowModal);
+                resetProgress.setMinimumDuration(0);
+                resetProgress.setValue(0);  // As before, the progress dialog should appear immediately
+                if (!resetProgress.wasCanceled()) {
+                    resetDevice();
+                    resetProgress.setValue(1);
+                }
+            }
+        }
+    }
+}
+
 
 // Partially disables configurator window
 void::ConfiguratorWindow::disableView()
@@ -513,7 +536,7 @@ bool ConfiguratorWindow::opCheck(const QString &op, int errcnt, QString errstr)
         } else {
             errstr.chop(1);  // Remove the last character, which is always a newline
             QMessageBox::critical(this, tr("Error"), tr("%1 operation returned the following error(s):\n– %2", "", errcnt).arg(op, errstr.replace("\n", "\n– ")));
-            error_ = true;
+            configerr_ = true;
         }
         retval = false;  // Failed check
     } else {
@@ -538,7 +561,7 @@ QStringList ConfiguratorWindow::prepareTaskList()
     if (editedConfig_.usbconfig.vid != deviceConfig_.usbconfig.vid) {
         tasks.append("writeVID");
     }
-    if (editedConfig_.usbconfig.vid != deviceConfig_.usbconfig.pid) {
+    if (editedConfig_.usbconfig.pid != deviceConfig_.usbconfig.pid) {
         tasks.append("writePID");
     }
     if (editedConfig_.usbconfig.majrel != deviceConfig_.usbconfig.majrel || editedConfig_.usbconfig.minrel != deviceConfig_.usbconfig.minrel) {
@@ -611,15 +634,15 @@ void ConfiguratorWindow::resetDevice()
             QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
             exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
         } else if (err == 2) {  // Failed to find device
-            QMessageBox::critical(this, tr("Error"), tr("Device disconnected."));
-            this->close();  // Close window
+            QMessageBox::critical(this, tr("Error"), tr("Device disconnected.\n\nThe corresponding window will be disabled."));
+            disableView();  // Disable configurator window
         } else if (err == 3) {  // Failed to claim interface
-            QMessageBox::critical(this, tr("Error"), tr("Device ceased to be available.\n\nPlease verify that the device is not in use by another application."));
-            this->close();  // Close window
+            QMessageBox::critical(this, tr("Error"), tr("Device ceased to be available. It could be in use by another application.\n\nThe corresponding window will be disabled."));
+            disableView();  // Disable configurator window
         } else {
             readDeviceConfiguration();
             displayConfiguration(deviceConfig_);
-            error_ = false;
+            configerr_ = false;  // Since the device was reset, any fault condition should be cleared
             requiresReset_ = false;
         }
     }
