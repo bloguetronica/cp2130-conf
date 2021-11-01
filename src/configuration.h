@@ -34,6 +34,7 @@ struct Configuration
     CP2130::PinConfig pinconfig;
 
     bool operator ==(const Configuration &other) const;
+    bool operator !=(const Configuration &other) const;
 };
 
 #endif // CONFIGURATION_H

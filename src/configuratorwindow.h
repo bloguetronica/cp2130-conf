@@ -41,6 +41,7 @@ public:
     void openDevice(quint16 vid, quint16 pid, const QString &serialstr);
 
 private slots:
+    void lockOTP();
     void on_lineEditMaxPower_editingFinished();
     void on_lineEditMaxPower_textChanged();
     void on_lineEditMaxPower_textEdited();
@@ -61,14 +62,27 @@ private slots:
     void on_lineEditResumeMask_textEdited();
     void on_pushButtonRevert_clicked();
     void on_pushButtonWrite_clicked();
+    void verifyConfiguration();
+    void writeManufacturerDesc();
+    void writeMaxPower();
+    void writePID();
+    void writePinConfig();
+    void writePowerMode();
+    void writeProductDesc();
+    void writeReleaseVersion();
+    void writeSerialDesc();
+    void writeTransferPrio();
+    void writeVID();
 
 private:
     Ui::ConfiguratorWindow *ui;
     CP2130 cp2130_;
-    Configuration editedConfig_, initConfig_;
+    Configuration deviceConfig_, editedConfig_;
     QString serialstr_;
     quint16 lockWord_, pid_, vid_;
+    bool error_, requiresReset_;
 
+    void disableView();
     void displayConfiguration(const Configuration &config);
     void displayManufacturer(const QString &manufacturer);
     void displayPinConfig(const CP2130::PinConfig &pinconfig);
@@ -76,7 +90,10 @@ private:
     void displaySerial(const QString &serial);
     void displayUSBConfig(const CP2130::USBConfig &usbconfig);
     void getEditedConfiguration();
-    void readInitialConfiguration();
+    bool opCheck(const QString &op, int errcnt, QString errstr);
+    QStringList prepareTaskList();
+    void readDeviceConfiguration();
+    void resetDevice();
     void setManufacturerEnabled(bool value);
     void setMaxPowerEnabled(bool value);
     void setPinConfigEnabled(bool value);

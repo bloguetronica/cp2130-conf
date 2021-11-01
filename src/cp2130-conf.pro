@@ -29,14 +29,16 @@ SOURCES += \
     cp2130.cpp \
     libusb-extra.c \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    nonblocking.cpp
 
 HEADERS += \
     configuration.h \
     configuratorwindow.h \
     cp2130.h \
     libusb-extra.h \
-    mainwindow.h
+    mainwindow.h \
+    nonblocking.h
 
 FORMS += \
     configuratorwindow.ui \

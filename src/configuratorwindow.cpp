@@ -20,13 +20,17 @@
 
 // Includes
 #include <QMessageBox>
+#include <QMetaObject>
 #include <QProgressDialog>
 #include <QRegExp>
 #include <QRegExpValidator>
+#include <QStringList>
+#include "nonblocking.h"
 #include "configuratorwindow.h"
 #include "ui_configuratorwindow.h"
 
 // Definitions
+const int ENUM_RETRIES = 10;  // Number of enumeration retries
 const int POWER_LIMIT = 500;  // Maximum current consumption limit, as per the USB 2.0 specification
 
 ConfiguratorWindow::ConfiguratorWindow(QWidget *parent) :
@@ -47,6 +51,38 @@ ConfiguratorWindow::ConfiguratorWindow(QWidget *parent) :
 ConfiguratorWindow::~ConfiguratorWindow()
 {
     delete ui;
+}
+
+//
+void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &serialstr)
+{
+    int err = cp2130_.open(vid, pid, serialstr);
+    if (err == 1) {  // Failed to initialize libusb
+        QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
+        exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
+    } else if (err == 2) {  // Failed to find device
+        QMessageBox::critical(this, tr("Error"), tr("Could not find device."));
+        this->deleteLater();  // Close window after the subsequent show() call
+    } else if (err == 3) {  // Failed to claim interface
+        QMessageBox::critical(this, tr("Error"), tr("Device is currently unavailable.\n\nPlease confirm that the device is not in use."));
+        this->deleteLater();  // Close window after the subsequent show() call
+    } else {
+        vid_ = vid;
+        pid_ = pid;
+        serialstr_ = serialstr;  // Valid serial number
+        readDeviceConfiguration();
+        this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
+        displayConfiguration(deviceConfig_);
+    }
+}
+
+void ConfiguratorWindow::lockOTP()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.lockOTP(errcnt, errstr);
+    opCheck(tr("lock-otp-op"), errcnt, errstr);  // The string "lock-otp-op" should be translated to "Lock OTP ROM"
+    requiresReset_ = true;
 }
 
 void ConfiguratorWindow::on_lineEditMaxPower_editingFinished()
@@ -188,7 +224,7 @@ void ConfiguratorWindow::on_lineEditResumeMask_textEdited()
 
 void ConfiguratorWindow::on_pushButtonRevert_clicked()
 {
-    displayConfiguration(initConfig_);
+    displayConfiguration(deviceConfig_);
 }
 
 void ConfiguratorWindow::on_pushButtonWrite_clicked()
@@ -197,48 +233,168 @@ void ConfiguratorWindow::on_pushButtonWrite_clicked()
         QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
     } else {
         getEditedConfiguration();
-        if (editedConfig_ == initConfig_ && !ui->checkBoxLock->isChecked()) {
+        if (editedConfig_ == deviceConfig_ && !ui->checkBoxLock->isChecked()) {
             QMessageBox::information(this, tr("No changes done"), tr("No changes were effected, because no values were modified."));
         } else {
             int qmret = QMessageBox::question(this, tr("Write configuration?"), tr("This will write the changes to the OTP ROM of your device. These changes will be permanent.\n\nDo you wish to proceed?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
             if (qmret == QMessageBox::Yes)
             {
-                QProgressDialog progress(tr("Configuring device..."), tr("Abort"), 0, 1700000, this);
-                progress.setWindowModality(Qt::WindowModal);
-                for (int i = 0; i < 1700000; i++) {
-                    progress.setValue(i);
-
-                    if (progress.wasCanceled())
+                error_ = false;
+                requiresReset_ = false;
+                QStringList tasks = prepareTaskList();
+                int nTasks = tasks.size();
+                QProgressDialog configProgress(tr("Configuring device..."), tr("Abort"), 0, nTasks, this);
+                configProgress.setWindowModality(Qt::WindowModal);
+                configProgress.setValue(0);
+                configProgress.show();
+                for (int i = 0; i < nTasks; ++i) {
+                    if (configProgress.wasCanceled()) {
                         break;
-                    //... copy one file
+                    }
+                    QMetaObject::invokeMethod(this, tasks[i].toStdString().c_str());
+                    if (error_) {
+                        QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
+                        break;
+                    }
+                    configProgress.setValue(i + 1);
                 }
-                progress.setValue(1700000);
+                if (!error_) {
+                    if (ui->checkBoxVerify->isChecked()) {
+                        QMessageBox::information(this, tr("Device configured"), tr("Device was successfully configured and verified."));
+                    } else {
+                        QMessageBox::information(this, tr("Device configured"), tr("Device was successfully configured."));
+                    }
+                }
+                if (requiresReset_) {
+                    QProgressDialog resetProgress(tr("Reseting device..."), tr("Abort"), 0, 1, this);
+                    resetProgress.setWindowModality(Qt::WindowModal);
+                    resetProgress.setValue(0);
+                    resetProgress.show();
+                    resetDevice();
+                    resetProgress.setValue(1);
+                }
             }
         }
     }
 }
 
-//
-void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &serialstr)
+void ConfiguratorWindow::verifyConfiguration()
 {
-    int err = cp2130_.open(vid, pid, serialstr);
-    if (err == 1) {  // Failed to initialize libusb
-        QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
-        exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
-    } else if (err == 2) {  // Failed to find device
-        QMessageBox::critical(this, tr("Error"), tr("Could not find device."));
-        this->deleteLater();  // Close window after the subsequent show() call
-    } else if (err == 3) {  // Failed to claim interface
-        QMessageBox::critical(this, tr("Error"), tr("Device is currently unavailable.\n\nPlease confirm that the device is not in use."));
-        this->deleteLater();  // Close window after the subsequent show() call
-    } else {
-        vid_ = vid;
-        pid_ = pid;
-        serialstr_ = serialstr;  // Valid serial number
-        readInitialConfiguration();
-        this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
-        displayConfiguration(initConfig_);
+    resetDevice();
+    if (deviceConfig_ != editedConfig_) {
+        QMessageBox::critical(this, tr("Error"), tr("Failed verification."));
+        error_ = true;
     }
+    requiresReset_ = false;
+}
+
+void ConfiguratorWindow::writeManufacturerDesc()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.writeManufacturerDesc(editedConfig_.manufacturer, errcnt, errstr);
+    opCheck(tr("write-manufacturer-desc-op"), errcnt, errstr);  // The string "write-manufacturer-desc-op" should be translated to "Write manufacturer descriptor"
+    requiresReset_ = true;
+}
+
+void ConfiguratorWindow::writeMaxPower()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWMAXPOW), errcnt, errstr);
+    opCheck(tr("write-max-power-op"), errcnt, errstr);  // The string "write-max-power-op" should be translated to "Write maximum power"
+    requiresReset_ = true;
+}
+
+void ConfiguratorWindow::writePID()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWPID), errcnt, errstr);
+    opCheck(tr("write-pid-op"), errcnt, errstr);  // The string "write-pid-op" should be translated to "Write PID"
+    if (error_ == false)
+    {
+        pid_ = editedConfig_.usbconfig.pid;  // If the previous operation was successful, it is safe to assume that the PID changed to the new value
+    }
+    requiresReset_ = true;
+}
+
+void ConfiguratorWindow::writePinConfig()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.writePinConfig(editedConfig_.pinconfig, errcnt, errstr);
+    opCheck(tr("write-pin-config-op"), errcnt, errstr);  // The string "write-pin-config-op" should be translated to "Write pin configuration"
+    requiresReset_ = true;
+}
+
+void ConfiguratorWindow::writePowerMode()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWPOWMODE), errcnt, errstr);
+    opCheck(tr("write-power-mode-op"), errcnt, errstr);  // The string "write-power-mode-op" should be translated to "Write power mode"
+    requiresReset_ = true;
+}
+
+void ConfiguratorWindow::writeProductDesc()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.writeProductDesc(editedConfig_.product, errcnt, errstr);
+    opCheck(tr("write-product-desc-op"), errcnt, errstr);  // The string "write-product-desc-op" should be translated to "Write product descriptor"
+    requiresReset_ = true;
+}
+
+void ConfiguratorWindow::writeReleaseVersion()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWREL), errcnt, errstr);
+    opCheck(tr("write-release-version-op"), errcnt, errstr);  // The string "write-release-version-op" should be translated to "Write release version"
+    requiresReset_ = true;
+}
+
+void ConfiguratorWindow::writeSerialDesc()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.writeSerialDesc(editedConfig_.serial, errcnt, errstr);
+    opCheck(tr("write-serial-desc-op"), errcnt, errstr);  // The string "write-serial-desc-op" should be translated to "Write serial descriptor"
+    if (error_ == false)
+    {
+        serialstr_ = editedConfig_.serial;  // If the previous operation was successful, it is safe to assume that the serial string changed to the new value
+    }
+    requiresReset_ = true;
+}
+
+void ConfiguratorWindow::writeTransferPrio()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWTRFPRIO), errcnt, errstr);
+    opCheck(tr("write-transfer-prio-op"), errcnt, errstr);  // The string "write-transfer-prio-op" should be translated to "Write transfer priority"
+    requiresReset_ = true;
+}
+
+void ConfiguratorWindow::writeVID()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWVID), errcnt, errstr);
+    opCheck(tr("write-vid-op"), errcnt, errstr);  // The string "write-vid-op" should be translated to "Write VID"
+    if (error_ == false)
+    {
+        vid_ = editedConfig_.usbconfig.vid;  // If the previous operation was successful, it is safe to assume that the VID changed to the new value
+    }
+    requiresReset_ = true;
+}
+
+// Partially disables configurator window
+void::ConfiguratorWindow::disableView()
+{
+    ui->actionInformation->setEnabled(false);
+    ui->centralWidget->setEnabled(false);
 }
 
 //
@@ -345,16 +501,80 @@ void ConfiguratorWindow::getEditedConfiguration()
     editedConfig_.pinconfig.divider = static_cast<quint8>(ui->spinBoxDivider->value());
 }
 
+// Checks for errors and validates (or ultimately halts) device operations
+bool ConfiguratorWindow::opCheck(const QString &op, int errcnt, QString errstr)
+{
+    bool retval;
+    if (errcnt > 0) {
+        if (cp2130_.disconnected()) {
+            QMessageBox::critical(this, tr("Error"), tr("Device disconnected.\n\nThe corresponding window will be disabled."));
+            disableView();  // Disable configurator window
+            cp2130_.close();
+        } else {
+            errstr.chop(1);  // Remove the last character, which is always a newline
+            QMessageBox::critical(this, tr("Error"), tr("%1 operation returned the following error(s):\n– %2", "", errcnt).arg(op, errstr.replace("\n", "\n– ")));
+            error_ = true;
+        }
+        retval = false;  // Failed check
+    } else {
+        retval = true;  // Passed check
+    }
+    return retval;
+}
+
 //
-void ConfiguratorWindow::readInitialConfiguration()
+QStringList ConfiguratorWindow::prepareTaskList()
+{
+    QStringList tasks;
+    if (editedConfig_.manufacturer != deviceConfig_.manufacturer) {
+        tasks.append("writeManufacturerDesc");
+    }
+    if (editedConfig_.product != deviceConfig_.product) {
+        tasks.append("writeProductDesc");
+    }
+    if (editedConfig_.serial != deviceConfig_.serial) {
+        tasks.append("writeSerialDesc");
+    }
+    if (editedConfig_.usbconfig.vid != deviceConfig_.usbconfig.vid) {
+        tasks.append("writeVID");
+    }
+    if (editedConfig_.usbconfig.vid != deviceConfig_.usbconfig.pid) {
+        tasks.append("writePID");
+    }
+    if (editedConfig_.usbconfig.majrel != deviceConfig_.usbconfig.majrel || editedConfig_.usbconfig.minrel != deviceConfig_.usbconfig.minrel) {
+        tasks.append("writeReleaseVersion");
+    }
+    if (editedConfig_.usbconfig.maxpow != deviceConfig_.usbconfig.maxpow) {
+        tasks.append("writeMaxPower");
+    }
+    if (editedConfig_.usbconfig.powmode != deviceConfig_.usbconfig.powmode) {
+        tasks.append("writePowerMode");
+    }
+    if (editedConfig_.usbconfig.trfprio != deviceConfig_.usbconfig.trfprio) {
+        tasks.append("writeTransferPrio");
+    }
+    if (editedConfig_.pinconfig != deviceConfig_.pinconfig) {
+        tasks.append("writePinConfig");
+    }
+    if (ui->checkBoxVerify->isChecked()) {
+        tasks.append("verifyConfiguration");
+    }
+    if (ui->checkBoxLock->isChecked()) {
+        tasks.append("lockOTP");
+    }
+    return tasks;
+}
+
+//
+void ConfiguratorWindow::readDeviceConfiguration()
 {
     int errcnt = 0;
     QString errstr;
-    initConfig_.manufacturer = cp2130_.getManufacturerDesc(errcnt, errstr);
-    initConfig_.product = cp2130_.getProductDesc(errcnt, errstr);
-    initConfig_.serial = cp2130_.getSerialDesc(errcnt, errstr);
-    initConfig_.usbconfig = cp2130_.getUSBConfig(errcnt, errstr);
-    initConfig_.pinconfig = cp2130_.getPinConfig(errcnt, errstr);
+    deviceConfig_.manufacturer = cp2130_.getManufacturerDesc(errcnt, errstr);
+    deviceConfig_.product = cp2130_.getProductDesc(errcnt, errstr);
+    deviceConfig_.serial = cp2130_.getSerialDesc(errcnt, errstr);
+    deviceConfig_.usbconfig = cp2130_.getUSBConfig(errcnt, errstr);
+    deviceConfig_.pinconfig = cp2130_.getPinConfig(errcnt, errstr);
     lockWord_ = cp2130_.getLockWord(errcnt, errstr);
     if (errcnt > 0) {
         if (cp2130_.disconnected()) {
@@ -367,6 +587,41 @@ void ConfiguratorWindow::readInitialConfiguration()
             QMessageBox::critical(this, tr("Error"), tr("Read operation returned the following error(s):\n– %1\n\nPlease try accessing the device again.", "", errcnt).arg(errstr.replace("\n", "\n– ")));
         }
         this->deleteLater();  // In a context where the window is already visible, it has the same effect as this->close()
+    }
+}
+
+// Resets the device
+void ConfiguratorWindow::resetDevice()
+{
+    int errcnt = 0;
+    QString errstr;
+    cp2130_.reset(errcnt, errstr);
+    opCheck(tr("reset-op"), errcnt, errstr);  // The string "reset-op" should be translated to "Reset"
+    if (cp2130_.isOpen()) {  // If opCheck() passes, thus, not closing the device
+        cp2130_.close();  // Important! - This should be done always, even if the previous reset operation shows an error, because an error doesn't mean that a device reset was not effected
+        int err;
+        for (int i = 0; i < ENUM_RETRIES; ++i) {  // Verify enumeration according to the number of times set by "ENUM_RETRIES" [10]
+            NonBlocking::msleep(500);  // Wait 500ms each time
+            err = cp2130_.open(vid_, pid_, serialstr_);
+            if (err != 2) {  // Retry only if the device was not found yet (as it may take some time to enumerate)
+                break;
+            }
+        }
+        if (err == 1) {  // Failed to initialize libusb
+            QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
+            exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
+        } else if (err == 2) {  // Failed to find device
+            QMessageBox::critical(this, tr("Error"), tr("Device disconnected."));
+            this->close();  // Close window
+        } else if (err == 3) {  // Failed to claim interface
+            QMessageBox::critical(this, tr("Error"), tr("Device ceased to be available.\n\nPlease verify that the device is not in use by another application."));
+            this->close();  // Close window
+        } else {
+            readDeviceConfiguration();
+            displayConfiguration(deviceConfig_);
+            error_ = false;
+            requiresReset_ = false;
+        }
     }
 }
 
