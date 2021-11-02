@@ -1309,6 +1309,7 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuDevice"/>
    <addaction name="menuHelp"/>
@@ -1324,6 +1325,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>&amp;About CP2130 Configurator</string>
    </property>
   </action>
  </widget>

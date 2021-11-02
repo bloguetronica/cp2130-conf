@@ -26,6 +26,7 @@
 #include <QRegExp>
 #include <QRegExpValidator>
 #include <QStringList>
+#include "aboutdialog.h"
 #include "nonblocking.h"
 #include "configuratorwindow.h"
 #include "ui_configuratorwindow.h"
@@ -68,8 +69,8 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
         QMessageBox::critical(this, tr("Error"), tr("Device is currently unavailable.\n\nPlease confirm that the device is not in use."));
         this->deleteLater();  // Close window after the subsequent show() call
     } else {
-        vid_ = vid;
-        pid_ = pid;
+        vid_ = vid;  // Pass VID
+        pid_ = pid;  // and PID
         serialstr_ = serialstr;  // Valid serial number
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
@@ -84,6 +85,12 @@ void ConfiguratorWindow::lockOTP()
     cp2130_.lockOTP(errcnt, errstr);
     opCheck(tr("lock-otp-op"), errcnt, errstr);  // The string "lock-otp-op" should be translated to "Lock OTP ROM"
     requiresReset_ = true;
+}
+
+void ConfiguratorWindow::on_actionAbout_triggered()
+{
+    AboutDialog about;
+    about.exec();
 }
 
 void ConfiguratorWindow::on_lineEditMaxPower_editingFinished()

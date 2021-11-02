@@ -24,6 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    aboutdialog.cpp \
     configuration.cpp \
     configuratorwindow.cpp \
     cp2130.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
     nonblocking.cpp
 
 HEADERS += \
+    aboutdialog.h \
     configuration.h \
     configuratorwindow.h \
     cp2130.h \
@@ -41,6 +43,7 @@ HEADERS += \
     nonblocking.h
 
 FORMS += \
+    aboutdialog.ui \
     configuratorwindow.ui \
     mainwindow.ui
 
