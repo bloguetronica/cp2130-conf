@@ -22,6 +22,7 @@
 #include <QMessageBox>
 #include <QRegExp>
 #include <QRegExpValidator>
+#include "aboutdialog.h"
 #include "cp2130.h"
 #include "configuratorwindow.h"
 #include "mainwindow.h"
@@ -40,6 +41,12 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    AboutDialog about;
+    about.exec();
 }
 
 void MainWindow::on_comboBoxDevices_currentIndexChanged(int index)
