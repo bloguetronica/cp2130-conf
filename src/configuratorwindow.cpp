@@ -431,21 +431,21 @@ void::ConfiguratorWindow::disableView()
 void ConfiguratorWindow::displayConfiguration(const Configuration &config)
 {
     displayManufacturer(config.manufacturer);
-    setManufacturerEnabled((lockWord_ & CP2130::LWMANUF) == CP2130::LWMANUF);
+    setManufacturerEnabled((CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF);
     displayProduct(config.product);
-    setProductEnabled((lockWord_ & CP2130::LWPROD) == CP2130::LWPROD);
+    setProductEnabled((CP2130::LWPROD & lockWord_) == CP2130::LWPROD);
     displaySerial(config.serial);
-    setSerialEnabled((lockWord_ & CP2130::LWSER) != 0x0000);
+    setSerialEnabled((CP2130::LWSER & lockWord_) != 0x0000);
     displayUSBConfig(config.usbconfig);
-    setVIDEnabled((lockWord_ & CP2130::LWVID) != 0x0000);
-    setPIDEnabled((lockWord_ & CP2130::LWPID) != 0x0000);
-    setReleaseEnabled((lockWord_ & CP2130::LWREL) != 0x0000);
-    setMaxPowerEnabled((lockWord_ & CP2130::LWMAXPOW) != 0x0000);
-    setPowerModeEnabled((lockWord_ & CP2130::LWPOWMODE) != 0x0000);
-    setTransferPrioEnabled((lockWord_ & CP2130::LWTRFPRIO) != 0x0000);
+    setVIDEnabled((CP2130::LWVID & lockWord_) != 0x0000);
+    setPIDEnabled((CP2130::LWPID & lockWord_) != 0x0000);
+    setReleaseEnabled((CP2130::LWREL & lockWord_) != 0x0000);
+    setMaxPowerEnabled((CP2130::LWMAXPOW & lockWord_) != 0x0000);
+    setPowerModeEnabled((CP2130::LWPOWMODE & lockWord_) != 0x0000);
+    setTransferPrioEnabled((CP2130::LWTRFPRIO & lockWord_) != 0x0000);
     displayPinConfig(config.pinconfig);
-    setPinConfigEnabled((lockWord_ & CP2130::LWPINCFG) != 0x0000);
-    setWriteEnabled((lockWord_ & CP2130::LWALL) != 0x0000);
+    setPinConfigEnabled((CP2130::LWPINCFG & lockWord_) != 0x0000);
+    setWriteEnabled((CP2130::LWALL & lockWord_) != 0x0000);
 }
 
 //
