@@ -23,7 +23,18 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>About CP2130 Configurator</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icons/icons/active64.png</normaloff>
+    <normalon>:/icons/icons/active64.png</normalon>
+    <disabledoff>:/icons/icons/greyed64.png</disabledoff>
+    <disabledon>:/icons/icons/greyed64.png</disabledon>
+    <activeoff>:/icons/icons/active64.png</activeoff>
+    <activeon>:/icons/icons/active64.png</activeon>
+    <selectedoff>:/icons/icons/selected64.png</selectedoff>
+    <selectedon>:/icons/icons/selected64.png</selectedon>:/icons/icons/active64.png</iconset>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -67,7 +78,9 @@
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
@@ -76,12 +89,12 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>150</x>
+     <y>135</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
+     <x>150</x>
+     <y>80</y>
     </hint>
    </hints>
   </connection>
