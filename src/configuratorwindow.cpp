@@ -55,7 +55,7 @@ ConfiguratorWindow::~ConfiguratorWindow()
     delete ui;
 }
 
-//
+// Opens the device and prepares the corresponding window
 void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &serialstr)
 {
     int err = cp2130_.open(vid, pid, serialstr);
@@ -78,6 +78,7 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
     }
 }
 
+// Locks the CP2130 OTP ROM, preventing further changes
 void ConfiguratorWindow::lockOTP()
 {
     int errcnt = 0;
@@ -253,7 +254,7 @@ void ConfiguratorWindow::on_pushButtonWrite_clicked()
     }
 }
 
-//
+// Verifies the CP2130 configuration against the input configuration
 void ConfiguratorWindow::verifyConfiguration()
 {
     resetDevice();
@@ -264,7 +265,7 @@ void ConfiguratorWindow::verifyConfiguration()
     requiresReset_ = false;
 }
 
-//
+// Writes the manufacturer descriptor to the CP2130 OTP ROM
 void ConfiguratorWindow::writeManufacturerDesc()
 {
     int errcnt = 0;
@@ -274,7 +275,7 @@ void ConfiguratorWindow::writeManufacturerDesc()
     requiresReset_ = true;
 }
 
-//
+// Writes the maximum power consumption configuration to the CP2130 OTP ROM
 void ConfiguratorWindow::writeMaxPower()
 {
     int errcnt = 0;
@@ -284,7 +285,7 @@ void ConfiguratorWindow::writeMaxPower()
     requiresReset_ = true;
 }
 
-//
+// Writes the PID to the CP2130 OTP ROM
 void ConfiguratorWindow::writePID()
 {
     int errcnt = 0;
@@ -298,7 +299,7 @@ void ConfiguratorWindow::writePID()
     requiresReset_ = true;
 }
 
-//
+// Writes the pin configuration to the CP2130 OTP ROM
 void ConfiguratorWindow::writePinConfig()
 {
     int errcnt = 0;
@@ -308,7 +309,7 @@ void ConfiguratorWindow::writePinConfig()
     requiresReset_ = true;
 }
 
-//
+// Writes the power mode configuration to the CP2130 OTP ROM
 void ConfiguratorWindow::writePowerMode()
 {
     int errcnt = 0;
@@ -318,7 +319,7 @@ void ConfiguratorWindow::writePowerMode()
     requiresReset_ = true;
 }
 
-//
+// Writes the product descriptor to the CP2130 OTP ROM
 void ConfiguratorWindow::writeProductDesc()
 {
     int errcnt = 0;
@@ -328,7 +329,7 @@ void ConfiguratorWindow::writeProductDesc()
     requiresReset_ = true;
 }
 
-//
+// Writes the release version to the CP2130 OTP ROM
 void ConfiguratorWindow::writeReleaseVersion()
 {
     int errcnt = 0;
@@ -338,7 +339,7 @@ void ConfiguratorWindow::writeReleaseVersion()
     requiresReset_ = true;
 }
 
-//
+// Writes the serial descriptor to the CP2130 OTP ROM
 void ConfiguratorWindow::writeSerialDesc()
 {
     int errcnt = 0;
@@ -352,7 +353,7 @@ void ConfiguratorWindow::writeSerialDesc()
     requiresReset_ = true;
 }
 
-//
+// Writes the transfer priority configuration to the CP2130 OTP ROM
 void ConfiguratorWindow::writeTransferPrio()
 {
     int errcnt = 0;
@@ -362,7 +363,7 @@ void ConfiguratorWindow::writeTransferPrio()
     requiresReset_ = true;
 }
 
-//
+// Writes the VID to the CP2130 OTP ROM
 void ConfiguratorWindow::writeVID()
 {
     int errcnt = 0;
@@ -376,7 +377,7 @@ void ConfiguratorWindow::writeVID()
     requiresReset_ = true;
 }
 
-//
+// This is the main configuration routine, used to configure the CP2130 OTP ROM according to the tasks in the task list
 void ConfiguratorWindow::configureDevice()
 {
     configerr_ = false;
@@ -427,7 +428,7 @@ void::ConfiguratorWindow::disableView()
     ui->centralWidget->setEnabled(false);
 }
 
-//
+// This is the main display routine, used to display the given configuration, updating all fields accordingly
 void ConfiguratorWindow::displayConfiguration(const Configuration &config)
 {
     displayManufacturer(config.manufacturer);
@@ -448,13 +449,13 @@ void ConfiguratorWindow::displayConfiguration(const Configuration &config)
     setWriteEnabled((CP2130::LWALL & lockWord_) != 0x0000);
 }
 
-//
+// Updates the manufacturer descriptor field
 void ConfiguratorWindow::displayManufacturer(const QString &manufacturer)
 {
     ui->lineEditManufacturer->setText(manufacturer);
 }
 
-//
+// Updates all fields pertaining to the CP2130 pin configuration
 void ConfiguratorWindow::displayPinConfig(const CP2130::PinConfig &pinconfig)
 {
     ui->comboBoxGPIO0->setCurrentIndex(pinconfig.gpio0);
@@ -475,19 +476,19 @@ void ConfiguratorWindow::displayPinConfig(const CP2130::PinConfig &pinconfig)
     ui->lineEditResumeMatch->setText(QString("%1").arg(pinconfig.wkupmatch, 4, 16, QChar('0')));  // Same as above
 }
 
-//
+// Updates the product descriptor field
 void ConfiguratorWindow::displayProduct(const QString &product)
 {
     ui->lineEditProduct->setText(product);
 }
 
-//
+// Updates the serial descriptor field
 void ConfiguratorWindow::displaySerial(const QString &serial)
 {
     ui->lineEditSerial->setText(serial);
 }
 
-//
+// Updates all fields pertaining to USB configuration
 void ConfiguratorWindow::displayUSBConfig(const CP2130::USBConfig &usbconfig)
 {
     ui->lineEditVID->setText(QString("%1").arg(usbconfig.vid, 4, 16, QChar('0')));  // This will autofill with up to four leading zeros
@@ -500,7 +501,7 @@ void ConfiguratorWindow::displayUSBConfig(const CP2130::USBConfig &usbconfig)
     ui->comboBoxTransferPrio->setCurrentIndex(usbconfig.trfprio);
 }
 
-//
+// Retrieves the user set configuration from the fields
 void ConfiguratorWindow::getEditedConfiguration()
 {
     editedConfig_.manufacturer = ui->lineEditManufacturer->text();
@@ -531,7 +532,7 @@ void ConfiguratorWindow::getEditedConfiguration()
     editedConfig_.pinconfig.divider = static_cast<quint8>(ui->spinBoxDivider->value());
 }
 
-// Checks for errors and validates (or ultimately halts) device operations
+// Checks for errors and validates device operations
 bool ConfiguratorWindow::opCheck(const QString &op, int errcnt, QString errstr)
 {
     bool retval;
@@ -552,7 +553,7 @@ bool ConfiguratorWindow::opCheck(const QString &op, int errcnt, QString errstr)
     return retval;
 }
 
-//
+// Prepares the task list, by checking which fields changed, while also setting optional tasks according to the user's requirements
 QStringList ConfiguratorWindow::prepareTaskList()
 {
     QStringList tasks;
@@ -595,7 +596,7 @@ QStringList ConfiguratorWindow::prepareTaskList()
     return tasks;
 }
 
-//
+// This is the routine that reads the configuration from the CP2130 OTP ROM
 void ConfiguratorWindow::readDeviceConfiguration()
 {
     int errcnt = 0;
@@ -655,20 +656,20 @@ void ConfiguratorWindow::resetDevice()
     }
 }
 
-//
+// Enables or disables the manufacturer description field
 void ConfiguratorWindow::setManufacturerEnabled(bool value)
 {
     ui->lineEditManufacturer->setReadOnly(!value);
 }
 
-//
+// Enables or disables the maximum power consuption configuration fields
 void ConfiguratorWindow::setMaxPowerEnabled(bool value)
 {
     ui->lineEditMaxPower->setReadOnly(!value);
     ui->lineEditMaxPowerHex->setReadOnly(!value);
 }
 
-//
+// Enables or disables all fields pertaining to pin configuration
 void ConfiguratorWindow::setPinConfigEnabled(bool value)
 {
     ui->comboBoxGPIO0->setEnabled(value);
@@ -689,50 +690,50 @@ void ConfiguratorWindow::setPinConfigEnabled(bool value)
     ui->lineEditResumeMatch->setReadOnly(!value);
 }
 
-//
+// Enables or disables the PID field
 void ConfiguratorWindow::setPIDEnabled(bool value)
 {
     ui->lineEditPID->setReadOnly(!value);
 }
 
-//
+// Enables or disables the power mode configuration field
 void ConfiguratorWindow::setPowerModeEnabled(bool value)
 {
     ui->comboBoxPowerMode->setEnabled(value);
 }
 
-//
+// Enables or disables the product description field
 void ConfiguratorWindow::setProductEnabled(bool value)
 {
     ui->lineEditProduct->setReadOnly(!value);
 }
 
-//
+// Enables or disables the release version fields
 void ConfiguratorWindow::setReleaseEnabled(bool value)
 {
     ui->spinBoxMajVersion->setReadOnly(!value);
     ui->spinBoxMinVersion->setReadOnly(!value);
 }
 
-//
+// Enables or disables the serial description field
 void ConfiguratorWindow::setSerialEnabled(bool value)
 {
     ui->lineEditSerial->setReadOnly(!value);
 }
 
-//
+// Enables or disables the transfer priority configuration field
 void ConfiguratorWindow::setTransferPrioEnabled(bool value)
 {
     ui->comboBoxTransferPrio->setEnabled(value);
 }
 
-//
+// Enables or disables the VID field
 void ConfiguratorWindow::setVIDEnabled(bool value)
 {
     ui->lineEditVID->setReadOnly(!value);
 }
 
-//
+// Enables or disables editing related buttons and checkboxes
 void ConfiguratorWindow::setWriteEnabled(bool value)
 {
     ui->pushButtonRevert->setEnabled(value);
