@@ -656,7 +656,7 @@ void ConfiguratorWindow::resetDevice()
     }
 }
 
-// Enables or disables the manufacturer description field
+// Enables or disables the manufacturer descriptor field
 void ConfiguratorWindow::setManufacturerEnabled(bool value)
 {
     ui->lineEditManufacturer->setReadOnly(!value);
@@ -702,7 +702,7 @@ void ConfiguratorWindow::setPowerModeEnabled(bool value)
     ui->comboBoxPowerMode->setEnabled(value);
 }
 
-// Enables or disables the product description field
+// Enables or disables the product descriptor field
 void ConfiguratorWindow::setProductEnabled(bool value)
 {
     ui->lineEditProduct->setReadOnly(!value);
@@ -715,7 +715,7 @@ void ConfiguratorWindow::setReleaseEnabled(bool value)
     ui->spinBoxMinVersion->setReadOnly(!value);
 }
 
-// Enables or disables the serial description field
+// Enables or disables the serial descriptor field
 void ConfiguratorWindow::setSerialEnabled(bool value)
 {
     ui->lineEditSerial->setReadOnly(!value);
