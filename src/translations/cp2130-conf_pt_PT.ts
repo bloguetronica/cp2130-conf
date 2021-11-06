@@ -18,7 +18,7 @@
     <name>ConfiguratorWindow</name>
     <message>
         <location filename="../configuratorwindow.ui" line="26"/>
-        <source>MainWindow</source>
+        <source>CP2130 Configurator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
