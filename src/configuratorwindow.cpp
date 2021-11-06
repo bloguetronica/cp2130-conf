@@ -27,6 +27,7 @@
 #include <QRegExpValidator>
 #include <QStringList>
 #include "aboutdialog.h"
+#include "informationdialog.h"
 #include "nonblocking.h"
 #include "configuratorwindow.h"
 #include "ui_configuratorwindow.h"
@@ -92,6 +93,18 @@ void ConfiguratorWindow::on_actionAbout_triggered()
 {
     AboutDialog about;
     about.exec();
+}
+
+void ConfiguratorWindow::on_actionInformation_triggered()
+{
+    int errcnt = 0;
+    QString errstr;
+    InformationDialog info;
+    CP2130::SiliconVersion siversion = cp2130_.getSiliconVersion(errcnt, errstr);
+    info.setSiliconVersionLabelText(siversion.maj, siversion.min);
+    if (opCheck(tr("device-information-retrieval-op"), errcnt, errstr)) {  // If error check passes (the string "device-information-retrieval-op" should be translated to "Device information retrieval")
+        info.exec();
+    }
 }
 
 void ConfiguratorWindow::on_lineEditMaxPower_editingFinished()

@@ -43,6 +43,7 @@ public:
 private slots:
     void lockOTP();
     void on_actionAbout_triggered();
+    void on_actionInformation_triggered();
     void on_lineEditMaxPower_editingFinished();
     void on_lineEditMaxPower_textChanged();
     void on_lineEditMaxPower_textEdited();
