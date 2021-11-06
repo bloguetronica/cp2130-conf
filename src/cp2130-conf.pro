@@ -28,6 +28,7 @@ SOURCES += \
     configuration.cpp \
     configuratorwindow.cpp \
     cp2130.cpp \
+    informationdialog.cpp \
     libusb-extra.c \
     main.cpp \
     mainwindow.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     configuration.h \
     configuratorwindow.h \
     cp2130.h \
+    informationdialog.h \
     libusb-extra.h \
     mainwindow.h \
     nonblocking.h
@@ -45,6 +47,7 @@ HEADERS += \
 FORMS += \
     aboutdialog.ui \
     configuratorwindow.ui \
+    informationdialog.ui \
     mainwindow.ui
 
 LIBS += -lusb-1.0
