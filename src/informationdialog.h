@@ -36,6 +36,8 @@ public:
     explicit InformationDialog(QWidget *parent = nullptr);
     ~InformationDialog();
 
+    void setSiliconVersionLabelText(quint8 majversion, quint8 minversion);
+
 private:
     Ui::InformationDialog *ui;
 };

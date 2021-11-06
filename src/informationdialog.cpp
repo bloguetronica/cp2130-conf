@@ -33,3 +33,9 @@ InformationDialog::~InformationDialog()
 {
     delete ui;
 }
+
+// Sets the labelSiliconVersion text
+void InformationDialog::setSiliconVersionLabelText(quint8 majversion, quint8 minversion)
+{
+    ui->labelSiliconVersion->setText(QString("%1.%2 [0x%3]").arg(majversion).arg(minversion).arg(majversion << 8 | minversion, 4, 16, QChar('0')));
+}
