@@ -29,8 +29,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QTranslator translator;
-    if (!translator.load("itusb1-mngr_" + QLocale::system().name(), ":/translations/translations")) {  // It the locale translation does not exist or cannot be loaded
-        translator.load("itusb1-mngr_en_US", ":/translations/translations");  // Fall back to the en-US translation
+    if (!translator.load("cp2130-conf_" + QLocale::system().name(), ":/translations/translations")) {  // It the locale translation does not exist or cannot be loaded
+        translator.load("cp2130-conf_en_US", ":/translations/translations");  // Fall back to the en-US translation
     }
     QCoreApplication::installTranslator(&translator);
     MainWindow w;

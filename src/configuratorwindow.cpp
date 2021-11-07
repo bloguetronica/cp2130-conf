@@ -662,6 +662,7 @@ void ConfiguratorWindow::resetDevice()
             disableView();  // Disable configurator window
         } else {
             readDeviceConfiguration();
+            this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
             displayConfiguration(deviceConfig_);
             configerr_ = false;  // Since the device was reset, any fault condition should be cleared
             requiresReset_ = false;
