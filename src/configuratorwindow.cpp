@@ -256,9 +256,9 @@ void ConfiguratorWindow::on_pushButtonWrite_clicked()
     } else {
         getEditedConfiguration();
         if (editedConfig_ == deviceConfig_ && !ui->checkBoxLock->isChecked()) {
-            QMessageBox::information(this, tr("No changes done"), tr("No changes were effected, because no values were modified."));
+            QMessageBox::information(this, tr("No Changes Done"), tr("No changes were effected, because no values were modified."));
         } else {
-            int qmret = QMessageBox::question(this, tr("Write configuration?"), tr("This will write the changes to the OTP ROM of your device. These changes will be permanent.\n\nDo you wish to proceed?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+            int qmret = QMessageBox::question(this, tr("Write Configuration?"), tr("This will write the changes to the OTP ROM of your device. These changes will be permanent.\n\nDo you wish to proceed?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
             if (qmret == QMessageBox::Yes && cp2130_.isOpen())  // It is important to check if the device is open, since resetDevice() is non-blocking (a device reset could still be underway)
             {
                 configureDevice();
@@ -415,9 +415,9 @@ void ConfiguratorWindow::configureDevice()
     if (cp2130_.isOpen()) {  // Important!
         if (!configerr_) {  // On success
             if (ui->checkBoxVerify->isChecked()) {
-                QMessageBox::information(this, tr("Device configured"), tr("Device was successfully configured and verified."));
+                QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured and verified."));
             } else {
-                QMessageBox::information(this, tr("Device configured"), tr("Device was successfully configured."));
+                QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured."));
             }
         }
         if (requiresReset_) {
