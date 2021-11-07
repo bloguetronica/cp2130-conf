@@ -426,17 +426,12 @@ Please correct the information in the fields highlighted in red.</source>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="259"/>
-        <source>No changes done</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configuratorwindow.cpp" line="259"/>
         <source>No changes were effected, because no values were modified.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="261"/>
-        <source>Write configuration?</source>
+        <location filename="../configuratorwindow.cpp" line="259"/>
+        <source>No Changes Done</source>
         <translation></translation>
     </message>
     <message>
@@ -444,6 +439,11 @@ Please correct the information in the fields highlighted in red.</source>
         <source>This will write the changes to the OTP ROM of your device. These changes will be permanent.
 
 Do you wish to proceed?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../configuratorwindow.cpp" line="261"/>
+        <source>Write Configuration?</source>
         <translation></translation>
     </message>
     <message>
@@ -518,13 +518,13 @@ Do you wish to proceed?</source>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="418"/>
-        <location filename="../configuratorwindow.cpp" line="420"/>
-        <source>Device configured</source>
+        <source>Device was successfully configured and verified.</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="418"/>
-        <source>Device was successfully configured and verified.</source>
+        <location filename="../configuratorwindow.cpp" line="420"/>
+        <source>Device Configured</source>
         <translation></translation>
     </message>
     <message>
