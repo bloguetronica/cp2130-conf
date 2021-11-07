@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=CP2130 Configurator
+Icon=cp2130-conf
+Exec=cp2130-conf
+Terminal=false
+Categories=Development;Electronics;
