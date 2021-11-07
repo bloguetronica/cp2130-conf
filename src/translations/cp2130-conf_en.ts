@@ -404,6 +404,7 @@ Please confirm that the device is not in use.</source>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="77"/>
+        <location filename="../configuratorwindow.cpp" line="665"/>
         <source>CP2130 Configurator (S/N: %1)</source>
         <translation></translation>
     </message>
