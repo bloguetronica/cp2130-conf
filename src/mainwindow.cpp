@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.0 for Debian Linux
+/* CP2130 Configurator - Version 1.1 for Debian Linux
    Copyright (c) 2021 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -22,6 +22,8 @@
 #include <QMessageBox>
 #include <QRegExp>
 #include <QRegExpValidator>
+#include <QString>
+#include <QStringList>
 #include "aboutdialog.h"
 #include "cp2130.h"
 #include "configuratorwindow.h"

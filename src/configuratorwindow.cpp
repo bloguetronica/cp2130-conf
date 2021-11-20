@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.0 for Debian Linux
+/* CP2130 Configurator - Version 1.1 for Debian Linux
    Copyright (c) 2021 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -25,7 +25,6 @@
 #include <QProgressDialog>
 #include <QRegExp>
 #include <QRegExpValidator>
-#include <QStringList>
 #include "aboutdialog.h"
 #include "informationdialog.h"
 #include "nonblocking.h"
@@ -74,7 +73,7 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
         pid_ = pid;  // and PID
         serialstr_ = serialstr;  // Valid serial number
         readDeviceConfiguration();
-        this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
+        this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialstr_));
         displayConfiguration(deviceConfig_);
     }
 }
@@ -259,8 +258,7 @@ void ConfiguratorWindow::on_pushButtonWrite_clicked()
             QMessageBox::information(this, tr("No Changes Done"), tr("No changes were effected, because no values were modified."));
         } else {
             int qmret = QMessageBox::question(this, tr("Write Configuration?"), tr("This will write the changes to the OTP ROM of your device. These changes will be permanent.\n\nDo you wish to proceed?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-            if (qmret == QMessageBox::Yes && cp2130_.isOpen())  // It is important to check if the device is open, since resetDevice() is non-blocking (a device reset could still be underway)
-            {
+            if (qmret == QMessageBox::Yes && cp2130_.isOpen()) {  // It is important to check if the device is open, since resetDevice() is non-blocking (a device reset could still be underway)
                 configureDevice();
             }
         }
@@ -305,8 +303,7 @@ void ConfiguratorWindow::writePID()
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWPID), errcnt, errstr);
     opCheck(tr("write-pid-op"), errcnt, errstr);  // The string "write-pid-op" should be translated to "Write PID"
-    if (!configerr_)
-    {
+    if (!configerr_) {
         pid_ = editedConfig_.usbconfig.pid;  // If the previous operation was successful, it is safe to assume that the PID changed to the new value
     }
     requiresReset_ = true;
@@ -359,9 +356,8 @@ void ConfiguratorWindow::writeSerialDesc()
     QString errstr;
     cp2130_.writeSerialDesc(editedConfig_.serial, errcnt, errstr);
     opCheck(tr("write-serial-desc-op"), errcnt, errstr);  // The string "write-serial-desc-op" should be translated to "Write serial descriptor"
-    if (!configerr_)
-    {
-        serialstr_ = editedConfig_.serial;  // If the previous operation was successful, it is safe to assume that the serial string changed to the new value
+    if (!configerr_) {
+        serialstr_ = editedConfig_.serial.toLatin1();  // If the previous operation was successful, it is safe to assume that the serial string changed to the new value (the conversion to ASCII was implemented in version 1.1 as a patch)
     }
     requiresReset_ = true;
 }
@@ -383,8 +379,7 @@ void ConfiguratorWindow::writeVID()
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWVID), errcnt, errstr);
     opCheck(tr("write-vid-op"), errcnt, errstr);  // The string "write-vid-op" should be translated to "Write VID"
-    if (!configerr_)
-    {
+    if (!configerr_) {
         vid_ = editedConfig_.usbconfig.vid;  // If the previous operation was successful, it is safe to assume that the VID changed to the new value
     }
     requiresReset_ = true;
@@ -406,13 +401,13 @@ void ConfiguratorWindow::configureDevice()
             break;  // Abort the configuration
         }
         QMetaObject::invokeMethod(this, tasks[i].toStdString().c_str());  // The task list entry is converted to a C string
-        if (!cp2130_.isOpen() || configerr_) {  // If an error has occured
+        if (cp2130_.disconnected() || configerr_) {  // If an error has occured (since version 1.1, cp2130_.disconnected() is used in place of !cp2130_.isOpen() for better responsiveness)
             QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
             break;  // Abort the configuration
         }
         configProgress.setValue(i + 1);  // Update the progress bar for each task done
     }
-    if (cp2130_.isOpen()) {  // Important!
+    if (!cp2130_.disconnected()) {  // Important!
         if (!configerr_) {  // On success
             if (ui->checkBoxVerify->isChecked()) {
                 QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured and verified."));

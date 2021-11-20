@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>CP2130 Configurator</string>
+   <string>CP2130 Device</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
