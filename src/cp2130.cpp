@@ -1,4 +1,4 @@
-/* CP2130 class for Qt - Version 2.1.0
+/* CP2130 class for Qt - Version 2.1.1
    Copyright (c) 2021 Samuel Lourenço
 
    This library is free software: you can redistribute it and/or modify it
@@ -76,7 +76,7 @@ void CP2130::writeDescGeneric(const QString &descriptor, quint8 command, int &er
         size_t start = i == 0 ? 2 : 0;
         size_t offset = DESC_IDXINCR * i;
         for (size_t j = start; j < DESC_IDXINCR; ++j) {
-            if (j < length - offset) {
+            if (offset + j < length) {  // Rewritten in version 2.1.1 in order to fix a bug
                 controlBufferOut[j] = static_cast<quint8>(descriptor[static_cast<int>((offset + j - 2) / 2)].unicode() >> ((i + j) % 2 == 0 ? 0 : 8));
             } else {
                 controlBufferOut[j] = 0x00;
