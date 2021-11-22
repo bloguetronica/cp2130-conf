@@ -1261,9 +1261,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>160</x>
       <y>555</y>
-      <width>71</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -1277,9 +1277,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>260</x>
       <y>555</y>
-      <width>71</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
