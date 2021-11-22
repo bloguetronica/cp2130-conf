@@ -82,7 +82,7 @@ private:
     Ui::ConfiguratorWindow *ui;
     CP2130 cp2130_;
     Configuration deviceConfig_, editedConfig_;
-    QString serialstr_;
+    QString errmsg_, serialstr_;
     quint16 lockWord_, pid_, vid_;
     bool configerr_, requiresReset_;
 

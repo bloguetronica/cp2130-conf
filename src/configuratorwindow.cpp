@@ -71,7 +71,7 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
     } else {
         vid_ = vid;  // Pass VID
         pid_ = pid;  // and PID
-        serialstr_ = serialstr;  // Valid serial number
+        serialstr_ = serialstr;  // and the serial number as well
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialstr_));
         displayConfiguration(deviceConfig_);
@@ -270,10 +270,9 @@ void ConfiguratorWindow::verifyConfiguration()
 {
     resetDevice();
     if (deviceConfig_ != editedConfig_) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed verification."));
         configerr_ = true;
+        errmsg_ = tr("Failed verification.");
     }
-    requiresReset_ = false;
 }
 
 // Writes the manufacturer descriptor to the CP2130 OTP ROM
@@ -396,34 +395,41 @@ void ConfiguratorWindow::configureDevice()
     configProgress.setWindowModality(Qt::WindowModal);
     configProgress.setMinimumDuration(0);
     configProgress.setValue(0);  // This, along with setMinimumDuration(), will cause the progress dialog to display immediately
+    bool aborted = false;
     for (int i = 0; i < nTasks; ++i) {  // Iterate through the newly created task list
         if (configProgress.wasCanceled()) {  // If user clicked "Abort"
+            aborted = true;
             break;  // Abort the configuration
         }
         QMetaObject::invokeMethod(this, tasks[i].toStdString().c_str());  // The task list entry is converted to a C string
-        if (cp2130_.disconnected() || configerr_) {  // If an error has occured (since version 1.1, cp2130_.disconnected() is used in place of !cp2130_.isOpen() for better responsiveness)
-            QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
+        if (configerr_) {  // If an error has occured
+            configProgress.cancel();  // This hides the progress dialog (fix implemented in version 1.1)
             break;  // Abort the configuration
         }
         configProgress.setValue(i + 1);  // Update the progress bar for each task done
     }
-    if (!cp2130_.disconnected()) {  // Important!
-        if (!configerr_) {  // On success
-            if (ui->checkBoxVerify->isChecked()) {
-                QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured and verified."));
-            } else {
-                QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured."));
-            }
+    if (configerr_) {  // If an error has occured
+        QMessageBox::critical(this, tr("Error"), errmsg_);
+        if (cp2130_.disconnected()) {
+            disableView();  // Disable configurator window
+            cp2130_.close();
         }
-        if (requiresReset_) {
-            QProgressDialog resetProgress(tr("Resetting device..."), tr("Cancel"), 0, 1, this);
-            resetProgress.setWindowModality(Qt::WindowModal);
-            resetProgress.setMinimumDuration(0);
-            resetProgress.setValue(0);  // As before, the progress dialog should appear immediately
-            if (!resetProgress.wasCanceled()) {
-                resetDevice();
-                resetProgress.setValue(1);
-            }
+        QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
+    } else if (aborted) {
+        QMessageBox::information(this, tr("Configuration Aborted"), tr("The device configuration was aborted."));
+    } else if (ui->checkBoxVerify->isChecked()) {
+        QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured and verified."));
+    } else {
+        QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured."));
+    }
+    if (!cp2130_.disconnected() && requiresReset_) {
+        QProgressDialog resetProgress(tr("Resetting device..."), tr("Cancel"), 0, 1, this);
+        resetProgress.setWindowModality(Qt::WindowModal);
+        resetProgress.setMinimumDuration(0);
+        resetProgress.setValue(0);  // As before, the progress dialog should appear immediately
+        if (!resetProgress.wasCanceled()) {
+            resetDevice();
+            resetProgress.setValue(1);
         }
     }
 }
@@ -545,14 +551,12 @@ bool ConfiguratorWindow::opCheck(const QString &op, int errcnt, QString errstr)
 {
     bool retval;
     if (errcnt > 0) {
+        configerr_ = true;  // Since version 1.1, a device disconnection is considered a configuration error
         if (cp2130_.disconnected()) {
-            QMessageBox::critical(this, tr("Error"), tr("Device disconnected.\n\nThe corresponding window will be disabled."));
-            disableView();  // Disable configurator window
-            cp2130_.close();
+            errmsg_ = tr("Device disconnected.\n\nThe corresponding window will be disabled.");
         } else {
             errstr.chop(1);  // Remove the last character, which is always a newline
-            QMessageBox::critical(this, tr("Error"), tr("%1 operation returned the following error(s):\n– %2", "", errcnt).arg(op, errstr.replace("\n", "\n– ")));
-            configerr_ = true;
+            errmsg_ = tr("%1 operation returned the following error(s):\n– %2", "", errcnt).arg(op, errstr.replace("\n", "\n– "));
         }
         retval = false;  // Failed check
     } else {
@@ -635,33 +639,29 @@ void ConfiguratorWindow::resetDevice()
     int errcnt = 0;
     QString errstr;
     cp2130_.reset(errcnt, errstr);
-    opCheck(tr("reset-op"), errcnt, errstr);  // The string "reset-op" should be translated to "Reset"
-    if (cp2130_.isOpen()) {  // If opCheck() passes, thus, not closing the device
-        cp2130_.close();  // Important! - This should be done always, even if the previous reset operation shows an error, because an error doesn't mean that a device reset was not effected
-        int err;
-        for (int i = 0; i < ENUM_RETRIES; ++i) {  // Verify enumeration according to the number of times set by "ENUM_RETRIES" [10]
-            NonBlocking::msleep(500);  // Wait 500ms each time
-            err = cp2130_.open(vid_, pid_, serialstr_);
-            if (err != 2) {  // Retry only if the device was not found yet (as it may take some time to enumerate)
-                break;
-            }
+    cp2130_.close();  // Important! - This should be done always, even if the previous reset operation shows an error, because an error doesn't mean that a device reset was not effected
+    int err;
+    for (int i = 0; i < ENUM_RETRIES; ++i) {  // Verify enumeration according to the number of times set by "ENUM_RETRIES" [10]
+        NonBlocking::msleep(500);  // Wait 500ms each time
+        err = cp2130_.open(vid_, pid_, serialstr_);
+        if (err != 2) {  // Retry only if the device was not found yet (as it may take some time to enumerate)
+            break;
         }
-        if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
-            QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
-            exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
-        } else if (err == CP2130::ERROR_NOT_FOUND) {  // Failed to find device
-            QMessageBox::critical(this, tr("Error"), tr("Device disconnected.\n\nThe corresponding window will be disabled."));
-            disableView();  // Disable configurator window
-        } else if (err == CP2130::ERROR_BUSY) {  // Failed to claim interface
-            QMessageBox::critical(this, tr("Error"), tr("Device ceased to be available. It could be in use by another application.\n\nThe corresponding window will be disabled."));
-            disableView();  // Disable configurator window
-        } else {
-            readDeviceConfiguration();
-            this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
-            displayConfiguration(deviceConfig_);
-            configerr_ = false;  // Since the device was reset, any fault condition should be cleared
-            requiresReset_ = false;
-        }
+    }
+    if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
+        QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
+        exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
+    } else if (err == CP2130::ERROR_NOT_FOUND) {  // Failed to find device
+        QMessageBox::critical(this, tr("Error"), tr("Device disconnected.\n\nThe corresponding window will be disabled."));
+        disableView();  // Disable configurator window
+    } else if (err == CP2130::ERROR_BUSY) {  // Failed to claim interface
+        QMessageBox::critical(this, tr("Error"), tr("Device ceased to be available. It could be in use by another application.\n\nThe corresponding window will be disabled."));
+        disableView();  // Disable configurator window
+    } else {
+        readDeviceConfiguration();
+        this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
+        displayConfiguration(deviceConfig_);
+        requiresReset_ = false;
     }
 }
 
