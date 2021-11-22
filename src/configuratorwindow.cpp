@@ -154,7 +154,7 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited()
     int maxPower = 2 * ui->lineEditMaxPowerHex->text().toInt(nullptr, 16);
     if (maxPower > POWER_LIMIT) {
         maxPower = POWER_LIMIT;
-        ui->lineEditMaxPowerHex->setText(QString("%1").arg(POWER_LIMIT / 2, 2, 16, QChar('0')));
+        ui->lineEditMaxPowerHex->setText(QString("%1").arg(POWER_LIMIT / 2, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
     }
     ui->lineEditMaxPower->setText(QString::number(maxPower));
 }
@@ -175,7 +175,7 @@ void ConfiguratorWindow::on_lineEditPID_textEdited()
 
 void ConfiguratorWindow::on_lineEditSuspendLevel_textChanged()
 {
-    if (ui->lineEditSuspendLevel->text().size() < 4) {
+    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra condition added in version 1.1
         ui->lineEditSuspendLevel->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditSuspendLevel->setStyleSheet("");
@@ -217,7 +217,7 @@ void ConfiguratorWindow::on_lineEditVID_textEdited()
 
 void ConfiguratorWindow::on_lineEditResumeMatch_textChanged()
 {
-    if (ui->lineEditResumeMatch->text().size() < 4) {
+    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra condition added in version 1.1
         ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMatch->setStyleSheet("");
@@ -231,7 +231,7 @@ void ConfiguratorWindow::on_lineEditResumeMatch_textEdited()
 
 void ConfiguratorWindow::on_lineEditResumeMask_textChanged()
 {
-    if (ui->lineEditResumeMask->text().size() < 4) {
+    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra condition added in version 1.1
         ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMask->setStyleSheet("");
@@ -751,7 +751,7 @@ void ConfiguratorWindow::setWriteEnabled(bool value)
     ui->pushButtonWrite->setEnabled(value);
 }
 
-// Checks user input, returning true if it is valid, or false otherwise, while also highlighting invalid fields
+// Checks user input, returning false if it is valid, or true otherwise, while also highlighting invalid fields
 bool ConfiguratorWindow::showInvalidInput()
 {
     bool retval = false;
@@ -771,7 +771,7 @@ bool ConfiguratorWindow::showInvalidInput()
         ui->lineEditVID->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditSuspendLevel->text().size() < 4) {
+    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra check condition added in version 1.1
         ui->lineEditSuspendLevel->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
@@ -779,11 +779,11 @@ bool ConfiguratorWindow::showInvalidInput()
         ui->lineEditSuspendMode->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditResumeMask->text().size() < 4) {
+    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra check condition added in version 1.1
         ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditResumeMatch->text().size() < 4) {
+    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra check condition added in version 1.1
         ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
