@@ -273,6 +273,7 @@ void ConfiguratorWindow::verifyConfiguration()
         configerr_ = true;
         errmsg_ = tr("Failed verification.");
     }
+    requiresReset_ = false;
 }
 
 // Writes the manufacturer descriptor to the CP2130 OTP ROM
@@ -661,7 +662,6 @@ void ConfiguratorWindow::resetDevice()
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
         displayConfiguration(deviceConfig_);
-        requiresReset_ = false;
     }
 }
 
