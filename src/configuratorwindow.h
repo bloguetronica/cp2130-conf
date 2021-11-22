@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.0 for Debian Linux
+/* CP2130 Configurator - Version 1.1 for Debian Linux
    Copyright (c) 2021 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -23,6 +23,8 @@
 
 // Includes
 #include <QMainWindow>
+#include <QString>
+#include <QStringList>
 #include "configuration.h"
 #include "cp2130.h"
 
@@ -80,7 +82,7 @@ private:
     Ui::ConfiguratorWindow *ui;
     CP2130 cp2130_;
     Configuration deviceConfig_, editedConfig_;
-    QString serialstr_;
+    QString errmsg_, serialstr_;
     quint16 lockWord_, pid_, vid_;
     bool configerr_, requiresReset_;
 
