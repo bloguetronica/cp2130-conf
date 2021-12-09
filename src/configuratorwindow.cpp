@@ -273,7 +273,7 @@ void ConfiguratorWindow::on_pushButtonWrite_clicked()
 // Verifies the CP2130 configuration against the input configuration
 void ConfiguratorWindow::verifyConfiguration()
 {
-    resetDevice();  // Since version 1.2, resetDevice uses err_ and errmsg_ to signal out non-critical errors and pass the corresponding messages (see implementation)
+    resetDevice();  // Since version 1.2, resetDevice() uses err_ and errmsg_ to signal out non-critical errors and pass the corresponding messages (see function implementation below)
     if (!err_ && deviceConfig_ != editedConfig_) {  // Condition added to prevent the message to be overwritten, which is applicable to a situation when resetDevice() fails
         err_ = true;
         errmsg_ = tr("Failed verification.");
@@ -433,7 +433,7 @@ void ConfiguratorWindow::configureDevice()
             resetDevice();
             if (err_) {
                 resetProgress.cancel();  // Hide the progress dialog
-                handleError();  // Since version 1.2, resetDevice() requires non-critical errors to be handled externally (see implementation)
+                handleError();  // Since version 1.2, resetDevice() requires non-critical errors to be handled externally (see function implementation below)
             } else {
                 resetProgress.setValue(1);
             }
