@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<TS version="2.1" language="pt">
 <context>
     <name>AboutDialog</name>
     <message>
         <location filename="../aboutdialog.ui" line="26"/>
         <source>About CP2130 Configurator</source>
-        <translation></translation>
+        <translation>Acerca do CP2130 Configurator</translation>
     </message>
     <message>
         <location filename="../aboutdialog.ui" line="68"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;CP2130 Configurator - Version 1.2&lt;br/&gt;© 2021 Samuel Lourenço&lt;/p&gt;&lt;p&gt;This program is distributed under the terms of the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;CP2130 Configurator - Versão 1.2&lt;br/&gt;© 2021 Samuel Lourenço&lt;/p&gt;&lt;p&gt;Este programa é distribuido sob os termos da licença &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -19,87 +19,87 @@
     <message>
         <location filename="../configuratorwindow.ui" line="26"/>
         <source>CP2130 Device</source>
-        <translation></translation>
+        <translation>Dispositivo CP2130</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="57"/>
         <source>General</source>
-        <translation></translation>
+        <translation>Geral</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="88"/>
         <source>Product ID:</source>
-        <translation></translation>
+        <translation>ID produto:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="104"/>
         <source>Vendor ID:</source>
-        <translation></translation>
+        <translation>ID fornecedor:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="120"/>
         <source>Manufacturer:</source>
-        <translation></translation>
+        <translation>Fabricante:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="136"/>
         <source>Serial number:</source>
-        <translation></translation>
+        <translation>N.º de série:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="171"/>
         <source>Product:</source>
-        <translation></translation>
+        <translation>Produto:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="206"/>
         <source>Max. power consumption (mA):</source>
-        <translation></translation>
+        <translation>Consumo máximo (mA):</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="222"/>
         <source>Major version:</source>
-        <translation></translation>
+        <translation>Versão maior:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="238"/>
         <source>Minor version:</source>
-        <translation></translation>
+        <translation>Versão menor:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="258"/>
         <source>Bus-powered with regulator enabled</source>
-        <translation></translation>
+        <translation>Via USB com regulador habilitado</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="263"/>
         <source>Bus-powered with regulator disabled</source>
-        <translation></translation>
+        <translation>Via USB com regulador desabilitado</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="268"/>
         <source>Self-powered with regulator enabled</source>
-        <translation></translation>
+        <translation>Própria com regulador habilitado</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="282"/>
         <source>Power mode:</source>
-        <translation></translation>
+        <translation>Alimentação:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="298"/>
         <source>Data transfer priority:</source>
-        <translation></translation>
+        <translation>Prioridade de transf. de dados:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="318"/>
         <source>High priority read</source>
-        <translation></translation>
+        <translation>Leitura prioritária</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="323"/>
         <source>High priority write</source>
-        <translation></translation>
+        <translation>Escrita prioritária</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="375"/>
@@ -115,7 +115,7 @@
     <message>
         <location filename="../configuratorwindow.ui" line="444"/>
         <source>Pin Configuration</source>
-        <translation></translation>
+        <translation>Config. de Pinos</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="460"/>
@@ -130,7 +130,7 @@
         <location filename="../configuratorwindow.ui" line="797"/>
         <location filename="../configuratorwindow.ui" line="835"/>
         <source>Input</source>
-        <translation></translation>
+        <translation>Entrada</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="465"/>
@@ -145,7 +145,7 @@
         <location filename="../configuratorwindow.ui" line="802"/>
         <location filename="../configuratorwindow.ui" line="840"/>
         <source>Open-drain output</source>
-        <translation></translation>
+        <translation>Saída em colector aberto</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="470"/>
@@ -160,7 +160,7 @@
         <location filename="../configuratorwindow.ui" line="807"/>
         <location filename="../configuratorwindow.ui" line="845"/>
         <source>Push-pull output</source>
-        <translation></translation>
+        <translation>Saída &apos;push-pull&apos;</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="475"/>
@@ -175,57 +175,57 @@
         <location filename="../configuratorwindow.ui" line="812"/>
         <location filename="../configuratorwindow.ui" line="850"/>
         <source>Chip select</source>
-        <translation></translation>
+        <translation>Linha de selecção</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="579"/>
         <source>!RTR input</source>
-        <translation></translation>
+        <translation>Entrada !RTR</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="584"/>
         <source>RTR input</source>
-        <translation></translation>
+        <translation>Entrada RTR</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="622"/>
         <source>EVTCNTR rising edge input</source>
-        <translation></translation>
+        <translation>Entrada EVTCNTR de flanco asc.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="627"/>
         <source>EVTCNTR falling edge input</source>
-        <translation></translation>
+        <translation>Entrada EVTCNTR de flanco desc.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="632"/>
         <source>EVTCNTR negative pulse input</source>
-        <translation></translation>
+        <translation>Entrada EVTCNTR de pulso neg.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="637"/>
         <source>EVTCNTR positive pulse input</source>
-        <translation></translation>
+        <translation>Entrada EVTCNTR de pulso pos.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="675"/>
         <source>CLKOUT push-pull output</source>
-        <translation></translation>
+        <translation>Saída &apos;push-pull&apos; CLKOUT</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="779"/>
         <source>SPIACT push-pull output</source>
-        <translation></translation>
+        <translation>Saída &apos;push-pull&apos; SPIACT</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="817"/>
         <source>SUSPEND push-pull output</source>
-        <translation></translation>
+        <translation>Saída &apos;push-pull&apos; SUSPEND</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="855"/>
         <source>!SUSPEND push-pull output</source>
-        <translation></translation>
+        <translation>Saída &apos;push-pull&apos; !SUSPEND</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="869"/>
@@ -285,72 +285,72 @@
     <message>
         <location filename="../configuratorwindow.ui" line="1061"/>
         <source>Clock divider:</source>
-        <translation></translation>
+        <translation>Divisor de relógio:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1070"/>
         <source>Suspend/Resume Levels</source>
-        <translation></translation>
+        <translation>Níveis de Suspensão/Retoma</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1082"/>
         <source>Suspend level:</source>
-        <translation></translation>
+        <translation>Nível de suspensão:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1098"/>
         <source>Suspend mode:</source>
-        <translation></translation>
+        <translation>Modo de suspensão:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1114"/>
         <source>Resume mask:</source>
-        <translation></translation>
+        <translation>Máscara de retoma:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1130"/>
         <source>Resume match:</source>
-        <translation></translation>
+        <translation>Combinação de retoma:</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1239"/>
         <source>Revert</source>
-        <translation></translation>
+        <translation>Reverter</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1255"/>
         <source>Write</source>
-        <translation></translation>
+        <translation>Escrever</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1271"/>
         <source>Verify</source>
-        <translation></translation>
+        <translation>Verificar</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1287"/>
         <source>Lock</source>
-        <translation></translation>
+        <translation>Proteger</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1302"/>
         <source>&amp;Device</source>
-        <translation></translation>
+        <translation>&amp;Dispositivo</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1310"/>
         <source>&amp;Help</source>
-        <translation></translation>
+        <translation>&amp;Ajuda</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1319"/>
         <source>&amp;Information</source>
-        <translation></translation>
+        <translation>&amp;Informações</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1324"/>
         <source>&amp;Close</source>
-        <translation></translation>
+        <translation>&amp;Fechar</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.ui" line="1327"/>
@@ -360,20 +360,22 @@
     <message>
         <location filename="../configuratorwindow.ui" line="1332"/>
         <source>&amp;About CP2130 Configurator</source>
-        <translation></translation>
+        <translation>&amp;Acerca do CP2130 Configurator</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="63"/>
         <location filename="../configuratorwindow.cpp" line="664"/>
         <source>Critical Error</source>
-        <translation></translation>
+        <translation>Erro Crítico</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="63"/>
         <source>Could not initialize libusb.
 
 This is a critical error and execution will be aborted.</source>
-        <translation></translation>
+        <translation>Falhou ao inicializar o libusb.
+
+Este é um erro crítico e a execução será abortada.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="66"/>
@@ -384,174 +386,180 @@ This is a critical error and execution will be aborted.</source>
         <location filename="../configuratorwindow.cpp" line="637"/>
         <location filename="../configuratorwindow.cpp" line="642"/>
         <source>Error</source>
-        <translation></translation>
+        <translation>Erro</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="66"/>
         <source>Could not find device.</source>
-        <translation></translation>
+        <translation>Dispositivo não encontrado.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="69"/>
         <source>Device is currently unavailable.
 
 Please confirm that the device is not in use.</source>
-        <translation></translation>
+        <translation>O dispositivo encontra-se indisponível neste momento.
+
+Por favor, confirme que o mesmo não está a ser utilizado.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="674"/>
         <source>CP2130 Configurator (S/N: %1)</source>
-        <translation></translation>
+        <translation>CP2130 Configurator (NS: %1)</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="87"/>
         <source>lock-otp-op</source>
-        <translation>Lock OTP ROM</translation>
+        <translation>protecção da ROM OTP</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="76"/>
         <source>CP2130 Device (S/N: %1)</source>
-        <translation></translation>
+        <translation>Dispositivo CP2130 (NS: %1)</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="104"/>
         <source>device-information-retrieval-op</source>
-        <translation>Device information retrieval</translation>
+        <translation>recolha de informações do dispositivo</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="258"/>
         <source>One or more fields have invalid information.
 
 Please correct the information in the fields highlighted in red.</source>
-        <translation></translation>
+        <translation>Um ou mais campos contêm informações inválidas.
+
+Por favor, corriga a informação nos campos marcados a vermelho.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="262"/>
         <source>No changes were effected, because no values were modified.</source>
-        <translation></translation>
+        <translation>Não houve alterações, dado que nenhum valor foi modificado.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="262"/>
         <source>No Changes Done</source>
-        <translation></translation>
+        <translation>Sem Alterações</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="264"/>
         <source>This will write the changes to the OTP ROM of your device. These changes will be permanent.
 
 Do you wish to proceed?</source>
-        <translation></translation>
+        <translation>Isto irá escrever os valores modificados na ROM OTP do seu dispositivo. Estas alterações serão permanentes.
+
+Deseja prosseguir?</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="264"/>
         <source>Write Configuration?</source>
-        <translation></translation>
+        <translation>Escrever Configuração?</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="279"/>
         <source>Failed verification.</source>
-        <translation></translation>
+        <translation>A verificação falhou.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="290"/>
         <source>write-manufacturer-desc-op</source>
-        <translation>Write manufacturer descriptor</translation>
+        <translation>escrita do descritor de fabricante</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="300"/>
         <source>write-max-power-op</source>
-        <translation>Write maximum power</translation>
+        <translation>escrita do consumo máximo</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="310"/>
         <source>write-pid-op</source>
-        <translation>Write PID</translation>
+        <translation>escrita do PID</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="323"/>
         <source>write-pin-config-op</source>
-        <translation>Write pin configuration</translation>
+        <translation>escrita da configuração de pinos</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="333"/>
         <source>write-power-mode-op</source>
-        <translation>Write power mode</translation>
+        <translation>escrita do modo de alimentação</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="343"/>
         <source>write-product-desc-op</source>
-        <translation>Write product descriptor</translation>
+        <translation>escrita do descritor de produto</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="353"/>
         <source>write-release-version-op</source>
-        <translation>Write release version</translation>
+        <translation>escrita da versão de lançamento</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="363"/>
         <source>write-serial-desc-op</source>
-        <translation>Write serial descriptor</translation>
+        <translation>escrita do descritor de série</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="376"/>
         <source>write-transfer-prio-op</source>
-        <translation>Write transfer priority</translation>
+        <translation>escrita da prioridade de transferência</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="386"/>
         <source>write-vid-op</source>
-        <translation>Write VID</translation>
+        <translation>escrita do VID</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="400"/>
         <source>Configuring device...</source>
-        <translation></translation>
+        <translation>A configurar o dispositivo...</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="400"/>
         <source>Abort</source>
-        <translation></translation>
+        <translation>Abortar</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="415"/>
         <source>The device configuration could not be completed.</source>
-        <translation></translation>
+        <translation>A configuração do dispositivo não foi finalizada.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="407"/>
         <source>Configuration Aborted</source>
-        <translation></translation>
+        <translation>Configuração Abortada</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="407"/>
         <source>The device configuration was aborted.</source>
-        <translation></translation>
+        <translation>A configuração do dispositivo foi abortada.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="422"/>
         <source>Device was successfully configured and verified.</source>
-        <translation></translation>
+        <translation>O dispositivo foi configurado e verificado com sucesso.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="422"/>
         <location filename="../configuratorwindow.cpp" line="424"/>
         <source>Device Configured</source>
-        <translation></translation>
+        <translation>Dispositivo Configurado</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="424"/>
         <source>Device was successfully configured.</source>
-        <translation></translation>
+        <translation>O dispositivo foi configurado com sucesso.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="428"/>
         <source>Resetting device...</source>
-        <translation></translation>
+        <translation>A reiniciar o dispositivo...</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="428"/>
         <source>Cancel</source>
-        <translation></translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="572"/>
@@ -559,16 +567,18 @@ Do you wish to proceed?</source>
         <source>Device disconnected.
 
 The corresponding window will be disabled.</source>
-        <translation></translation>
+        <translation>O dispositivo foi desligado.
+
+A respectiva janela será desabilitada.</translation>
     </message>
     <message numerus="yes">
         <location filename="../configuratorwindow.cpp" line="575"/>
         <source>%1 operation returned the following error(s):
 – %2</source>
         <translation>
-            <numerusform>%1 operation returned the following error:
+            <numerusform>Operação de %1 retornou o seguinte erro:
 – %2</numerusform>
-            <numerusform>%1 operation returned the following errors:
+            <numerusform>Operação de %1 retornou os seguintes erros:
 – %2</numerusform>
         </translation>
     </message>
@@ -577,7 +587,9 @@ The corresponding window will be disabled.</source>
         <source>Device disconnected.
 
 Please reconnect it and try again.</source>
-        <translation></translation>
+        <translation>O dispositivo foi desligado.
+
+Por favor, ligue-o e tente novamente.</translation>
     </message>
     <message numerus="yes">
         <location filename="../configuratorwindow.cpp" line="642"/>
@@ -586,14 +598,14 @@ Please reconnect it and try again.</source>
 
 Please try accessing the device again.</source>
         <translation>
-            <numerusform>Read operation returned the following error:
+            <numerusform>Operação de leitura retornou o seguinte erro:
 – %1
 
-Please try accessing the device again.</numerusform>
-            <numerusform>Read operation returned the following errors:
+Por favor, tente aceder novamente ao dispositivo.</numerusform>
+            <numerusform>Operação de leitura retornou o seguintes erros:
 – %1
 
-Please try accessing the device again.</numerusform>
+Por favor, tente aceder novamente ao dispositivo.</numerusform>
         </translation>
     </message>
     <message>
@@ -601,14 +613,18 @@ Please try accessing the device again.</numerusform>
         <source>Could not reinitialize libusb.
 
 This is a critical error and execution will be aborted.</source>
-        <translation></translation>
+        <translation>Falhou ao reinicializar o libusb.
+
+Este é um erro crítico e a execução será abortada.</translation>
     </message>
     <message>
         <location filename="../configuratorwindow.cpp" line="671"/>
         <source>Device ceased to be available. It could be in use by another application.
 
 The corresponding window will be disabled.</source>
-        <translation></translation>
+        <translation>O dispositivo deixou de estar disponível. O mesmo pode estar a ser utilizado por outra aplicação.
+
+A respectiva janela será desabilitada.</translation>
     </message>
 </context>
 <context>
@@ -616,12 +632,12 @@ The corresponding window will be disabled.</source>
     <message>
         <location filename="../informationdialog.ui" line="26"/>
         <source>Device Information</source>
-        <translation></translation>
+        <translation>Informações do Dispositivo</translation>
     </message>
     <message>
         <location filename="../informationdialog.ui" line="68"/>
         <source>Silicon version:</source>
-        <translation></translation>
+        <translation>Versão do silício:</translation>
     </message>
 </context>
 <context>
@@ -634,12 +650,12 @@ The corresponding window will be disabled.</source>
     <message>
         <location filename="../mainwindow.ui" line="53"/>
         <source>Vendor ID:</source>
-        <translation></translation>
+        <translation>ID fornecedor:</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="69"/>
         <source>Product ID:</source>
-        <translation></translation>
+        <translation>ID produto:</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="88"/>
@@ -652,32 +668,32 @@ The corresponding window will be disabled.</source>
         <location filename="../mainwindow.ui" line="133"/>
         <location filename="../mainwindow.cpp" line="95"/>
         <source>Select device...</source>
-        <translation></translation>
+        <translation>Seleccione o dispositivo...</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="150"/>
         <source>Refresh</source>
-        <translation></translation>
+        <translation>Actualizar</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="166"/>
         <source>Open</source>
-        <translation></translation>
+        <translation>Abrir</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="181"/>
         <source>&amp;File</source>
-        <translation></translation>
+        <translation>&amp;Ficheiro</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="187"/>
         <source>&amp;Help</source>
-        <translation></translation>
+        <translation>&amp;Ajuda</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="196"/>
         <source>&amp;Quit</source>
-        <translation></translation>
+        <translation>&amp;Sair</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="199"/>
@@ -687,18 +703,19 @@ The corresponding window will be disabled.</source>
     <message>
         <location filename="../mainwindow.ui" line="204"/>
         <source>&amp;About CP2130 Configurator</source>
-        <translation></translation>
+        <translation>&amp;Acerca do CP2130 Configurator</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="98"/>
         <source>Critical Error</source>
-        <translation></translation>
+        <translation>Erro Crítico</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="98"/>
         <source>%1
 This is a critical error and execution will be aborted.</source>
-        <translation></translation>
+        <translation>%1
+Este é um erro crítico e a execução será abortada.</translation>
     </message>
 </context>
 <context>
@@ -707,121 +724,141 @@ This is a critical error and execution will be aborted.</source>
         <location filename="../cp2130.cpp" line="227"/>
         <source>In bulkTransfer(): device is not open.
 </source>
-        <translation></translation>
+        <translation>Em &quot;bulkTransfer()&quot;: o dispositivo não se encontra aberto.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="233"/>
         <source>Failed bulk OUT transfer to endpoint %1 (address 0x%2).
 </source>
-        <translation></translation>
+        <translation>Falhou transferência &quot;bulk OUT&quot; para o &apos;endpoint&apos; %1 (endereço 0x%2).
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="235"/>
         <source>Failed bulk IN transfer from endpoint %1 (address 0x%2).
 </source>
-        <translation></translation>
+        <translation>Falhou transferência &quot;bulk IN&quot; proveniente do &apos;endpoint&apos; %1 (endereço 0x%2).
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="264"/>
         <source>In configureGPIO(): Pin number must be between 0 and 10.
 </source>
-        <translation></translation>
+        <translation>Em &quot;configureGPIO()&quot;: O número do pino deve estar compreendido entre 0 e 10.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="280"/>
         <source>In configureSPIDelays(): SPI channel value must be between 0 and 10.
 </source>
-        <translation></translation>
+        <translation>Em &quot;configureSPIDelays()&quot;: O valor do canal SPI deve estar compreendido entre 0 e 10.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="298"/>
         <source>In configureSPIMode(): SPI channel value must be between 0 and 10.
 </source>
-        <translation></translation>
+        <translation>Em &quot;configureSPIMode()&quot;: O valor do canal SPI deve estar compreendido entre 0 e 10.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="313"/>
         <source>In controlTransfer(): device is not open.
 </source>
-        <translation></translation>
+        <translation>Em &quot;controlTransfer()&quot;: o dispositivo não se encontra aberto.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="318"/>
         <source>Failed control transfer (0x%1, 0x%2).
 </source>
-        <translation></translation>
+        <translation>Falhou transferência de controlo (0x%1, 0x%2).
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="331"/>
         <source>In disableCS(): SPI channel value must be between 0 and 10.
 </source>
-        <translation></translation>
+        <translation>Em &quot;disableCS()&quot;: O valor do canal SPI deve estar compreendido entre 0 e 10.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="346"/>
         <source>In disableSPIDelays(): SPI channel value must be between 0 and 10.
 </source>
-        <translation></translation>
+        <translation>Em &quot;disableSPIDelays()&quot;: O valor do canal SPI deve estar compreendido entre 0 e 10.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="364"/>
         <source>In enableCS(): SPI channel value must be between 0 and 10.
 </source>
-        <translation></translation>
+        <translation>Em &quot;enableCS()&quot;: O valor do canal SPI deve estar compreendido entre 0 e 10.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="388"/>
         <source>In getCS(): SPI channel value must be between 0 and 10.
 </source>
-        <translation></translation>
+        <translation>Em &quot;getCS()&quot;: O valor do canal SPI deve estar compreendido entre 0 e 10.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="586"/>
         <source>In getSPIDelays(): SPI channel value must be between 0 and 10.
 </source>
-        <translation></translation>
+        <translation>Em &quot;getSPIDelays()&quot;: O valor do canal SPI deve estar compreendido entre 0 e 10.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="608"/>
         <source>In getSPIMode(): SPI channel value must be between 0 and 10.
 </source>
-        <translation></translation>
+        <translation>Em &quot;getSPIMode()&quot;: O valor do canal SPI deve estar compreendido entre 0 e 10.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="721"/>
         <source>In selectCS(): SPI channel value must be between 0 and 10.
 </source>
-        <translation></translation>
+        <translation>Em &quot;selectCS()&quot;: O valor do canal SPI deve estar compreendido entre 0 e 10.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="928"/>
         <source>In writeManufacturerDesc(): manufacturer descriptor string cannot be longer than 62 characters.
 </source>
-        <translation></translation>
+        <translation>Em &quot;writeManufacturerDesc()&quot;: o descritor do fabricante não pode ter mais do que 62 caracteres.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="964"/>
         <source>In writeProductDesc(): product descriptor string cannot be longer than 62 characters.
 </source>
-        <translation></translation>
+        <translation>Em &quot;writeProductDesc()&quot;: o descritor do produto não pode ter mais do que 62 caracteres.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="988"/>
         <source>In writeSerialDesc(): serial descriptor string cannot be longer than 30 characters.
 </source>
-        <translation></translation>
+        <translation>Em &quot;writeSerialDesc()&quot;: o descritor do número de série não pode ter mais do que 30 caracteres.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="1016"/>
         <source>Could not initialize libusb.
 </source>
-        <translation></translation>
+        <translation>Falhou ao inicializar o libusb.
+</translation>
     </message>
     <message>
         <location filename="../cp2130.cpp" line="1022"/>
         <source>Failed to retrieve a list of devices.
 </source>
-        <translation></translation>
+        <translation>Falhou em obter uma lista de dispositivos.
+</translation>
     </message>
 </context>
 </TS>
