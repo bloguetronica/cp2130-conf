@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.1 for Debian Linux
+/* CP2130 Configurator - Version 1.2 for Debian Linux
    Copyright (c) 2021 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -84,7 +84,7 @@ private:
     Configuration deviceConfig_, editedConfig_;
     QString errmsg_, serialstr_;
     quint16 lockWord_, pid_, vid_;
-    bool configerr_, requiresReset_;
+    bool err_, requiresReset_;
 
     void configureDevice();
     void disableView();
@@ -95,7 +95,8 @@ private:
     void displaySerial(const QString &serial);
     void displayUSBConfig(const CP2130::USBConfig &usbconfig);
     void getEditedConfiguration();
-    bool opCheck(const QString &op, int errcnt, QString errstr);
+    void handleError();
+    void opCheck(const QString &op, int errcnt, QString errstr);
     QStringList prepareTaskList();
     void readDeviceConfiguration();
     void resetDevice();

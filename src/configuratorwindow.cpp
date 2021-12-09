@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.1 for Debian Linux
+/* CP2130 Configurator - Version 1.2 for Debian Linux
    Copyright (c) 2021 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -101,7 +101,10 @@ void ConfiguratorWindow::on_actionInformation_triggered()
     InformationDialog info;
     CP2130::SiliconVersion siversion = cp2130_.getSiliconVersion(errcnt, errstr);
     info.setSiliconVersionLabelText(siversion.maj, siversion.min);
-    if (opCheck(tr("device-information-retrieval-op"), errcnt, errstr)) {  // If error check passes (the string "device-information-retrieval-op" should be translated to "Device information retrieval")
+    opCheck(tr("device-information-retrieval-op"), errcnt, errstr);  // The string "device-information-retrieval-op" should be translated to "Device information retrieval"
+    if (err_) {  // Fix implemented in version 1.2
+        handleError();
+    } else {  // If error check passes
         info.exec();
     }
 }
@@ -250,16 +253,18 @@ void ConfiguratorWindow::on_pushButtonRevert_clicked()
 
 void ConfiguratorWindow::on_pushButtonWrite_clicked()
 {
-    if(showInvalidInput()) {
-        QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
-    } else {
-        getEditedConfiguration();
-        if (editedConfig_ == deviceConfig_ && !ui->checkBoxLock->isChecked()) {
-            QMessageBox::information(this, tr("No Changes Done"), tr("No changes were effected, because no values were modified."));
+    if (cp2130_.isOpen()) {  // It is important to check if the device is open, since resetDevice() is non-blocking (a device reset could still be underway)
+        if(showInvalidInput()) {
+            QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
         } else {
-            int qmret = QMessageBox::question(this, tr("Write Configuration?"), tr("This will write the changes to the OTP ROM of your device. These changes will be permanent.\n\nDo you wish to proceed?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-            if (qmret == QMessageBox::Yes && cp2130_.isOpen()) {  // It is important to check if the device is open, since resetDevice() is non-blocking (a device reset could still be underway)
-                configureDevice();
+            getEditedConfiguration();
+            if (editedConfig_ == deviceConfig_ && !ui->checkBoxLock->isChecked()) {
+                QMessageBox::information(this, tr("No Changes Done"), tr("No changes were effected, because no values were modified."));
+            } else {
+                int qmret = QMessageBox::question(this, tr("Write Configuration?"), tr("This will write the changes to the OTP ROM of your device. These changes will be permanent.\n\nDo you wish to proceed?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+                if (qmret == QMessageBox::Yes) {
+                    configureDevice();
+                }
             }
         }
     }
@@ -268,9 +273,9 @@ void ConfiguratorWindow::on_pushButtonWrite_clicked()
 // Verifies the CP2130 configuration against the input configuration
 void ConfiguratorWindow::verifyConfiguration()
 {
-    resetDevice();
-    if (deviceConfig_ != editedConfig_) {
-        configerr_ = true;
+    resetDevice();  // Since version 1.2, resetDevice() uses err_ and errmsg_ to signal out non-critical errors and pass the corresponding messages (see function implementation below)
+    if (!err_ && deviceConfig_ != editedConfig_) {  // Condition added to prevent the message to be overwritten, which is applicable to a situation when resetDevice() fails
+        err_ = true;
         errmsg_ = tr("Failed verification.");
     }
     requiresReset_ = false;
@@ -303,7 +308,7 @@ void ConfiguratorWindow::writePID()
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWPID), errcnt, errstr);
     opCheck(tr("write-pid-op"), errcnt, errstr);  // The string "write-pid-op" should be translated to "Write PID"
-    if (!configerr_) {
+    if (!err_) {
         pid_ = editedConfig_.usbconfig.pid;  // If the previous operation was successful, it is safe to assume that the PID changed to the new value
     }
     requiresReset_ = true;
@@ -356,7 +361,7 @@ void ConfiguratorWindow::writeSerialDesc()
     QString errstr;
     cp2130_.writeSerialDesc(editedConfig_.serial, errcnt, errstr);
     opCheck(tr("write-serial-desc-op"), errcnt, errstr);  // The string "write-serial-desc-op" should be translated to "Write serial descriptor"
-    if (!configerr_) {
+    if (!err_) {
         serialstr_ = editedConfig_.serial.toLatin1();  // If the previous operation was successful, it is safe to assume that the serial string changed to the new value (the conversion to ASCII was implemented in version 1.1 as a patch)
     }
     requiresReset_ = true;
@@ -379,7 +384,7 @@ void ConfiguratorWindow::writeVID()
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWVID), errcnt, errstr);
     opCheck(tr("write-vid-op"), errcnt, errstr);  // The string "write-vid-op" should be translated to "Write VID"
-    if (!configerr_) {
+    if (!err_) {
         vid_ = editedConfig_.usbconfig.vid;  // If the previous operation was successful, it is safe to assume that the VID changed to the new value
     }
     requiresReset_ = true;
@@ -388,7 +393,7 @@ void ConfiguratorWindow::writeVID()
 // This is the main configuration routine, used to configure the CP2130 OTP ROM according to the tasks in the task list
 void ConfiguratorWindow::configureDevice()
 {
-    configerr_ = false;
+    err_ = false;
     requiresReset_ = false;
     QStringList tasks = prepareTaskList();  // Create a new task list
     int nTasks = tasks.size();
@@ -399,29 +404,25 @@ void ConfiguratorWindow::configureDevice()
     bool aborted = false;
     for (int i = 0; i < nTasks; ++i) {  // Iterate through the newly created task list
         if (configProgress.wasCanceled()) {  // If user clicked "Abort"
+            QMessageBox::information(this, tr("Configuration Aborted"), tr("The device configuration was aborted."));
             aborted = true;
             break;  // Abort the configuration
         }
         QMetaObject::invokeMethod(this, tasks[i].toStdString().c_str());  // The task list entry is converted to a C string
-        if (configerr_) {  // If an error has occured
+        if (err_) {  // If an error has occured
             configProgress.cancel();  // This hides the progress dialog (fix implemented in version 1.1)
+            handleError();  // Mind that this shows a message, so it is important to hide the progress dialog first in order to avoid unresponsiveness
+            QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
             break;  // Abort the configuration
         }
         configProgress.setValue(i + 1);  // Update the progress bar for each task done
     }
-    if (configerr_) {  // If an error has occured
-        QMessageBox::critical(this, tr("Error"), errmsg_);
-        if (cp2130_.disconnected()) {
-            disableView();  // Disable configurator window
-            cp2130_.close();
+    if (!err_ && !aborted) {  // If the configuration was sucessful
+        if (ui->checkBoxVerify->isChecked()) {
+            QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured and verified."));
+        } else {
+            QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured."));
         }
-        QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
-    } else if (aborted) {
-        QMessageBox::information(this, tr("Configuration Aborted"), tr("The device configuration was aborted."));
-    } else if (ui->checkBoxVerify->isChecked()) {
-        QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured and verified."));
-    } else {
-        QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured."));
     }
     if (!cp2130_.disconnected() && requiresReset_) {
         QProgressDialog resetProgress(tr("Resetting device..."), tr("Cancel"), 0, 1, this);
@@ -430,11 +431,15 @@ void ConfiguratorWindow::configureDevice()
         resetProgress.setValue(0);  // As before, the progress dialog should appear immediately
         if (!resetProgress.wasCanceled()) {
             resetDevice();
-            resetProgress.setValue(1);
+            if (err_) {
+                resetProgress.cancel();  // Hide the progress dialog
+                handleError();  // Since version 1.2, resetDevice() requires non-critical errors to be handled externally (see function implementation below)
+            } else {
+                resetProgress.setValue(1);
+            }
         }
     }
 }
-
 
 // Partially disables configurator window
 void::ConfiguratorWindow::disableView()
@@ -547,23 +552,29 @@ void ConfiguratorWindow::getEditedConfiguration()
     editedConfig_.pinconfig.divider = static_cast<quint8>(ui->spinBoxDivider->value());
 }
 
-// Checks for errors and validates device operations
-bool ConfiguratorWindow::opCheck(const QString &op, int errcnt, QString errstr)
+// Determines the type of error and acts accordingly, always showing a message
+void ConfiguratorWindow::handleError()
 {
-    bool retval;
+    QMessageBox::critical(this, tr("Error"), errmsg_);
+    if (cp2130_.disconnected() || !cp2130_.isOpen()) {
+        disableView();  // Disable configurator window
+        cp2130_.close();  // If the device is already closed, this will have no effect
+    }
+}
+
+// Checks for errors and validates device operations
+// Void since version 1.2, since the return value was found to be redundant
+void ConfiguratorWindow::opCheck(const QString &op, int errcnt, QString errstr)
+{
     if (errcnt > 0) {
-        configerr_ = true;  // Since version 1.1, a device disconnection is considered a configuration error
+        err_ = true;
         if (cp2130_.disconnected()) {
             errmsg_ = tr("Device disconnected.\n\nThe corresponding window will be disabled.");
         } else {
             errstr.chop(1);  // Remove the last character, which is always a newline
             errmsg_ = tr("%1 operation returned the following error(s):\n– %2", "", errcnt).arg(op, errstr.replace("\n", "\n– "));
         }
-        retval = false;  // Failed check
-    } else {
-        retval = true;  // Passed check
     }
-    return retval;
 }
 
 // Prepares the task list, by checking which fields changed, while also setting optional tasks according to the user's requirements
@@ -653,11 +664,11 @@ void ConfiguratorWindow::resetDevice()
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
         exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
     } else if (err == CP2130::ERROR_NOT_FOUND) {  // Failed to find device
-        QMessageBox::critical(this, tr("Error"), tr("Device disconnected.\n\nThe corresponding window will be disabled."));
-        disableView();  // Disable configurator window
+        err_ = true;
+        errmsg_ = tr("Device disconnected.\n\nThe corresponding window will be disabled.");  // Since version 1.2, the error message is not shown here
     } else if (err == CP2130::ERROR_BUSY) {  // Failed to claim interface
-        QMessageBox::critical(this, tr("Error"), tr("Device ceased to be available. It could be in use by another application.\n\nThe corresponding window will be disabled."));
-        disableView();  // Disable configurator window
+        err_ = true;
+        errmsg_ = tr("Device ceased to be available. It could be in use by another application.\n\nThe corresponding window will be disabled.");  // Same as above
     } else {
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
