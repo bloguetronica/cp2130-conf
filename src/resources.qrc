@@ -8,5 +8,6 @@
         <file>translations/cp2130-conf_en_US.qm</file>
         <file>translations/cp2130-conf_en.qm</file>
         <file>translations/cp2130-conf_pt_PT.qm</file>
+        <file>translations/cp2130-conf_pt.qm</file>
     </qresource>
 </RCC>
