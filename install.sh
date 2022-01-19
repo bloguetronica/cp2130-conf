@@ -45,6 +45,8 @@ cp -f src/translations/cp2130-conf_en.qm /usr/local/src/cp2130-conf/translations
 cp -f src/translations/cp2130-conf_en.ts /usr/local/src/cp2130-conf/translations/.
 cp -f src/translations/cp2130-conf_en_US.qm /usr/local/src/cp2130-conf/translations/.
 cp -f src/translations/cp2130-conf_en_US.ts /usr/local/src/cp2130-conf/translations/.
+cp -f src/translations/cp2130-conf_pt.qm /usr/local/src/cp2130-conf/translations/.
+cp -f src/translations/cp2130-conf_pt.ts /usr/local/src/cp2130-conf/translations/.
 cp -f src/translations/cp2130-conf_pt_PT.qm /usr/local/src/cp2130-conf/translations/.
 cp -f src/translations/cp2130-conf_pt_PT.ts /usr/local/src/cp2130-conf/translations/.
 echo Building and installing application...
