@@ -33,6 +33,8 @@ Configurator. A list of relevant files follows:
 – translations/cp2130-conf_en.ts;
 – translations/cp2130-conf_en_US.qm;
 – translations/cp2130-conf_en_US.ts;
+– translations/cp2130-conf_pt.qm;
+– translations/cp2130-conf_pt.ts;
 – translations/cp2130-conf_pt_PT.qm;
 – translations/cp2130-conf_pt_PT.ts.
 
