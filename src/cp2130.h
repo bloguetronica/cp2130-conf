@@ -1,5 +1,5 @@
-/* CP2130 class for Qt - Version 2.1.1
-   Copyright (c) 2021 Samuel Lourenço
+/* CP2130 class for Qt - Version 2.2.0
+   Copyright (c) 2021-2022 Samuel Lourenço
 
    This library is free software: you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by
@@ -32,7 +32,7 @@ class CP2130
 private:
     libusb_context *context_;
     libusb_device_handle *handle_;
-    bool disconnected_, kernelAttached_;
+    bool disconnected_, kernelWasAttached_;
 
     QString getDescGeneric(quint8 command, int &errcnt, QString &errstr);
     void writeDescGeneric(const QString &descriptor, quint8 command, int &errcnt, QString &errstr);
@@ -171,7 +171,6 @@ public:
     static const quint8 SET_PROM_CONFIG = 0x71;                     // Set_PROM_Config command
     static const quint16 SET_PROM_CONFIG_WLEN = 0x0040;             // Set_PROM_Config data stage length
 
-
     // The following masks are applicable to the value returned by getLockWord()
     static const quint16 LWVID = 0x0001;      // Mask for the vendor ID lock bit
     static const quint16 LWPID = 0x0002;      // Mask for the product ID lock bit
@@ -197,10 +196,10 @@ public:
     static const quint8 CFRQ375K = 0x05;   // Value corresponding to a clock frequency of 375KHz
     static const quint8 CFRQ1875= 0x06;    // Value corresponding to a clock frequency of 187.5KHz
     static const quint8 CFRQ938 = 0x07;    // Value corresponding to a clock frequency of 93.8KHz
-    static const bool CPOL0 = false;       // Boolean corresponding to CPOL = 0
-    static const bool CPOL1 = true;        // Boolean corresponding to CPOL = 1
-    static const bool CPHA0 = false;       // Boolean corresponding to CPHA = 0
-    static const bool CPHA1 = true;        // Boolean corresponding to CPHA = 1
+    static const bool CPOL0 = false;       // Boolean corresponding to CPOL = 0 (clock is active high and idles low)
+    static const bool CPOL1 = true;        // Boolean corresponding to CPOL = 1 (clock is active low and idles high)
+    static const bool CPHA0 = false;       // Boolean corresponding to CPHA = 0 (data is valid on the leading edge of the clock)
+    static const bool CPHA1 = true;        // Boolean corresponding to CPHA = 1 (data is valid on the trailing edge of the clock)
 
     // The following values are applicable to PinConfig/getPinConfig()/writePinConfig()
     static const quint8 PCIN = 0x00;         // GPIO as input - Also applicable to configureGPIO()
@@ -396,6 +395,8 @@ public:
     QVector<quint8> spiRead(quint32 bytesToRead, int &errcnt, QString &errstr);
     void spiWrite(const QVector<quint8> &data, quint8 endpointOutAddr, int &errcnt, QString &errstr);
     void spiWrite(const QVector<quint8> &data, int &errcnt, QString &errstr);
+    QVector<quint8> spiWriteRead(const QVector<quint8> &data, quint8 endpointInAddr, quint8 endpointOutAddr, int &errcnt, QString &errstr);
+    QVector<quint8> spiWriteRead(const QVector<quint8> &data, int &errcnt, QString &errstr);
     void stopRTR(int &errcnt, QString &errstr);
     void writeLockWord(quint16 word, int &errcnt, QString &errstr);
     void writeManufacturerDesc(const QString &manufacturer, int &errcnt, QString &errstr);

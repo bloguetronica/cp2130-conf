@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 1.2 for Debian Linux
-   Copyright (c) 2021 Samuel Lourenço
+/* CP2130 Configurator - Version 1.3 for Debian Linux
+   Copyright (c) 2021-2022 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -582,40 +582,40 @@ QStringList ConfiguratorWindow::prepareTaskList()
 {
     QStringList tasks;
     if (editedConfig_.manufacturer != deviceConfig_.manufacturer) {
-        tasks.append("writeManufacturerDesc");
+        tasks += "writeManufacturerDesc";
     }
     if (editedConfig_.product != deviceConfig_.product) {
-        tasks.append("writeProductDesc");
+        tasks += "writeProductDesc";
     }
     if (editedConfig_.serial != deviceConfig_.serial) {
-        tasks.append("writeSerialDesc");
+        tasks += "writeSerialDesc";
     }
     if (editedConfig_.usbconfig.vid != deviceConfig_.usbconfig.vid) {
-        tasks.append("writeVID");
+        tasks += "writeVID";
     }
     if (editedConfig_.usbconfig.pid != deviceConfig_.usbconfig.pid) {
-        tasks.append("writePID");
+        tasks += "writePID";
     }
     if (editedConfig_.usbconfig.majrel != deviceConfig_.usbconfig.majrel || editedConfig_.usbconfig.minrel != deviceConfig_.usbconfig.minrel) {
-        tasks.append("writeReleaseVersion");
+        tasks += "writeReleaseVersion";
     }
     if (editedConfig_.usbconfig.maxpow != deviceConfig_.usbconfig.maxpow) {
-        tasks.append("writeMaxPower");
+        tasks += "writeMaxPower";
     }
     if (editedConfig_.usbconfig.powmode != deviceConfig_.usbconfig.powmode) {
-        tasks.append("writePowerMode");
+        tasks += "writePowerMode";
     }
     if (editedConfig_.usbconfig.trfprio != deviceConfig_.usbconfig.trfprio) {
-        tasks.append("writeTransferPrio");
+        tasks += "writeTransferPrio";
     }
     if (editedConfig_.pinconfig != deviceConfig_.pinconfig) {
-        tasks.append("writePinConfig");
+        tasks += "writePinConfig";
     }
     if (ui->checkBoxVerify->isChecked()) {
-        tasks.append("verifyConfiguration");
+        tasks += "verifyConfiguration";
     }
     if (ui->checkBoxLock->isChecked()) {
-        tasks.append("lockOTP");
+        tasks += "lockOTP";
     }
     return tasks;
 }

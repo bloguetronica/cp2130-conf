@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 1.2 for Debian Linux
-   Copyright (c) 2021 Samuel Lourenço
+/* CP2130 Configurator - Version 1.3 for Debian Linux
+   Copyright (c) 2021-2022 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -93,7 +93,7 @@ void MainWindow::refresh()
     int errcnt = 0;
     QString errstr;
     QStringList comboBoxList = {tr("Select device...")};
-    comboBoxList.append(CP2130::listDevices(vid_, pid_, errcnt, errstr));
+    comboBoxList += CP2130::listDevices(vid_, pid_, errcnt, errstr);
     if (errcnt > 0) {
         QMessageBox::critical(this, tr("Critical Error"), tr("%1\nThis is a critical error and execution will be aborted.").arg(errstr));
         exit(EXIT_FAILURE);  // This error is critical because either libusb failed to initialize, or could not retrieve a list of devices
