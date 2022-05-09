@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.3 for Debian Linux
+/* CP2130 Configurator - Version 1.4 for Debian Linux
    Copyright (c) 2021-2022 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -90,22 +90,22 @@ void ConfiguratorWindow::lockOTP()
 
 void ConfiguratorWindow::on_actionAbout_triggered()
 {
-    AboutDialog about;
-    about.exec();
+    AboutDialog aboutDialog;
+    aboutDialog.exec();
 }
 
 void ConfiguratorWindow::on_actionInformation_triggered()
 {
     int errcnt = 0;
     QString errstr;
-    InformationDialog info;
+    InformationDialog infoDialog;
     CP2130::SiliconVersion siversion = cp2130_.getSiliconVersion(errcnt, errstr);
-    info.setSiliconVersionLabelText(siversion.maj, siversion.min);
+    infoDialog.setSiliconVersionLabelText(siversion.maj, siversion.min);
     opCheck(tr("device-information-retrieval-op"), errcnt, errstr);  // The string "device-information-retrieval-op" should be translated to "Device information retrieval"
     if (err_) {  // Fix implemented in version 1.2
         handleError();
     } else {  // If error check passes
-        info.exec();
+        infoDialog.exec();
     }
 }
 
@@ -153,12 +153,14 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_textChanged()
 
 void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited()
 {
+    int curPosition = ui->lineEditMaxPowerHex->cursorPosition();
     ui->lineEditMaxPowerHex->setText(ui->lineEditMaxPowerHex->text().toLower());
     int maxPower = 2 * ui->lineEditMaxPowerHex->text().toInt(nullptr, 16);
     if (maxPower > POWER_LIMIT) {
         maxPower = POWER_LIMIT;
         ui->lineEditMaxPowerHex->setText(QString("%1").arg(POWER_LIMIT / 2, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
     }
+    ui->lineEditMaxPowerHex->setCursorPosition(curPosition);
     ui->lineEditMaxPower->setText(QString::number(maxPower));
 }
 
@@ -173,7 +175,9 @@ void ConfiguratorWindow::on_lineEditPID_textChanged()
 
 void ConfiguratorWindow::on_lineEditPID_textEdited()
 {
+    int curPosition = ui->lineEditPID->cursorPosition();
     ui->lineEditPID->setText(ui->lineEditPID->text().toLower());
+    ui->lineEditPID->setCursorPosition(curPosition);
 }
 
 void ConfiguratorWindow::on_lineEditSuspendLevel_textChanged()
@@ -187,7 +191,9 @@ void ConfiguratorWindow::on_lineEditSuspendLevel_textChanged()
 
 void ConfiguratorWindow::on_lineEditSuspendLevel_textEdited()
 {
+    int curPosition = ui->lineEditSuspendLevel->cursorPosition();
     ui->lineEditSuspendLevel->setText(ui->lineEditSuspendLevel->text().toLower());
+    ui->lineEditSuspendLevel->setCursorPosition(curPosition);
 }
 
 void ConfiguratorWindow::on_lineEditSuspendMode_textChanged()
@@ -201,7 +207,9 @@ void ConfiguratorWindow::on_lineEditSuspendMode_textChanged()
 
 void ConfiguratorWindow::on_lineEditSuspendMode_textEdited()
 {
+    int curPosition = ui->lineEditSuspendMode->cursorPosition();
     ui->lineEditSuspendMode->setText(ui->lineEditSuspendMode->text().toLower());
+    ui->lineEditSuspendMode->setCursorPosition(curPosition);
 }
 
 void ConfiguratorWindow::on_lineEditVID_textChanged()
@@ -215,7 +223,9 @@ void ConfiguratorWindow::on_lineEditVID_textChanged()
 
 void ConfiguratorWindow::on_lineEditVID_textEdited()
 {
+    int curPosition = ui->lineEditVID->cursorPosition();
     ui->lineEditVID->setText(ui->lineEditVID->text().toLower());
+    ui->lineEditVID->setCursorPosition(curPosition);
 }
 
 void ConfiguratorWindow::on_lineEditResumeMatch_textChanged()
@@ -229,7 +239,9 @@ void ConfiguratorWindow::on_lineEditResumeMatch_textChanged()
 
 void ConfiguratorWindow::on_lineEditResumeMatch_textEdited()
 {
+    int curPosition = ui->lineEditResumeMatch->cursorPosition();
     ui->lineEditResumeMatch->setText(ui->lineEditResumeMatch->text().toLower());
+    ui->lineEditResumeMatch->setCursorPosition(curPosition);
 }
 
 void ConfiguratorWindow::on_lineEditResumeMask_textChanged()
@@ -243,7 +255,9 @@ void ConfiguratorWindow::on_lineEditResumeMask_textChanged()
 
 void ConfiguratorWindow::on_lineEditResumeMask_textEdited()
 {
+    int curPosition = ui->lineEditResumeMask->cursorPosition();
     ui->lineEditResumeMask->setText(ui->lineEditResumeMask->text().toLower());
+    ui->lineEditResumeMask->setCursorPosition(curPosition);
 }
 
 void ConfiguratorWindow::on_pushButtonRevert_clicked()
@@ -555,11 +569,11 @@ void ConfiguratorWindow::getEditedConfiguration()
 // Determines the type of error and acts accordingly, always showing a message
 void ConfiguratorWindow::handleError()
 {
-    QMessageBox::critical(this, tr("Error"), errmsg_);
     if (cp2130_.disconnected() || !cp2130_.isOpen()) {
-        disableView();  // Disable configurator window
+        disableView();  // Disable configurator window (since version 2.0, this is done before showing the error message)
         cp2130_.close();  // If the device is already closed, this will have no effect
     }
+    QMessageBox::critical(this, tr("Error"), errmsg_);
 }
 
 // Checks for errors and validates device operations
@@ -569,7 +583,7 @@ void ConfiguratorWindow::opCheck(const QString &op, int errcnt, QString errstr)
     if (errcnt > 0) {
         err_ = true;
         if (cp2130_.disconnected()) {
-            errmsg_ = tr("Device disconnected.\n\nThe corresponding window will be disabled.");
+            errmsg_ = tr("Device disconnected.\n\nPlease reconnect it and try again.");
         } else {
             errstr.chop(1);  // Remove the last character, which is always a newline
             errmsg_ = tr("%1 operation returned the following error(s):\n– %2", "", errcnt).arg(op, errstr.replace("\n", "\n– "));
@@ -665,10 +679,10 @@ void ConfiguratorWindow::resetDevice()
         exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
     } else if (err == CP2130::ERROR_NOT_FOUND) {  // Failed to find device
         err_ = true;
-        errmsg_ = tr("Device disconnected.\n\nThe corresponding window will be disabled.");  // Since version 1.2, the error message is not shown here
+        errmsg_ = tr("Device disconnected.\n\nPlease reconnect it and try again.");  // Since version 1.2, the error message is not shown here
     } else if (err == CP2130::ERROR_BUSY) {  // Failed to claim interface
         err_ = true;
-        errmsg_ = tr("Device ceased to be available. It could be in use by another application.\n\nThe corresponding window will be disabled.");  // Same as above
+        errmsg_ = tr("Device ceased to be available. It could be in use by another application.");  // Same as above
     } else {
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));

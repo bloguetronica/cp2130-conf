@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.3 for Debian Linux
+/* CP2130 Configurator - Version 1.4 for Debian Linux
    Copyright (c) 2021-2022 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -47,8 +47,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    AboutDialog about;
-    about.exec();
+    AboutDialog aboutDialog;
+    aboutDialog.exec();
 }
 
 void MainWindow::on_comboBoxDevices_currentIndexChanged(int index)
@@ -62,24 +62,27 @@ void MainWindow::on_comboBoxDevices_currentIndexChanged(int index)
 
 void MainWindow::on_lineEditPID_textEdited()
 {
+    int curPosition = ui->lineEditPID->cursorPosition();
     ui->lineEditPID->setText(ui->lineEditPID->text().toLower());
+    ui->lineEditPID->setCursorPosition(curPosition);
     validateInput();
 }
 
 void MainWindow::on_lineEditVID_textEdited()
 {
+    int curPosition = ui->lineEditVID->cursorPosition();
     ui->lineEditVID->setText(ui->lineEditVID->text().toLower());
+    ui->lineEditVID->setCursorPosition(curPosition);
     validateInput();
 }
-
 
 void MainWindow::on_pushButtonOpen_clicked()
 {
     QString serialstr = ui->comboBoxDevices->currentText();  // Extract the serial number from the chosen item in the combo box
-    ConfiguratorWindow *deview = new ConfiguratorWindow(this);  // Create a new window that will close when its parent window closes
-    deview->setAttribute(Qt::WA_DeleteOnClose);  // This will not only free the allocated memory once the window is closed, but will also automatically call the destructor of the respective device, which in turn closes it
-    deview->openDevice(vid_, pid_, serialstr);  // Access the selected device and prepare its view
-    deview->show();  // Then open the corresponding window
+    ConfiguratorWindow *confWindow = new ConfiguratorWindow(this);  // Create a new window that will close when its parent window closes
+    confWindow->setAttribute(Qt::WA_DeleteOnClose);  // This will not only free the allocated memory once the window is closed, but will also automatically call the destructor of the respective device, which in turn closes it
+    confWindow->openDevice(vid_, pid_, serialstr);  // Access the selected device and prepare its view
+    confWindow->show();  // Then open the corresponding window
 }
 
 void MainWindow::on_pushButtonRefresh_clicked()
