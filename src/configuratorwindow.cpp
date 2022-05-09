@@ -570,7 +570,7 @@ void ConfiguratorWindow::getEditedConfiguration()
 void ConfiguratorWindow::handleError()
 {
     if (cp2130_.disconnected() || !cp2130_.isOpen()) {
-        disableView();  // Disable configurator window (since version 2.0, this is done before showing the error message)
+        disableView();  // Disable configurator window (since version 1.4, this is done before showing the error message)
         cp2130_.close();  // If the device is already closed, this will have no effect
     }
     QMessageBox::critical(this, tr("Error"), errmsg_);
