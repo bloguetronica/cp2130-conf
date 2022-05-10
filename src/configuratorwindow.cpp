@@ -670,7 +670,7 @@ void ConfiguratorWindow::resetDevice()
     for (int i = 0; i < ENUM_RETRIES; ++i) {  // Verify enumeration according to the number of times set by "ENUM_RETRIES" [10]
         NonBlocking::msleep(500);  // Wait 500ms each time
         err = cp2130_.open(vid_, pid_, serialstr_);
-        if (err != 2) {  // Retry only if the device was not found yet (as it may take some time to enumerate)
+        if (err != CP2130::ERROR_NOT_FOUND) {  // Retry only if the device was not found yet (as it may take some time to enumerate)
             break;
         }
     }
