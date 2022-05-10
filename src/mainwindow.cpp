@@ -108,8 +108,8 @@ void MainWindow::validateInput()
     QString vidstr = ui->lineEditVID->text();
     QString pidstr = ui->lineEditPID->text();
     if (vidstr.size() == 4 && pidstr.size() == 4) {
-        vid_ = static_cast<quint16>(vidstr.toInt(nullptr, 16));
-        pid_ = static_cast<quint16>(pidstr.toInt(nullptr, 16));
+        vid_ = static_cast<quint16>(vidstr.toUInt(nullptr, 16));
+        pid_ = static_cast<quint16>(pidstr.toUInt(nullptr, 16));
         refresh();  // This has the "side effect" of disabling the "Open" button - Note that this is the intended behavior!
         ui->comboBoxDevices->setEnabled(true);
         ui->pushButtonRefresh->setEnabled(true);
