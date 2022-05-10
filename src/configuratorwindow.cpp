@@ -59,22 +59,23 @@ ConfiguratorWindow::~ConfiguratorWindow()
 void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &serialstr)
 {
     int err = cp2130_.open(vid, pid, serialstr);
-    if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
-        QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
-        exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
-    } else if (err == CP2130::ERROR_NOT_FOUND) {  // Failed to find device
-        QMessageBox::critical(this, tr("Error"), tr("Could not find device."));
-        this->deleteLater();  // Close window after the subsequent show() call
-    } else if (err == CP2130::ERROR_BUSY) {  // Failed to claim interface
-        QMessageBox::critical(this, tr("Error"), tr("Device is currently unavailable.\n\nPlease confirm that the device is not in use."));
-        this->deleteLater();  // Close window after the subsequent show() call
-    } else {
+    if (err == CP2130::SUCCESS) {  // Device was successfully opened
         vid_ = vid;  // Pass VID
         pid_ = pid;  // and PID
         serialstr_ = serialstr;  // and the serial number as well
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialstr_));
         displayConfiguration(deviceConfig_);
+    } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
+        QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
+        exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
+    } else {
+        if (err == CP2130::ERROR_NOT_FOUND) {  // Failed to find device
+            QMessageBox::critical(this, tr("Error"), tr("Could not find device."));
+        } else if (err == CP2130::ERROR_BUSY) {  // Failed to claim interface
+            QMessageBox::critical(this, tr("Error"), tr("Device is currently unavailable.\n\nPlease confirm that the device is not in use."));
+        }
+        this->deleteLater();  // Close window after the subsequent show() call
     }
 }
 
