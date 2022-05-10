@@ -675,7 +675,11 @@ void ConfiguratorWindow::resetDevice()
             break;
         }
     }
-    if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
+    if (err == CP2130::SUCCESS) {  // Device was successfully reopened
+        readDeviceConfiguration();
+        this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
+        displayConfiguration(deviceConfig_);
+    } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
         exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
     } else if (err == CP2130::ERROR_NOT_FOUND) {  // Failed to find device
@@ -684,10 +688,6 @@ void ConfiguratorWindow::resetDevice()
     } else if (err == CP2130::ERROR_BUSY) {  // Failed to claim interface
         err_ = true;
         errmsg_ = tr("Device ceased to be available. It could be in use by another application.");  // Same as above
-    } else {
-        readDeviceConfiguration();
-        this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
-        displayConfiguration(deviceConfig_);
     }
 }
 
