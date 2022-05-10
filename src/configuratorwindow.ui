@@ -1333,6 +1333,40 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>lineEditManufacturer</tabstop>
+  <tabstop>lineEditProduct</tabstop>
+  <tabstop>lineEditSerial</tabstop>
+  <tabstop>lineEditVID</tabstop>
+  <tabstop>lineEditPID</tabstop>
+  <tabstop>spinBoxMajVersion</tabstop>
+  <tabstop>spinBoxMinVersion</tabstop>
+  <tabstop>lineEditMaxPower</tabstop>
+  <tabstop>lineEditMaxPowerHex</tabstop>
+  <tabstop>comboBoxPowerMode</tabstop>
+  <tabstop>comboBoxTransferPrio</tabstop>
+  <tabstop>comboBoxGPIO0</tabstop>
+  <tabstop>comboBoxGPIO1</tabstop>
+  <tabstop>comboBoxGPIO2</tabstop>
+  <tabstop>comboBoxGPIO3</tabstop>
+  <tabstop>comboBoxGPIO4</tabstop>
+  <tabstop>comboBoxGPIO5</tabstop>
+  <tabstop>comboBoxGPIO6</tabstop>
+  <tabstop>comboBoxGPIO7</tabstop>
+  <tabstop>comboBoxGPIO8</tabstop>
+  <tabstop>comboBoxGPIO9</tabstop>
+  <tabstop>comboBoxGPIO10</tabstop>
+  <tabstop>spinBoxDivider</tabstop>
+  <tabstop>lineEditSuspendLevel</tabstop>
+  <tabstop>lineEditSuspendMode</tabstop>
+  <tabstop>lineEditResumeMask</tabstop>
+  <tabstop>lineEditResumeMatch</tabstop>
+  <tabstop>pushButtonRevert</tabstop>
+  <tabstop>checkBoxVerify</tabstop>
+  <tabstop>checkBoxLock</tabstop>
+  <tabstop>pushButtonWrite</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>
