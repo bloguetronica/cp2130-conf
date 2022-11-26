@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.4 for Debian Linux
+/* CP2130 Configurator - Version 1.5 for Debian Linux
    Copyright (c) 2021-2022 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -114,4 +114,4 @@ private:
     bool showInvalidInput();
 };
 
-#endif // CONFIGURATORWINDOW_H
+#endif  // CONFIGURATORWINDOW_H

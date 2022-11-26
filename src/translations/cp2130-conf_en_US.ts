@@ -10,7 +10,7 @@
     </message>
     <message>
         <location filename="../aboutdialog.ui" line="68"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;CP2130 Configurator - Version 1.4&lt;br/&gt;© 2021-2022 Samuel Lourenço&lt;/p&gt;&lt;p&gt;This program is distributed under the terms of the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;CP2130 Configurator - Version 1.5&lt;br/&gt;© 2021-2022 Samuel Lourenço&lt;/p&gt;&lt;p&gt;This program is distributed under the terms of the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
 </context>
@@ -379,7 +379,7 @@ This is a critical error and execution will be aborted.</source>
         <location filename="../configuratorwindow.cpp" line="74"/>
         <location filename="../configuratorwindow.cpp" line="76"/>
         <location filename="../configuratorwindow.cpp" line="273"/>
-        <location filename="../configuratorwindow.cpp" line="430"/>
+        <location filename="../configuratorwindow.cpp" line="433"/>
         <location filename="../configuratorwindow.cpp" line="577"/>
         <location filename="../configuratorwindow.cpp" line="652"/>
         <location filename="../configuratorwindow.cpp" line="657"/>
@@ -414,7 +414,7 @@ Please confirm that the device is not in use.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="105"/>
+        <location filename="../configuratorwindow.cpp" line="103"/>
         <source>device-information-retrieval-op</source>
         <translation>Device information retrieval</translation>
     </message>
@@ -513,8 +513,18 @@ Do you wish to proceed?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="430"/>
+        <location filename="../configuratorwindow.cpp" line="416"/>
+        <source>Device Configuration</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../configuratorwindow.cpp" line="433"/>
         <source>The device configuration could not be completed.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../configuratorwindow.cpp" line="443"/>
+        <source>Device Reset</source>
         <translation></translation>
     </message>
     <message>
@@ -523,12 +533,12 @@ Do you wish to proceed?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="422"/>
+        <location filename="../configuratorwindow.cpp" line="435"/>
         <source>Configuration Aborted</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="422"/>
+        <location filename="../configuratorwindow.cpp" line="435"/>
         <source>The device configuration was aborted.</source>
         <translation></translation>
     </message>
@@ -549,12 +559,12 @@ Do you wish to proceed?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="443"/>
+        <location filename="../configuratorwindow.cpp" line="442"/>
         <source>Resetting device...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="443"/>
+        <location filename="../configuratorwindow.cpp" line="442"/>
         <source>Cancel</source>
         <translation></translation>
     </message>
@@ -786,31 +796,31 @@ This is a critical error and execution will be aborted.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../cp2130.cpp" line="976"/>
+        <location filename="../cp2130.cpp" line="979"/>
         <source>In writeManufacturerDesc(): manufacturer descriptor string cannot be longer than 62 characters.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../cp2130.cpp" line="1011"/>
+        <location filename="../cp2130.cpp" line="1014"/>
         <source>In writeProductDesc(): product descriptor string cannot be longer than 62 characters.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../cp2130.cpp" line="1034"/>
+        <location filename="../cp2130.cpp" line="1037"/>
         <source>In writeSerialDesc(): serial descriptor string cannot be longer than 30 characters.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../cp2130.cpp" line="1062"/>
+        <location filename="../cp2130.cpp" line="1065"/>
         <source>Could not initialize libusb.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../cp2130.cpp" line="1068"/>
+        <location filename="../cp2130.cpp" line="1071"/>
         <source>Failed to retrieve a list of devices.
 </source>
         <translation></translation>

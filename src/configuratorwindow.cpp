@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.4 for Debian Linux
+/* CP2130 Configurator - Version 1.5 for Debian Linux
    Copyright (c) 2021-2022 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -99,13 +99,13 @@ void ConfiguratorWindow::on_actionInformation_triggered()
 {
     int errcnt = 0;
     QString errstr;
-    InformationDialog infoDialog;
     CP2130::SiliconVersion siversion = cp2130_.getSiliconVersion(errcnt, errstr);
-    infoDialog.setSiliconVersionLabelText(siversion.maj, siversion.min);
     opCheck(tr("device-information-retrieval-op"), errcnt, errstr);  // The string "device-information-retrieval-op" should be translated to "Device information retrieval"
     if (err_) {  // Fix implemented in version 1.2
         handleError();
     } else {  // If error check passes
+        InformationDialog infoDialog;  // Declared here since version 1.5
+        infoDialog.setSiliconVersionLabelText(siversion.maj, siversion.min);
         infoDialog.exec();
     }
 }
@@ -183,7 +183,7 @@ void ConfiguratorWindow::on_lineEditPID_textEdited()
 
 void ConfiguratorWindow::on_lineEditSuspendLevel_textChanged()
 {
-    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra condition added in version 1.1
+    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
         ui->lineEditSuspendLevel->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditSuspendLevel->setStyleSheet("");
@@ -231,7 +231,7 @@ void ConfiguratorWindow::on_lineEditVID_textEdited()
 
 void ConfiguratorWindow::on_lineEditResumeMatch_textChanged()
 {
-    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra condition added in version 1.1
+    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
         ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMatch->setStyleSheet("");
@@ -247,7 +247,7 @@ void ConfiguratorWindow::on_lineEditResumeMatch_textEdited()
 
 void ConfiguratorWindow::on_lineEditResumeMask_textChanged()
 {
-    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra condition added in version 1.1
+    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
         ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMask->setStyleSheet("");
@@ -413,34 +413,34 @@ void ConfiguratorWindow::configureDevice()
     QStringList tasks = prepareTaskList();  // Create a new task list
     int nTasks = tasks.size();
     QProgressDialog configProgress(tr("Configuring device..."), tr("Abort"), 0, nTasks, this);
+    configProgress.setWindowTitle(tr("Device Configuration"));  // Added in version 1.5
     configProgress.setWindowModality(Qt::WindowModal);
-    configProgress.setMinimumDuration(0);
+    configProgress.setMinimumDuration(0);  // The progress dialog needs to be displayed right away, since resetDevice() is non-blocking
     configProgress.setValue(0);  // This, along with setMinimumDuration(), will cause the progress dialog to display immediately
-    bool aborted = false;
-    for (int i = 0; i < nTasks; ++i) {  // Iterate through the newly created task list
-        if (configProgress.wasCanceled()) {  // If user clicked "Abort"
-            QMessageBox::information(this, tr("Configuration Aborted"), tr("The device configuration was aborted."));
-            aborted = true;
+    for (int i = 0; i < nTasks; ++i) {  // Iterate through the newly created task list (refactored in version 1.5)
+        if (configProgress.wasCanceled()) {  // If the user clicks "Abort"
             break;  // Abort the configuration
         }
         QMetaObject::invokeMethod(this, tasks[i].toStdString().c_str());  // The task list entry is converted to a C string
         if (err_) {  // If an error has occured
             configProgress.cancel();  // This hides the progress dialog (fix implemented in version 1.1)
-            handleError();  // Mind that this shows a message, so it is important to hide the progress dialog first in order to avoid unresponsiveness
-            QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
             break;  // Abort the configuration
         }
         configProgress.setValue(i + 1);  // Update the progress bar for each task done
     }
-    if (!err_ && !aborted) {  // If the configuration was sucessful
-        if (ui->checkBoxVerify->isChecked()) {
-            QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured and verified."));
-        } else {
-            QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured."));
-        }
+    if (err_) {  // If an error occured (refactored in version 1.5)
+        handleError();
+        QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
+    } else if (configProgress.wasCanceled()) {  // If the device configuration was aborted by the user
+        QMessageBox::information(this, tr("Configuration Aborted"), tr("The device configuration was aborted."));
+    } else if (ui->checkBoxVerify->isChecked()) {  // Successul configuration with verification
+        QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured and verified."));
+    } else {  // Successul configuration without verification
+        QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured."));
     }
     if (!cp2130_.disconnected() && requiresReset_) {
         QProgressDialog resetProgress(tr("Resetting device..."), tr("Cancel"), 0, 1, this);
+        resetProgress.setWindowTitle(tr("Device Reset"));  // Added in version 1.5
         resetProgress.setWindowModality(Qt::WindowModal);
         resetProgress.setMinimumDuration(0);
         resetProgress.setValue(0);  // As before, the progress dialog should appear immediately
@@ -797,7 +797,7 @@ bool ConfiguratorWindow::showInvalidInput()
         ui->lineEditVID->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra check condition added in version 1.1
+    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7fff) {  // Extra check condition added in version 1.1
         ui->lineEditSuspendLevel->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
@@ -805,11 +805,11 @@ bool ConfiguratorWindow::showInvalidInput()
         ui->lineEditSuspendMode->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra check condition added in version 1.1
+    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7fff) {  // Extra check condition added in version 1.1
         ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7FFF) {  // Extra check condition added in version 1.1
+    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7fff) {  // Extra check condition added in version 1.1
         ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
