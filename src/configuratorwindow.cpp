@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 1.5 for Debian Linux
-   Copyright (c) 2021-2022 Samuel Lourenço
+/* CP2130 Configurator - Version 1.6 for Debian Linux
+   Copyright (c) 2021-2023 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -110,6 +110,14 @@ void ConfiguratorWindow::on_actionInformation_triggered()
     }
 }
 
+// Implemented in version 1.6
+void ConfiguratorWindow::on_lineEditManufacturer_textEdited()
+{
+    int curPosition = ui->lineEditManufacturer->cursorPosition();
+    ui->lineEditManufacturer->setText(ui->lineEditManufacturer->text().replace('\n', ' '));
+    ui->lineEditManufacturer->setCursorPosition(curPosition);
+}
+
 void ConfiguratorWindow::on_lineEditMaxPower_editingFinished()
 {
     ui->lineEditMaxPower->setText(QString::number(2 * (ui->lineEditMaxPower->text().toInt() / 2)));  // This removes any leading zeros and also rounds to the previous even number, if the value is odd
@@ -181,6 +189,54 @@ void ConfiguratorWindow::on_lineEditPID_textEdited()
     ui->lineEditPID->setCursorPosition(curPosition);
 }
 
+// Implemented in version 1.6
+void ConfiguratorWindow::on_lineEditProduct_textEdited()
+{
+    int curPosition = ui->lineEditProduct->cursorPosition();
+    ui->lineEditProduct->setText(ui->lineEditProduct->text().replace('\n', ' '));
+    ui->lineEditProduct->setCursorPosition(curPosition);
+}
+
+void ConfiguratorWindow::on_lineEditResumeMask_textChanged()
+{
+    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
+        ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 204, 0);");
+    } else {
+        ui->lineEditResumeMask->setStyleSheet("");
+    }
+}
+
+void ConfiguratorWindow::on_lineEditResumeMask_textEdited()
+{
+    int curPosition = ui->lineEditResumeMask->cursorPosition();
+    ui->lineEditResumeMask->setText(ui->lineEditResumeMask->text().toLower());
+    ui->lineEditResumeMask->setCursorPosition(curPosition);
+}
+
+void ConfiguratorWindow::on_lineEditResumeMatch_textChanged()
+{
+    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
+        ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 204, 0);");
+    } else {
+        ui->lineEditResumeMatch->setStyleSheet("");
+    }
+}
+
+void ConfiguratorWindow::on_lineEditResumeMatch_textEdited()
+{
+    int curPosition = ui->lineEditResumeMatch->cursorPosition();
+    ui->lineEditResumeMatch->setText(ui->lineEditResumeMatch->text().toLower());
+    ui->lineEditResumeMatch->setCursorPosition(curPosition);
+}
+
+// Implemented in version 1.6
+void ConfiguratorWindow::on_lineEditSerial_textEdited()
+{
+    int curPosition = ui->lineEditSerial->cursorPosition();
+    ui->lineEditSerial->setText(ui->lineEditSerial->text().replace('\n', ' '));
+    ui->lineEditSerial->setCursorPosition(curPosition);
+}
+
 void ConfiguratorWindow::on_lineEditSuspendLevel_textChanged()
 {
     if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
@@ -227,38 +283,6 @@ void ConfiguratorWindow::on_lineEditVID_textEdited()
     int curPosition = ui->lineEditVID->cursorPosition();
     ui->lineEditVID->setText(ui->lineEditVID->text().toLower());
     ui->lineEditVID->setCursorPosition(curPosition);
-}
-
-void ConfiguratorWindow::on_lineEditResumeMatch_textChanged()
-{
-    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
-        ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 204, 0);");
-    } else {
-        ui->lineEditResumeMatch->setStyleSheet("");
-    }
-}
-
-void ConfiguratorWindow::on_lineEditResumeMatch_textEdited()
-{
-    int curPosition = ui->lineEditResumeMatch->cursorPosition();
-    ui->lineEditResumeMatch->setText(ui->lineEditResumeMatch->text().toLower());
-    ui->lineEditResumeMatch->setCursorPosition(curPosition);
-}
-
-void ConfiguratorWindow::on_lineEditResumeMask_textChanged()
-{
-    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
-        ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 204, 0);");
-    } else {
-        ui->lineEditResumeMask->setStyleSheet("");
-    }
-}
-
-void ConfiguratorWindow::on_lineEditResumeMask_textEdited()
-{
-    int curPosition = ui->lineEditResumeMask->cursorPosition();
-    ui->lineEditResumeMask->setText(ui->lineEditResumeMask->text().toLower());
-    ui->lineEditResumeMask->setCursorPosition(curPosition);
 }
 
 void ConfiguratorWindow::on_pushButtonRevert_clicked()

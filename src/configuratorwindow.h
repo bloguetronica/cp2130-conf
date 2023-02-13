@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 1.5 for Debian Linux
-   Copyright (c) 2021-2022 Samuel Lourenço
+/* CP2130 Configurator - Version 1.6 for Debian Linux
+   Copyright (c) 2021-2023 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -46,6 +46,7 @@ private slots:
     void lockOTP();
     void on_actionAbout_triggered();
     void on_actionInformation_triggered();
+    void on_lineEditManufacturer_textEdited();
     void on_lineEditMaxPower_editingFinished();
     void on_lineEditMaxPower_textChanged();
     void on_lineEditMaxPower_textEdited();
@@ -54,16 +55,18 @@ private slots:
     void on_lineEditMaxPowerHex_textEdited();
     void on_lineEditPID_textChanged();
     void on_lineEditPID_textEdited();
+    void on_lineEditProduct_textEdited();
+    void on_lineEditResumeMask_textChanged();
+    void on_lineEditResumeMask_textEdited();
+    void on_lineEditResumeMatch_textChanged();
+    void on_lineEditResumeMatch_textEdited();
+    void on_lineEditSerial_textEdited();
     void on_lineEditSuspendLevel_textChanged();
     void on_lineEditSuspendLevel_textEdited();
     void on_lineEditSuspendMode_textChanged();
     void on_lineEditSuspendMode_textEdited();
     void on_lineEditVID_textChanged();
     void on_lineEditVID_textEdited();
-    void on_lineEditResumeMatch_textChanged();
-    void on_lineEditResumeMatch_textEdited();
-    void on_lineEditResumeMask_textChanged();
-    void on_lineEditResumeMask_textEdited();
     void on_pushButtonRevert_clicked();
     void on_pushButtonWrite_clicked();
     void verifyConfiguration();
