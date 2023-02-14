@@ -4,6 +4,9 @@
         <file>icons/greyed64.png</file>
         <file>icons/selected64.png</file>
     </qresource>
+    <qresource prefix="/images">
+        <file>images/banner.png</file>
+    </qresource>
     <qresource prefix="/translations">
         <file>translations/cp2130-conf_en_US.qm</file>
         <file>translations/cp2130-conf_en.qm</file>
