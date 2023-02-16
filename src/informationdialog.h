@@ -36,7 +36,7 @@ public:
     explicit InformationDialog(QWidget *parent = nullptr);
     ~InformationDialog();
 
-    void setSiliconVersionLabelText(quint8 majver, quint8 minver);
+    void setSiliconVersionValueLabelText(quint8 majver, quint8 minver);
 
 private:
     Ui::InformationDialog *ui;

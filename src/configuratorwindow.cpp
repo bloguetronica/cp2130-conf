@@ -105,7 +105,7 @@ void ConfiguratorWindow::on_actionInformation_triggered()
         handleError();
     } else {  // If error check passes
         InformationDialog infoDialog;  // Declared here since version 1.5
-        infoDialog.setSiliconVersionLabelText(siversion.maj, siversion.min);
+        infoDialog.setSiliconVersionValueLabelText(siversion.maj, siversion.min);
         infoDialog.exec();
     }
 }
