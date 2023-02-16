@@ -40,6 +40,7 @@ public:
     explicit ConfiguratorWindow(QWidget *parent = nullptr);
     ~ConfiguratorWindow();
 
+    bool isViewEnabled();
     void openDevice(quint16 vid, quint16 pid, const QString &serialstr);
 
 private slots:
@@ -83,11 +84,11 @@ private slots:
 
 private:
     Ui::ConfiguratorWindow *ui;
-    CP2130 cp2130_;
     Configuration deviceConfig_, editedConfig_;
+    CP2130 cp2130_;
     QString errmsg_, serialstr_;
     quint16 lockWord_, pid_, vid_;
-    bool err_, requiresReset_;
+    bool err_, requiresReset_, viewEnabled_ = false;
 
     void configureDevice();
     void disableView();

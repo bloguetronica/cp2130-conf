@@ -55,6 +55,12 @@ ConfiguratorWindow::~ConfiguratorWindow()
     delete ui;
 }
 
+// Checks if the device window is currently fully enabled (implemented in version 2.0)
+bool ConfiguratorWindow::isViewEnabled()
+{
+    return viewEnabled_;
+}
+
 // Opens the device and prepares the corresponding window
 void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &serialstr)
 {
@@ -66,6 +72,7 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialstr_));
         displayConfiguration(deviceConfig_);
+        viewEnabled_ = true;
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
         exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
@@ -484,7 +491,9 @@ void ConfiguratorWindow::configureDevice()
 void::ConfiguratorWindow::disableView()
 {
     ui->actionInformation->setEnabled(false);
+    ui->actionClose->setText(tr("&Close Window"));  // Implemented in version 2.0, to hint the user that the device is effectively closed and only its window remains open
     ui->centralWidget->setEnabled(false);
+    viewEnabled_ = false;
 }
 
 // This is the main display routine, used to display the given configuration, updating all fields accordingly

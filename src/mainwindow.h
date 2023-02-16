@@ -23,6 +23,10 @@
 
 // Includes
 #include <QMainWindow>
+#include <QMap>
+#include <QPointer>
+#include <QString>
+#include "configuratorwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -46,6 +50,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QMap<QString, QPointer<ConfiguratorWindow>> confWindowMap_;
     quint16 pid_, vid_;
 
     void refresh();
