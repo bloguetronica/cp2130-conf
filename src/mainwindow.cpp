@@ -23,7 +23,7 @@
 #include <QRegExp>
 #include <QRegExpValidator>
 #include <QStringList>
-#include "aboutdialog.h"
+#include "common.h"
 #include "cp2130.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -43,10 +43,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    Q_UNUSED(event);
+    closeAboutDialog();  // See "common.h" and "common.cpp"
+}
+
 void MainWindow::on_actionAbout_triggered()
 {
-    AboutDialog aboutDialog;
-    aboutDialog.exec();
+    showAboutDialog();  // Implemented in "common.h" and "common.cpp" since version 2.0
 }
 
 void MainWindow::on_comboBoxDevices_currentIndexChanged(int index)

@@ -25,8 +25,7 @@
 #include <QProgressDialog>
 #include <QRegExp>
 #include <QRegExpValidator>
-#include "aboutdialog.h"
-#include "informationdialog.h"
+#include "common.h"
 #include "nonblocking.h"
 #include "configuratorwindow.h"
 #include "ui_configuratorwindow.h"
@@ -98,22 +97,28 @@ void ConfiguratorWindow::lockOTP()
 
 void ConfiguratorWindow::on_actionAbout_triggered()
 {
-    AboutDialog aboutDialog;
-    aboutDialog.exec();
+    showAboutDialog();  // Implemented in "common.h" and "common.cpp" since version 2.0
 }
 
 void ConfiguratorWindow::on_actionInformation_triggered()
 {
-    int errcnt = 0;
-    QString errstr;
-    CP2130::SiliconVersion siversion = cp2130_.getSiliconVersion(errcnt, errstr);
-    opCheck(tr("device-information-retrieval-op"), errcnt, errstr);  // The string "device-information-retrieval-op" should be translated to "Device information retrieval"
-    if (err_) {  // Fix implemented in version 1.2
-        handleError();
-    } else {  // If error check passes
-        InformationDialog infoDialog;  // Declared here since version 1.5
-        infoDialog.setSiliconVersionValueLabelText(siversion.maj, siversion.min);
-        infoDialog.exec();
+    if (informationDialog_.isNull()) {  // If the dialog is not open (implemented in version 2.0, because the device information dialog is now modeless)
+        int errcnt = 0;
+        QString errstr;
+        CP2130::SiliconVersion siversion = cp2130_.getSiliconVersion(errcnt, errstr);
+        opCheck(tr("device-information-retrieval-op"), errcnt, errstr);  // The string "device-information-retrieval-op" should be translated to "Device information retrieval"
+        if (err_) {  // Fix implemented in version 1.2
+            handleError();
+        } else {  // If error check passes
+            informationDialog_ = new InformationDialog(this);  // The dialog is no longer modal (version 2.0 feature);
+            informationDialog_->setAttribute(Qt::WA_DeleteOnClose);  // It is important to delete the dialog in memory once closed, in order to force the application to retrieve information about the device if the window is opened again
+            informationDialog_->setWindowTitle(tr("Device Information (S/N: %1)").arg(serialstr_));
+            informationDialog_->setSiliconVersionValueLabelText(siversion.maj, siversion.min);
+            informationDialog_->show();
+        }
+    } else {
+        informationDialog_->showNormal();  // Required if the dialog is minimized
+        informationDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
     }
 }
 

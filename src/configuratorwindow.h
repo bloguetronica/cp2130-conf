@@ -23,10 +23,12 @@
 
 // Includes
 #include <QMainWindow>
+#include <QPointer>
 #include <QString>
 #include <QStringList>
 #include "configuration.h"
 #include "cp2130.h"
+#include "informationdialog.h"
 
 namespace Ui {
 class ConfiguratorWindow;
@@ -86,6 +88,7 @@ private:
     Ui::ConfiguratorWindow *ui;
     Configuration deviceConfig_, editedConfig_;
     CP2130 cp2130_;
+    QPointer<InformationDialog> informationDialog_;
     QString errmsg_, serialstr_;
     quint16 lockWord_, pid_, vid_;
     bool err_, requiresReset_, viewEnabled_ = false;

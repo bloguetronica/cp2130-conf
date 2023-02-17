@@ -18,46 +18,30 @@
    Please feel free to contact me via e-mail: samuel.fmlourenco@gmail.com */
 
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
 // Includes
-#include <QMainWindow>
-#include <QMap>
 #include <QPointer>
-#include <QString>
-#include "configuratorwindow.h"
+#include "aboutdialog.h"
+#include "common.h"
 
-namespace Ui {
-class MainWindow;
+// Definitions
+QPointer<AboutDialog> aboutDialog_;
+
+// Closes the about dialog
+void closeAboutDialog()
+{
+    if (!aboutDialog_.isNull()) {
+        aboutDialog_->close();  // Close the about dialog if open
+    }
 }
 
-class MainWindow : public QMainWindow
+// Shows the about dialog
+void showAboutDialog()
 {
-    Q_OBJECT
-
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-protected:
-    void closeEvent(QCloseEvent *event);
-
-private slots:
-    void on_actionAbout_triggered();
-    void on_comboBoxDevices_currentIndexChanged(int index);
-    void on_lineEditPID_textEdited();
-    void on_lineEditVID_textEdited();
-    void on_pushButtonOpen_clicked();
-    void on_pushButtonRefresh_clicked();
-
-private:
-    Ui::MainWindow *ui;
-    QMap<QString, QPointer<ConfiguratorWindow>> confWindowMap_;
-    quint16 pid_, vid_;
-
-    void refresh();
-    void validateInput();
-};
-
-#endif  // MAINWINDOW_H
+    if (aboutDialog_.isNull()) {  // If the dialog wasn't previously open
+        aboutDialog_ = new AboutDialog;  // Note that the about dialog doesn't have a parent
+        aboutDialog_->show();
+    } else {
+        aboutDialog_->showNormal();  // Required if the dialog is minimized
+        aboutDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
+    }
+}
