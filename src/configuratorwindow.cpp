@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.6 for Debian Linux
+/* CP2130 Configurator - Version 2.0 for Debian Linux
    Copyright (c) 2021-2023 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -25,8 +25,7 @@
 #include <QProgressDialog>
 #include <QRegExp>
 #include <QRegExpValidator>
-#include "aboutdialog.h"
-#include "informationdialog.h"
+#include "common.h"
 #include "nonblocking.h"
 #include "configuratorwindow.h"
 #include "ui_configuratorwindow.h"
@@ -55,6 +54,12 @@ ConfiguratorWindow::~ConfiguratorWindow()
     delete ui;
 }
 
+// Checks if the device window is currently fully enabled (implemented in version 2.0)
+bool ConfiguratorWindow::isViewEnabled()
+{
+    return viewEnabled_;
+}
+
 // Opens the device and prepares the corresponding window
 void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &serialstr)
 {
@@ -66,6 +71,7 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialstr_));
         displayConfiguration(deviceConfig_);
+        viewEnabled_ = true;
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
         exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
@@ -91,22 +97,28 @@ void ConfiguratorWindow::lockOTP()
 
 void ConfiguratorWindow::on_actionAbout_triggered()
 {
-    AboutDialog aboutDialog;
-    aboutDialog.exec();
+    showAboutDialog();  // Implemented in "common.h" and "common.cpp" since version 2.0
 }
 
 void ConfiguratorWindow::on_actionInformation_triggered()
 {
-    int errcnt = 0;
-    QString errstr;
-    CP2130::SiliconVersion siversion = cp2130_.getSiliconVersion(errcnt, errstr);
-    opCheck(tr("device-information-retrieval-op"), errcnt, errstr);  // The string "device-information-retrieval-op" should be translated to "Device information retrieval"
-    if (err_) {  // Fix implemented in version 1.2
-        handleError();
-    } else {  // If error check passes
-        InformationDialog infoDialog;  // Declared here since version 1.5
-        infoDialog.setSiliconVersionLabelText(siversion.maj, siversion.min);
-        infoDialog.exec();
+    if (informationDialog_.isNull()) {  // If the dialog is not open (implemented in version 2.0, because the device information dialog is now modeless)
+        int errcnt = 0;
+        QString errstr;
+        CP2130::SiliconVersion siversion = cp2130_.getSiliconVersion(errcnt, errstr);
+        opCheck(tr("device-information-retrieval-op"), errcnt, errstr);  // The string "device-information-retrieval-op" should be translated to "Device information retrieval"
+        if (err_) {  // Fix implemented in version 1.2
+            handleError();
+        } else {  // If error check passes
+            informationDialog_ = new InformationDialog(this);  // The dialog is no longer modal (version 2.0 feature);
+            informationDialog_->setAttribute(Qt::WA_DeleteOnClose);  // It is important to delete the dialog in memory once closed, in order to force the application to retrieve information about the device if the window is opened again
+            informationDialog_->setWindowTitle(tr("Device Information (S/N: %1)").arg(serialstr_));
+            informationDialog_->setSiliconVersionValueLabelText(siversion.maj, siversion.min);
+            informationDialog_->show();
+        }
+    } else {
+        informationDialog_->showNormal();  // Required if the dialog is minimized
+        informationDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
     }
 }
 
@@ -484,7 +496,9 @@ void ConfiguratorWindow::configureDevice()
 void::ConfiguratorWindow::disableView()
 {
     ui->actionInformation->setEnabled(false);
+    ui->actionClose->setText(tr("&Close Window"));  // Implemented in version 2.0, to hint the user that the device is effectively closed and only its window remains open
     ui->centralWidget->setEnabled(false);
+    viewEnabled_ = false;
 }
 
 // This is the main display routine, used to display the given configuration, updating all fields accordingly

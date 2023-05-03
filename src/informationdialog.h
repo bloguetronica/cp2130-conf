@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.6 for Debian Linux
+/* CP2130 Configurator - Version 2.0 for Debian Linux
    Copyright (c) 2021-2023 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -36,7 +36,7 @@ public:
     explicit InformationDialog(QWidget *parent = nullptr);
     ~InformationDialog();
 
-    void setSiliconVersionLabelText(quint8 majver, quint8 minver);
+    void setSiliconVersionValueLabelText(quint8 majver, quint8 minver);
 
 private:
     Ui::InformationDialog *ui;

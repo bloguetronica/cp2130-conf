@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.6 for Debian Linux
+/* CP2130 Configurator - Version 2.0 for Debian Linux
    Copyright (c) 2021-2023 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -23,6 +23,10 @@
 
 // Includes
 #include <QMainWindow>
+#include <QMap>
+#include <QPointer>
+#include <QString>
+#include "configuratorwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -36,6 +40,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     void on_actionAbout_triggered();
     void on_comboBoxDevices_currentIndexChanged(int index);
@@ -46,6 +53,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QMap<QString, QPointer<ConfiguratorWindow>> confWindowMap_;
     quint16 pid_, vid_;
 
     void refresh();

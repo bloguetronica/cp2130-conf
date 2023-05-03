@@ -18,23 +18,30 @@
    Please feel free to contact me via e-mail: samuel.fmlourenco@gmail.com */
 
 
-#ifndef CONFIGURATION_H
-#define CONFIGURATION_H
-
 // Includes
-#include <QString>
-#include "cp2130.h"
+#include <QPointer>
+#include "aboutdialog.h"
+#include "common.h"
 
-struct Configuration
+// Definitions
+QPointer<AboutDialog> aboutDialog_;
+
+// Closes the about dialog
+void closeAboutDialog()
 {
-    QString manufacturer;
-    QString product;
-    QString serial;
-    CP2130::USBConfig usbconfig;
-    CP2130::PinConfig pinconfig;
+    if (!aboutDialog_.isNull()) {
+        aboutDialog_->close();  // Close the about dialog if open
+    }
+}
 
-    bool operator ==(const Configuration &other) const;
-    bool operator !=(const Configuration &other) const;
-};
-
-#endif  // CONFIGURATION_H
+// Shows the about dialog
+void showAboutDialog()
+{
+    if (aboutDialog_.isNull()) {  // If the dialog wasn't previously open
+        aboutDialog_ = new AboutDialog;  // Note that the about dialog doesn't have a parent
+        aboutDialog_->show();
+    } else {
+        aboutDialog_->showNormal();  // Required if the dialog is minimized
+        aboutDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
+    }
+}

@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.6 for Debian Linux
+/* CP2130 Configurator - Version 2.0 for Debian Linux
    Copyright (c) 2021-2023 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -34,8 +34,8 @@ InformationDialog::~InformationDialog()
     delete ui;
 }
 
-// Sets the labelSiliconVersion text
-void InformationDialog::setSiliconVersionLabelText(quint8 majver, quint8 minver)
+// Sets the text of "labelSiliconVersionValue"
+void InformationDialog::setSiliconVersionValueLabelText(quint8 majver, quint8 minver)
 {
-    ui->labelSiliconVersion->setText(QString("%1.%2 [0x%3]").arg(majver).arg(minver).arg(majver << 8 | minver, 4, 16, QChar('0')));
+    ui->labelSiliconVersionValue->setText(QString("%1.%2 [0x%3]").arg(majver).arg(minver).arg(majver << 8 | minver, 4, 16, QChar('0')));
 }

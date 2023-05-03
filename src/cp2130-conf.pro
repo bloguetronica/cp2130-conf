@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     aboutdialog.cpp \
+    common.cpp \
     configuration.cpp \
     configuratorwindow.cpp \
     cp2130.cpp \
@@ -36,6 +37,7 @@ SOURCES += \
 
 HEADERS += \
     aboutdialog.h \
+    common.h \
     configuration.h \
     configuratorwindow.h \
     cp2130.h \

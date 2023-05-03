@@ -10,7 +10,12 @@
     </message>
     <message>
         <location filename="../aboutdialog.ui" line="68"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;CP2130 Configurator - Version 1.6&lt;br/&gt;© 2021-2023 Samuel Lourenço&lt;/p&gt;&lt;p&gt;This program is distributed under the terms of the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Version 2.0&lt;br/&gt;© 2021-2023 Samuel Lourenço&lt;/p&gt;&lt;p&gt;This program is distributed under the terms of the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../aboutdialog.ui" line="90"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/images/images/banner.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
 </context>
@@ -363,213 +368,218 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="70"/>
-        <location filename="../configuratorwindow.cpp" line="707"/>
+        <location filename="../configuratorwindow.cpp" line="76"/>
+        <location filename="../configuratorwindow.cpp" line="721"/>
         <source>Critical Error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="70"/>
+        <location filename="../configuratorwindow.cpp" line="76"/>
         <source>Could not initialize libusb.
 
 This is a critical error and execution will be aborted.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="74"/>
-        <location filename="../configuratorwindow.cpp" line="76"/>
-        <location filename="../configuratorwindow.cpp" line="297"/>
-        <location filename="../configuratorwindow.cpp" line="457"/>
-        <location filename="../configuratorwindow.cpp" line="601"/>
-        <location filename="../configuratorwindow.cpp" line="676"/>
-        <location filename="../configuratorwindow.cpp" line="681"/>
+        <location filename="../configuratorwindow.cpp" line="80"/>
+        <location filename="../configuratorwindow.cpp" line="82"/>
+        <location filename="../configuratorwindow.cpp" line="309"/>
+        <location filename="../configuratorwindow.cpp" line="469"/>
+        <location filename="../configuratorwindow.cpp" line="615"/>
+        <location filename="../configuratorwindow.cpp" line="690"/>
+        <location filename="../configuratorwindow.cpp" line="695"/>
         <source>Error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="74"/>
+        <location filename="../configuratorwindow.cpp" line="80"/>
         <source>Could not find device.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="76"/>
+        <location filename="../configuratorwindow.cpp" line="82"/>
         <source>Device is currently unavailable.
 
 Please confirm that the device is not in use.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="704"/>
+        <location filename="../configuratorwindow.cpp" line="718"/>
         <source>CP2130 Configurator (S/N: %1)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="88"/>
+        <location filename="../configuratorwindow.cpp" line="94"/>
         <source>lock-otp-op</source>
         <translation>Lock OTP ROM</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="67"/>
+        <location filename="../configuratorwindow.cpp" line="72"/>
         <source>CP2130 Device (S/N: %1)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="103"/>
+        <location filename="../configuratorwindow.cpp" line="109"/>
         <source>device-information-retrieval-op</source>
         <translation>Device information retrieval</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="297"/>
+        <location filename="../configuratorwindow.cpp" line="115"/>
+        <source>Device Information (S/N: %1)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../configuratorwindow.cpp" line="309"/>
         <source>One or more fields have invalid information.
 
 Please correct the information in the fields highlighted in red.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="301"/>
+        <location filename="../configuratorwindow.cpp" line="313"/>
         <source>No changes were effected, because no values were modified.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="301"/>
+        <location filename="../configuratorwindow.cpp" line="313"/>
         <source>No Changes Done</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="303"/>
+        <location filename="../configuratorwindow.cpp" line="315"/>
         <source>This will write the changes to the OTP ROM of your device. These changes will be permanent.
 
 Do you wish to proceed?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="303"/>
+        <location filename="../configuratorwindow.cpp" line="315"/>
         <source>Write Configuration?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="318"/>
+        <location filename="../configuratorwindow.cpp" line="330"/>
         <source>Failed verification.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="329"/>
+        <location filename="../configuratorwindow.cpp" line="341"/>
         <source>write-manufacturer-desc-op</source>
         <translation>Write manufacturer descriptor</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="339"/>
+        <location filename="../configuratorwindow.cpp" line="351"/>
         <source>write-max-power-op</source>
         <translation>Write maximum power</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="349"/>
+        <location filename="../configuratorwindow.cpp" line="361"/>
         <source>write-pid-op</source>
         <translation>Write PID</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="362"/>
+        <location filename="../configuratorwindow.cpp" line="374"/>
         <source>write-pin-config-op</source>
         <translation>Write pin configuration</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="372"/>
+        <location filename="../configuratorwindow.cpp" line="384"/>
         <source>write-power-mode-op</source>
         <translation>Write power mode</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="382"/>
+        <location filename="../configuratorwindow.cpp" line="394"/>
         <source>write-product-desc-op</source>
         <translation>Write product descriptor</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="392"/>
+        <location filename="../configuratorwindow.cpp" line="404"/>
         <source>write-release-version-op</source>
         <translation>Write release version</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="402"/>
+        <location filename="../configuratorwindow.cpp" line="414"/>
         <source>write-serial-desc-op</source>
         <translation>Write serial descriptor</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="415"/>
+        <location filename="../configuratorwindow.cpp" line="427"/>
         <source>write-transfer-prio-op</source>
         <translation>Write transfer priority</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="425"/>
+        <location filename="../configuratorwindow.cpp" line="437"/>
         <source>write-vid-op</source>
         <translation>Write VID</translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="439"/>
+        <location filename="../configuratorwindow.cpp" line="451"/>
         <source>Configuring device...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="439"/>
+        <location filename="../configuratorwindow.cpp" line="451"/>
         <source>Abort</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="440"/>
+        <location filename="../configuratorwindow.cpp" line="452"/>
         <source>Device Configuration</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="457"/>
+        <location filename="../configuratorwindow.cpp" line="469"/>
         <source>The device configuration could not be completed.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="467"/>
+        <location filename="../configuratorwindow.cpp" line="479"/>
         <source>Device Reset</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="714"/>
+        <location filename="../configuratorwindow.cpp" line="728"/>
         <source>Device ceased to be available. It could be in use by another application.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="459"/>
+        <location filename="../configuratorwindow.cpp" line="471"/>
         <source>Configuration Aborted</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="459"/>
+        <location filename="../configuratorwindow.cpp" line="471"/>
         <source>The device configuration was aborted.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="461"/>
+        <location filename="../configuratorwindow.cpp" line="473"/>
         <source>Device was successfully configured and verified.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="461"/>
-        <location filename="../configuratorwindow.cpp" line="463"/>
+        <location filename="../configuratorwindow.cpp" line="473"/>
+        <location filename="../configuratorwindow.cpp" line="475"/>
         <source>Device Configured</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="463"/>
+        <location filename="../configuratorwindow.cpp" line="475"/>
         <source>Device was successfully configured.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="466"/>
+        <location filename="../configuratorwindow.cpp" line="478"/>
         <source>Resetting device...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="466"/>
+        <location filename="../configuratorwindow.cpp" line="478"/>
         <source>Cancel</source>
         <translation></translation>
     </message>
     <message numerus="yes">
-        <location filename="../configuratorwindow.cpp" line="614"/>
+        <location filename="../configuratorwindow.cpp" line="628"/>
         <source>%1 operation returned the following error(s):
 – %2</source>
         <translation>
@@ -580,16 +590,16 @@ Do you wish to proceed?</source>
         </translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="611"/>
-        <location filename="../configuratorwindow.cpp" line="676"/>
-        <location filename="../configuratorwindow.cpp" line="711"/>
+        <location filename="../configuratorwindow.cpp" line="625"/>
+        <location filename="../configuratorwindow.cpp" line="690"/>
+        <location filename="../configuratorwindow.cpp" line="725"/>
         <source>Device disconnected.
 
 Please reconnect it and try again.</source>
         <translation></translation>
     </message>
     <message numerus="yes">
-        <location filename="../configuratorwindow.cpp" line="681"/>
+        <location filename="../configuratorwindow.cpp" line="695"/>
         <source>Read operation returned the following error(s):
 – %1
 
@@ -606,7 +616,7 @@ Please try accessing the device again.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../configuratorwindow.cpp" line="707"/>
+        <location filename="../configuratorwindow.cpp" line="721"/>
         <source>Could not reinitialize libusb.
 
 This is a critical error and execution will be aborted.</source>
@@ -652,7 +662,7 @@ This is a critical error and execution will be aborted.</source>
     <message>
         <location filename="../mainwindow.ui" line="126"/>
         <location filename="../mainwindow.ui" line="133"/>
-        <location filename="../mainwindow.cpp" line="94"/>
+        <location filename="../mainwindow.cpp" line="106"/>
         <source>Select device...</source>
         <translation></translation>
     </message>
@@ -692,12 +702,12 @@ This is a critical error and execution will be aborted.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="97"/>
+        <location filename="../mainwindow.cpp" line="109"/>
         <source>Critical Error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="97"/>
+        <location filename="../mainwindow.cpp" line="109"/>
         <source>%1
 This is a critical error and execution will be aborted.</source>
         <translation></translation>
@@ -823,6 +833,14 @@ This is a critical error and execution will be aborted.</source>
         <location filename="../cp2130.cpp" line="1071"/>
         <source>Failed to retrieve a list of devices.
 </source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>void::ConfiguratorWindow</name>
+    <message>
+        <location filename="../configuratorwindow.cpp" line="499"/>
+        <source>&amp;Close Window</source>
         <translation></translation>
     </message>
 </context>

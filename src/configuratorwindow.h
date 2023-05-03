@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.6 for Debian Linux
+/* CP2130 Configurator - Version 2.0 for Debian Linux
    Copyright (c) 2021-2023 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -23,10 +23,12 @@
 
 // Includes
 #include <QMainWindow>
+#include <QPointer>
 #include <QString>
 #include <QStringList>
 #include "configuration.h"
 #include "cp2130.h"
+#include "informationdialog.h"
 
 namespace Ui {
 class ConfiguratorWindow;
@@ -40,6 +42,7 @@ public:
     explicit ConfiguratorWindow(QWidget *parent = nullptr);
     ~ConfiguratorWindow();
 
+    bool isViewEnabled();
     void openDevice(quint16 vid, quint16 pid, const QString &serialstr);
 
 private slots:
@@ -83,11 +86,12 @@ private slots:
 
 private:
     Ui::ConfiguratorWindow *ui;
-    CP2130 cp2130_;
     Configuration deviceConfig_, editedConfig_;
+    CP2130 cp2130_;
+    QPointer<InformationDialog> informationDialog_;
     QString errmsg_, serialstr_;
     quint16 lockWord_, pid_, vid_;
-    bool err_, requiresReset_;
+    bool err_, requiresReset_, viewEnabled_ = false;
 
     void configureDevice();
     void disableView();

@@ -55,12 +55,12 @@
     <set>QDialogButtonBox::Close</set>
    </property>
   </widget>
-  <widget class="QLabel" name="labelSiliconVersionLabel">
+  <widget class="QLabel" name="labelSiliconVersion">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>130</width>
+     <width>135</width>
      <height>17</height>
     </rect>
    </property>
@@ -71,12 +71,12 @@
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="labelSiliconVersion">
+  <widget class="QLabel" name="labelSiliconVersionValue">
    <property name="geometry">
     <rect>
-     <x>145</x>
+     <x>150</x>
      <y>10</y>
-     <width>116</width>
+     <width>111</width>
      <height>17</height>
     </rect>
    </property>

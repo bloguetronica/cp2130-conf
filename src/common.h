@@ -18,23 +18,11 @@
    Please feel free to contact me via e-mail: samuel.fmlourenco@gmail.com */
 
 
-#ifndef CONFIGURATION_H
-#define CONFIGURATION_H
+#ifndef COMMON_H
+#define COMMON_H
 
-// Includes
-#include <QString>
-#include "cp2130.h"
+// Function prototypes
+void closeAboutDialog();
+void showAboutDialog();
 
-struct Configuration
-{
-    QString manufacturer;
-    QString product;
-    QString serial;
-    CP2130::USBConfig usbconfig;
-    CP2130::PinConfig pinconfig;
-
-    bool operator ==(const Configuration &other) const;
-    bool operator !=(const Configuration &other) const;
-};
-
-#endif  // CONFIGURATION_H
+#endif  // COMMON_H

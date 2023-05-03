@@ -8,11 +8,14 @@ apt-get -qq install qt5-default
 apt-get -qq install qtbase5-dev
 echo Copying source code files...
 mkdir -p /usr/local/src/cp2130-conf/icons
+mkdir -p /usr/local/src/cp2130-conf/images
 mkdir -p /usr/local/src/cp2130-conf/misc
 mkdir -p /usr/local/src/cp2130-conf/translations
 cp -f src/aboutdialog.cpp /usr/local/src/cp2130-conf/.
 cp -f src/aboutdialog.h /usr/local/src/cp2130-conf/.
 cp -f src/aboutdialog.ui /usr/local/src/cp2130-conf/.
+cp -f src/common.cpp /usr/local/src/cp2130-conf/.
+cp -f src/common.h /usr/local/src/cp2130-conf/.
 cp -f src/configuration.cpp /usr/local/src/cp2130-conf/.
 cp -f src/configuration.h /usr/local/src/cp2130-conf/.
 cp -f src/configuratorwindow.cpp /usr/local/src/cp2130-conf/.
@@ -27,6 +30,8 @@ cp -f src/icons/cp2130-conf.png /usr/local/src/cp2130-conf/icons/.
 cp -f src/icons/greyed64.png /usr/local/src/cp2130-conf/icons/.
 cp -f src/icons/icon.svg /usr/local/src/cp2130-conf/icons/.
 cp -f src/icons/selected64.png /usr/local/src/cp2130-conf/icons/.
+cp -f src/images/banner.png /usr/local/src/cp2130-conf/images/.
+cp -f src/images/banner.svg /usr/local/src/cp2130-conf/images/.
 cp -f src/informationdialog.cpp /usr/local/src/cp2130-conf/.
 cp -f src/informationdialog.h /usr/local/src/cp2130-conf/.
 cp -f src/informationdialog.ui /usr/local/src/cp2130-conf/.
