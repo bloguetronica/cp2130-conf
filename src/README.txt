@@ -3,6 +3,8 @@ Configurator. A list of relevant files follows:
 – aboutdialog.cpp;
 – aboutdialog.h;
 – aboutdialog.ui;
+– common.cpp;
+– common.h;
 – configuration.cpp;
 – configuration.h;
 – configuratorwindow.cpp;
@@ -16,6 +18,8 @@ Configurator. A list of relevant files follows:
 – icons/greyed64.png;
 – icons/icon.svg;
 – icons/selected64.png;
+– images/banner.png;
+– images/banner.svg;
 – informationdialog.cpp;
 – informationdialog.h;
 – informationdialog.ui;
