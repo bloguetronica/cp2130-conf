@@ -493,7 +493,7 @@ void ConfiguratorWindow::configureDevice()
 }
 
 // Partially disables configurator window
-void::ConfiguratorWindow::disableView()
+void ConfiguratorWindow::disableView()
 {
     ui->actionInformation->setEnabled(false);
     ui->actionClose->setText(tr("&Close Window"));  // Implemented in version 2.0, to hint the user that the device is effectively closed and only its window remains open
