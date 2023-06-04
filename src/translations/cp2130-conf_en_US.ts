@@ -10,7 +10,7 @@
     </message>
     <message>
         <location filename="../aboutdialog.ui" line="68"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Version 2.0&lt;br/&gt;© 2021-2023 Samuel Lourenço&lt;/p&gt;&lt;p&gt;This program is distributed under the terms of the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Version 2.1&lt;br/&gt;© 2021-2023 Samuel Lourenço&lt;/p&gt;&lt;p&gt;This program is distributed under the terms of the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
@@ -538,6 +538,11 @@ Do you wish to proceed?</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="../configuratorwindow.cpp" line="499"/>
+        <source>&amp;Close Window</source>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="../configuratorwindow.cpp" line="728"/>
         <source>Device ceased to be available. It could be in use by another application.</source>
         <translation></translation>
@@ -833,14 +838,6 @@ This is a critical error and execution will be aborted.</source>
         <location filename="../cp2130.cpp" line="1071"/>
         <source>Failed to retrieve a list of devices.
 </source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>void::ConfiguratorWindow</name>
-    <message>
-        <location filename="../configuratorwindow.cpp" line="499"/>
-        <source>&amp;Close Window</source>
         <translation></translation>
     </message>
 </context>

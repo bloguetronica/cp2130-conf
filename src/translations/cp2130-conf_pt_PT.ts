@@ -10,8 +10,8 @@
     </message>
     <message>
         <location filename="../aboutdialog.ui" line="68"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Version 2.0&lt;br/&gt;© 2021-2023 Samuel Lourenço&lt;/p&gt;&lt;p&gt;This program is distributed under the terms of the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Versão 2.0&lt;br/&gt;© 2021-2023 Samuel Lourenço&lt;/p&gt;&lt;p&gt;Este programa é distribuido sob os termos da licença &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Version 2.1&lt;br/&gt;© 2021-2023 Samuel Lourenço&lt;/p&gt;&lt;p&gt;This program is distributed under the terms of the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Versão 2.1&lt;br/&gt;© 2021-2023 Samuel Lourenço&lt;/p&gt;&lt;p&gt;Este programa é distribuido sob os termos da licença &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../aboutdialog.ui" line="90"/>
@@ -546,6 +546,11 @@ Deseja prosseguir?</translation>
         <translation>Reinício do Dispositivo</translation>
     </message>
     <message>
+        <location filename="../configuratorwindow.cpp" line="499"/>
+        <source>&amp;Close Window</source>
+        <translation>&amp;Fechar Janela</translation>
+    </message>
+    <message>
         <location filename="../configuratorwindow.cpp" line="728"/>
         <source>Device ceased to be available. It could be in use by another application.</source>
         <translation>O dispositivo deixou de estar disponível. Este pode estar a ser utilizado por outra aplicação.</translation>
@@ -867,14 +872,6 @@ Este é um erro crítico e a execução será abortada.</translation>
 </source>
         <translation>Falhou em obter uma lista de dispositivos.
 </translation>
-    </message>
-</context>
-<context>
-    <name>void::ConfiguratorWindow</name>
-    <message>
-        <location filename="../configuratorwindow.cpp" line="499"/>
-        <source>&amp;Close Window</source>
-        <translation>&amp;Fechar Janela</translation>
     </message>
 </context>
 </TS>
