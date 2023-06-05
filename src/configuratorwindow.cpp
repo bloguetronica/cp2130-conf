@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 2.0 for Debian Linux
+/* CP2130 Configurator - Version 2.1 for Debian Linux
    Copyright (c) 2021-2023 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -492,8 +492,8 @@ void ConfiguratorWindow::configureDevice()
     }
 }
 
-// Partially disables configurator window
-void::ConfiguratorWindow::disableView()
+// Partially disables configurator window (fixed in version 2.1)
+void ConfiguratorWindow::disableView()
 {
     ui->actionInformation->setEnabled(false);
     ui->actionClose->setText(tr("&Close Window"));  // Implemented in version 2.0, to hint the user that the device is effectively closed and only its window remains open
