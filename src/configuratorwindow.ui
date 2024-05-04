@@ -61,7 +61,7 @@
        <rect>
         <x>120</x>
         <y>90</y>
-        <width>321</width>
+        <width>281</width>
         <height>31</height>
        </rect>
       </property>
@@ -436,6 +436,22 @@
       </property>
       <property name="clearButtonEnabled">
        <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonRegenerateSerial">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>90</y>
+        <width>31</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>
@@ -1338,6 +1354,7 @@
   <tabstop>lineEditManufacturer</tabstop>
   <tabstop>lineEditProduct</tabstop>
   <tabstop>lineEditSerial</tabstop>
+  <tabstop>pushButtonRegenerateSerial</tabstop>
   <tabstop>lineEditVID</tabstop>
   <tabstop>lineEditPID</tabstop>
   <tabstop>spinBoxMajVersion</tabstop>
