@@ -438,7 +438,7 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButtonRegenerateSerial">
+     <widget class="QPushButton" name="pushButtonGenerateSerial">
       <property name="enabled">
        <bool>false</bool>
       </property>
@@ -1354,7 +1354,7 @@
   <tabstop>lineEditManufacturer</tabstop>
   <tabstop>lineEditProduct</tabstop>
   <tabstop>lineEditSerial</tabstop>
-  <tabstop>pushButtonRegenerateSerial</tabstop>
+  <tabstop>pushButtonGenerateSerial</tabstop>
   <tabstop>lineEditVID</tabstop>
   <tabstop>lineEditPID</tabstop>
   <tabstop>spinBoxMajVersion</tabstop>
