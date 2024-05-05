@@ -4,6 +4,9 @@
         <file>icons/greyed64.png</file>
         <file>icons/selected64.png</file>
     </qresource>
+    <qresource prefix="/icons/buttons">
+        <file>icons/buttons/cycle.png</file>
+    </qresource>
     <qresource prefix="/images">
         <file>images/banner.png</file>
     </qresource>

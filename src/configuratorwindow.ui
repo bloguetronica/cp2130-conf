@@ -453,6 +453,10 @@
       <property name="text">
        <string/>
       </property>
+      <property name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/buttons/icons/buttons/cycle.png</normaloff>:/icons/buttons/icons/buttons/cycle.png</iconset>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tabPinConfig">
