@@ -1392,10 +1392,16 @@
    <property name="text">
     <string>&amp;Load Configuration...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
   <action name="actionSaveConfiguration">
    <property name="text">
     <string>&amp;Save Configuration...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
