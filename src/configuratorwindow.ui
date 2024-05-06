@@ -1323,6 +1323,9 @@
     </property>
     <addaction name="actionInformation"/>
     <addaction name="separator"/>
+    <addaction name="actionLoadConfiguration"/>
+    <addaction name="actionSaveConfiguration"/>
+    <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -1331,7 +1334,21 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <widget class="QMenu" name="menuSerialGenerator">
+     <property name="title">
+      <string>&amp;Serial Number Generator</string>
+     </property>
+     <addaction name="actionSerialGeneratorEnable"/>
+     <addaction name="actionSerialGeneratorSettings"/>
+    </widget>
+    <addaction name="menuSerialGenerator"/>
+   </widget>
    <addaction name="menuDevice"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionInformation">
@@ -1350,6 +1367,32 @@
   <action name="actionAbout">
    <property name="text">
     <string>&amp;About CP2130 Configurator</string>
+   </property>
+  </action>
+  <action name="actionSerialGeneratorEnable">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Enable</string>
+   </property>
+  </action>
+  <action name="actionSerialGeneratorSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionLoadConfiguration">
+   <property name="text">
+    <string>&amp;Load Configuration...</string>
+   </property>
+  </action>
+  <action name="actionSaveConfiguration">
+   <property name="text">
+    <string>&amp;Save Configuration...</string>
    </property>
   </action>
  </widget>
