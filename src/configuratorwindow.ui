@@ -1382,10 +1382,13 @@
   </action>
   <action name="actionSerialGeneratorSettings">
    <property name="text">
-    <string>Settings</string>
+    <string>&amp;Settings</string>
    </property>
   </action>
   <action name="actionLoadConfiguration">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Load Configuration...</string>
    </property>
