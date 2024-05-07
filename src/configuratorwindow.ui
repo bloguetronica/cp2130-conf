@@ -1345,6 +1345,7 @@
      <addaction name="actionSerialGeneratorEnable"/>
      <addaction name="actionSerialGeneratorSettings"/>
     </widget>
+    <addaction name="actionHexadeximalViewer"/>
     <addaction name="menuSerialGenerator"/>
    </widget>
    <addaction name="menuDevice"/>
@@ -1369,22 +1370,6 @@
     <string>&amp;About CP2130 Configurator</string>
    </property>
   </action>
-  <action name="actionSerialGeneratorEnable">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Enable</string>
-   </property>
-  </action>
-  <action name="actionSerialGeneratorSettings">
-   <property name="text">
-    <string>&amp;Settings</string>
-   </property>
-  </action>
   <action name="actionLoadConfiguration">
    <property name="enabled">
     <bool>false</bool>
@@ -1402,6 +1387,27 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionHexadeximalViewer">
+   <property name="text">
+    <string>&amp;Hexadecimal Viewer</string>
+   </property>
+  </action>
+  <action name="actionSerialGeneratorEnable">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Enable</string>
+   </property>
+  </action>
+  <action name="actionSerialGeneratorSettings">
+   <property name="text">
+    <string>&amp;Settings</string>
    </property>
   </action>
  </widget>
