@@ -1345,7 +1345,7 @@
      <addaction name="actionSerialGeneratorEnable"/>
      <addaction name="actionSerialGeneratorSettings"/>
     </widget>
-    <addaction name="actionHexadeximalViewer"/>
+    <addaction name="actionPROMViewer"/>
     <addaction name="menuSerialGenerator"/>
    </widget>
    <addaction name="menuDevice"/>
@@ -1389,9 +1389,9 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionHexadeximalViewer">
+  <action name="actionPROMViewer">
    <property name="text">
-    <string>&amp;Hexadecimal Viewer</string>
+    <string>&amp;PROM Viewer</string>
    </property>
   </action>
   <action name="actionSerialGeneratorEnable">
