@@ -29,6 +29,7 @@ SOURCES += \
     configuration.cpp \
     configuratorwindow.cpp \
     cp2130.cpp \
+    hexadecimalviewerdialog.cpp \
     informationdialog.cpp \
     libusb-extra.c \
     main.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
     configuration.h \
     configuratorwindow.h \
     cp2130.h \
+    hexadecimalviewerdialog.h \
     informationdialog.h \
     libusb-extra.h \
     mainwindow.h \
@@ -49,6 +51,7 @@ HEADERS += \
 FORMS += \
     aboutdialog.ui \
     configuratorwindow.ui \
+    hexadecimalviewerdialog.ui \
     informationdialog.ui \
     mainwindow.ui
 
