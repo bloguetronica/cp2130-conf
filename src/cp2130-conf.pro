@@ -33,7 +33,8 @@ SOURCES += \
     libusb-extra.c \
     main.cpp \
     mainwindow.cpp \
-    nonblocking.cpp
+    nonblocking.cpp \
+    promviewerdialog.cpp
 
 HEADERS += \
     aboutdialog.h \
@@ -44,13 +45,15 @@ HEADERS += \
     informationdialog.h \
     libusb-extra.h \
     mainwindow.h \
-    nonblocking.h
+    nonblocking.h \
+    promviewerdialog.h
 
 FORMS += \
     aboutdialog.ui \
     configuratorwindow.ui \
     informationdialog.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    promviewerdialog.ui
 
 TRANSLATIONS += \
     translations/cp2130-conf_en.ts \
