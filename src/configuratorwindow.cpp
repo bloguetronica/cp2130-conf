@@ -122,6 +122,12 @@ void ConfiguratorWindow::on_actionInformation_triggered()
     }
 }
 
+// Implemented in version 3.0
+void ConfiguratorWindow::on_actionSerialGeneratorEnable_toggled(bool checked)
+{
+    ui->pushButtonGenerateSerial->setEnabled(checked);
+}
+
 // Implemented in version 1.6
 void ConfiguratorWindow::on_lineEditManufacturer_textEdited()
 {
@@ -496,7 +502,10 @@ void ConfiguratorWindow::configureDevice()
 void ConfiguratorWindow::disableView()
 {
     ui->actionInformation->setEnabled(false);
+    ui->actionLoadConfiguration->setEnabled(false);
+    ui->actionSaveConfiguration->setEnabled(false);
     ui->actionClose->setText(tr("&Close Window"));  // Implemented in version 2.0, to hint the user that the device is effectively closed and only its window remains open
+    ui->menuTools->setEnabled(false);
     ui->centralWidget->setEnabled(false);
     viewEnabled_ = false;
 }
@@ -519,7 +528,7 @@ void ConfiguratorWindow::displayConfiguration(const Configuration &config)
     setTransferPrioEnabled((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO);
     displayPinConfig(config.pinconfig);
     setPinConfigEnabled((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG);
-    setWriteEnabled((CP2130::LWALL & lockWord_) != 0x0000);
+    setWriteEnabled((CP2130::LWALL & lockWord_) != 0x0000);  // Since version 3.0, this also enables the "Load Configuration..." menu action
 }
 
 // Updates the manufacturer descriptor field
@@ -788,9 +797,13 @@ void ConfiguratorWindow::setReleaseEnabled(bool value)
     ui->spinBoxMinVersion->setReadOnly(!value);
 }
 
-// Enables or disables the serial descriptor field
+// Enables or disables the serial descriptor field and the related "Serial Number Generator -> Enable" action
 void ConfiguratorWindow::setSerialEnabled(bool value)
 {
+    ui->actionSerialGeneratorEnable->setEnabled(value);  // Added in version 3.0
+    if (!value) {  // Implemented in version 3.0
+        ui->actionSerialGeneratorEnable->setChecked(false);  // This also disables pushButtonGenerateSerial
+    }
     ui->lineEditSerial->setReadOnly(!value);
 }
 
@@ -806,9 +819,10 @@ void ConfiguratorWindow::setVIDEnabled(bool value)
     ui->lineEditVID->setReadOnly(!value);
 }
 
-// Enables or disables editing related buttons and checkboxes
+// Enables or disables editing related actions, buttons and checkboxes
 void ConfiguratorWindow::setWriteEnabled(bool value)
 {
+    ui->actionLoadConfiguration->setEnabled(value);  // Added in version 3.0
     ui->pushButtonRevert->setEnabled(value);
     ui->checkBoxVerify->setEnabled(value);
     ui->checkBoxLock->setEnabled(value);

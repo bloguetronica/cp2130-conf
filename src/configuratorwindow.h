@@ -49,6 +49,7 @@ private slots:
     void lockOTP();
     void on_actionAbout_triggered();
     void on_actionInformation_triggered();
+    void on_actionSerialGeneratorEnable_toggled(bool checked);
     void on_lineEditManufacturer_textEdited();
     void on_lineEditMaxPower_editingFinished();
     void on_lineEditMaxPower_textChanged();
