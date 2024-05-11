@@ -502,10 +502,10 @@ void ConfiguratorWindow::configureDevice()
 void ConfiguratorWindow::disableView()
 {
     ui->actionInformation->setEnabled(false);
-    ui->actionLoadConfiguration->setEnabled(false);
-    ui->actionSaveConfiguration->setEnabled(false);
+    ui->actionLoadConfiguration->setEnabled(false);  // Added in version 3.0
+    ui->actionSaveConfiguration->setEnabled(false);  // Added in version 3.0
     ui->actionClose->setText(tr("&Close Window"));  // Implemented in version 2.0, to hint the user that the device is effectively closed and only its window remains open
-    ui->menuTools->setEnabled(false);
+    ui->menuTools->setEnabled(false);  // Added in version 3.0
     ui->centralWidget->setEnabled(false);
     viewEnabled_ = false;
 }
