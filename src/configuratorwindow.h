@@ -29,6 +29,7 @@
 #include "configuration.h"
 #include "cp2130.h"
 #include "informationdialog.h"
+#include "promviewerdialog.h"
 
 namespace Ui {
 class ConfiguratorWindow;
@@ -49,6 +50,7 @@ private slots:
     void lockOTP();
     void on_actionAbout_triggered();
     void on_actionInformation_triggered();
+    void on_actionPROMViewer_triggered();
     void on_actionSerialGeneratorEnable_toggled(bool checked);
     void on_lineEditManufacturer_textEdited();
     void on_lineEditMaxPower_editingFinished();
@@ -90,6 +92,7 @@ private:
     Configuration deviceConfig_, editedConfig_;
     CP2130 cp2130_;
     QPointer<InformationDialog> informationDialog_;
+    QPointer<PROMViewerDialog> promViewerDialog_;
     QString errmsg_, serialstr_;
     quint16 lockWord_, pid_, vid_;
     bool err_, requiresReset_, viewEnabled_ = false;

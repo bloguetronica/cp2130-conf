@@ -103,6 +103,7 @@ void ConfiguratorWindow::on_actionAbout_triggered()
 void ConfiguratorWindow::on_actionInformation_triggered()
 {
     if (informationDialog_.isNull()) {  // If the dialog is not open (implemented in version 2.0, because the device information dialog is now modeless)
+        err_ = false;  // Bug fix implemented in version 3.0
         int errcnt = 0;
         QString errstr;
         CP2130::SiliconVersion siversion = cp2130_.getSiliconVersion(errcnt, errstr);
@@ -119,6 +120,29 @@ void ConfiguratorWindow::on_actionInformation_triggered()
     } else {
         informationDialog_->showNormal();  // Required if the dialog is minimized
         informationDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
+    }
+}
+
+void ConfiguratorWindow::on_actionPROMViewer_triggered()
+{
+    if (promViewerDialog_.isNull()) {  // If the dialog is not open
+        err_ = false;
+        int errcnt = 0;
+        QString errstr;
+        CP2130::PROMConfig promConfig = cp2130_.getPROMConfig(errcnt, errstr);
+        opCheck(tr("prom-configuration-retrieval-op"), errcnt, errstr);  // The string "prom-configuration-retrieval-op" should be translated to "PROM configuration retrieval"
+        if (err_) {
+            handleError();
+        } else {  // If error check passes
+            promViewerDialog_ = new PROMViewerDialog(this);
+            promViewerDialog_->setAttribute(Qt::WA_DeleteOnClose);  // It is important to delete the dialog in memory once closed, in order to force the application to retrieve the PROM configuration if the window is opened again
+            promViewerDialog_->setWindowTitle(tr("PROM Viewer (S/N: %1)").arg(serialstr_));
+            //promViewerDialog_->setSiliconVersionValueLabelText(siversion.maj, siversion.min);
+            promViewerDialog_->show();
+        }
+    } else {
+        promViewerDialog_->showNormal();  // Required if the dialog is minimized
+        promViewerDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
     }
 }
 
@@ -798,7 +822,7 @@ void ConfiguratorWindow::setReleaseEnabled(bool value)
     ui->spinBoxMinVersion->setReadOnly(!value);
 }
 
-// Enables or disables the serial descriptor field and the related "Serial Number Generator -> Enable" action
+// Enables or disables the serial descriptor field and the related "Serial Number Generator > Enable" action
 void ConfiguratorWindow::setSerialEnabled(bool value)
 {
     ui->actionSerialGeneratorEnable->setEnabled(value);  // Added in version 3.0
