@@ -1345,7 +1345,7 @@
      <addaction name="actionSerialGeneratorEnable"/>
      <addaction name="actionSerialGeneratorSettings"/>
     </widget>
-    <addaction name="actionPROMViewer"/>
+    <addaction name="actionOTPROMViewer"/>
     <addaction name="menuSerialGenerator"/>
    </widget>
    <addaction name="menuDevice"/>
@@ -1389,9 +1389,9 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionPROMViewer">
+  <action name="actionOTPROMViewer">
    <property name="text">
-    <string>&amp;PROM Viewer</string>
+    <string>OTP &amp;ROM Viewer</string>
    </property>
   </action>
   <action name="actionSerialGeneratorEnable">

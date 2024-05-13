@@ -123,9 +123,9 @@ void ConfiguratorWindow::on_actionInformation_triggered()
     }
 }
 
-void ConfiguratorWindow::on_actionPROMViewer_triggered()
+void ConfiguratorWindow::on_actionOTPROMViewer_triggered()
 {
-    if (promViewerDialog_.isNull()) {  // If the dialog is not open
+    if (otpromViewerDialog_.isNull()) {  // If the dialog is not open
         err_ = false;
         int errcnt = 0;
         QString errstr;
@@ -134,15 +134,15 @@ void ConfiguratorWindow::on_actionPROMViewer_triggered()
         if (err_) {
             handleError();
         } else {  // If error check passes
-            promViewerDialog_ = new PROMViewerDialog(this);
-            promViewerDialog_->setAttribute(Qt::WA_DeleteOnClose);  // It is important to delete the dialog in memory once closed, in order to force the application to retrieve the PROM configuration if the window is opened again
-            promViewerDialog_->setWindowTitle(tr("PROM Viewer (S/N: %1)").arg(serialstr_));
-            //promViewerDialog_->setSiliconVersionValueLabelText(siversion.maj, siversion.min);
-            promViewerDialog_->show();
+            otpromViewerDialog_ = new OTPROMViewerDialog(this);
+            otpromViewerDialog_->setAttribute(Qt::WA_DeleteOnClose);  // It is important to delete the dialog in memory once closed, in order to force the application to retrieve the PROM configuration if the window is opened again
+            otpromViewerDialog_->setWindowTitle(tr("PROM Viewer (S/N: %1)").arg(serialstr_));
+            otpromViewerDialog_->setOTPROMViewPlainText(promConfig);
+            otpromViewerDialog_->show();
         }
     } else {
-        promViewerDialog_->showNormal();  // Required if the dialog is minimized
-        promViewerDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
+        otpromViewerDialog_->showNormal();  // Required if the dialog is minimized
+        otpromViewerDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
     }
 }
 
@@ -528,7 +528,7 @@ void ConfiguratorWindow::disableView()
     ui->actionInformation->setEnabled(false);
     ui->actionLoadConfiguration->setEnabled(false);  // Added in version 3.0
     ui->actionClose->setText(tr("&Close Window"));  // Implemented in version 2.0, to hint the user that the device is effectively closed and only its window remains open
-    ui->actionPROMViewer->setEnabled(false);  // Added in version 3.0
+    ui->actionOTPROMViewer->setEnabled(false);  // Added in version 3.0
     ui->actionSerialGeneratorEnable->setEnabled(false);  // Added in version 3.0
     ui->actionSerialGeneratorEnable->setChecked(false);  // Added in version 3.0
     ui->centralWidget->setEnabled(false);
