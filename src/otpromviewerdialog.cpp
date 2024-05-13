@@ -38,16 +38,16 @@ OTPROMViewerDialog::~OTPROMViewerDialog()
 // Sets the content text of "plainTextEditPROMView"
 void OTPROMViewerDialog::setOTPROMViewPlainText(const CP2130::PROMConfig &promConfig)
 {
-    QString promViewContents;
+    QString otpromViewContents;
     for (size_t i = 0; i < CP2130::PROM_BLOCKS; ++i) {
         for (size_t j = 0; j < CP2130::PROM_BLOCK_SIZE; ++j) {
-            promViewContents += QString("%1").arg(promConfig.blocks[i][j], 2, 16, QChar('0'));
+            otpromViewContents += QString("%1").arg(promConfig.blocks[i][j], 2, 16, QChar('0'));
             if (j % 16 == 15) {
-                promViewContents += "\n";
+                otpromViewContents += "\n";
             } else {
-                promViewContents += " ";
+                otpromViewContents += " ";
             }
         }
     }
-    ui->plainTextEditOTPROMView->setPlainText(promViewContents);
+    ui->plainTextEditOTPROMView->setPlainText(otpromViewContents);
 }
