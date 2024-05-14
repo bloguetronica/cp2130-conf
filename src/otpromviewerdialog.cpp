@@ -19,6 +19,7 @@
 
 
 // Includes
+#include <QMetaObject>
 #include <QString>
 #include "otpromviewerdialog.h"
 #include "ui_otpromviewerdialog.h"
@@ -40,6 +41,7 @@ void OTPROMViewerDialog::setOTPROMViewPlainText(const CP2130::PROMConfig &promCo
 {
     QString otpromViewContents;
     for (size_t i = 0; i < CP2130::PROM_BLOCKS; ++i) {
+        otpromViewContents += tr("Block %1:\n").arg(i);
         for (size_t j = 0; j < CP2130::PROM_BLOCK_SIZE; ++j) {
             otpromViewContents += QString("%1").arg(promConfig.blocks[i][j], 2, 16, QChar('0'));
             if (j % 16 == 15) {
@@ -48,6 +50,8 @@ void OTPROMViewerDialog::setOTPROMViewPlainText(const CP2130::PROMConfig &promCo
                 otpromViewContents += " ";
             }
         }
+        otpromViewContents += "\n";
     }
+    otpromViewContents += tr("%1 blocks of %2 bytes. %3 bytes in total.").arg(CP2130::PROM_BLOCKS).arg(CP2130::PROM_BLOCK_SIZE).arg(CP2130::PROM_BLOCKS * CP2130::PROM_BLOCK_SIZE);
     ui->plainTextEditOTPROMView->setPlainText(otpromViewContents);
 }

@@ -136,7 +136,7 @@ void ConfiguratorWindow::on_actionOTPROMViewer_triggered()
         } else {  // If error check passes
             otpromViewerDialog_ = new OTPROMViewerDialog(this);
             otpromViewerDialog_->setAttribute(Qt::WA_DeleteOnClose);  // It is important to delete the dialog in memory once closed, in order to force the application to retrieve the PROM configuration if the window is opened again
-            otpromViewerDialog_->setWindowTitle(tr("PROM Viewer (S/N: %1)").arg(serialstr_));
+            otpromViewerDialog_->setWindowTitle(tr("OTP ROM Viewer (S/N: %1)").arg(serialstr_));
             otpromViewerDialog_->setOTPROMViewPlainText(promConfig);
             otpromViewerDialog_->show();
         }
