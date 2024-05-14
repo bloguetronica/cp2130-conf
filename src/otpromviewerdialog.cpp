@@ -52,6 +52,6 @@ void OTPROMViewerDialog::setOTPROMViewPlainText(const CP2130::PROMConfig &promCo
         }
         otpromViewContents += "\n";
     }
-    otpromViewContents += tr("%1 blocks of %2 bytes. %3 bytes in total.").arg(CP2130::PROM_BLOCKS).arg(CP2130::PROM_BLOCK_SIZE).arg(CP2130::PROM_BLOCKS * CP2130::PROM_BLOCK_SIZE);
+    otpromViewContents += tr("%1 blocks of %2 bytes. %3 bytes in total.").arg(CP2130::PROM_BLOCKS).arg(CP2130::PROM_BLOCK_SIZE).arg(CP2130::PROM_SIZE);
     ui->plainTextEditOTPROMView->setPlainText(otpromViewContents);
 }
