@@ -34,7 +34,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     nonblocking.cpp \
-    otpromviewerdialog.cpp
+    otpromviewerdialog.cpp \
+    serialgeneratordialog.cpp
 
 HEADERS += \
     aboutdialog.h \
@@ -46,14 +47,16 @@ HEADERS += \
     libusb-extra.h \
     mainwindow.h \
     nonblocking.h \
-    otpromviewerdialog.h
+    otpromviewerdialog.h \
+    serialgeneratordialog.h
 
 FORMS += \
     aboutdialog.ui \
     configuratorwindow.ui \
     informationdialog.ui \
     mainwindow.ui \
-    otpromviewerdialog.ui
+    otpromviewerdialog.ui \
+    serialgeneratordialog.ui
 
 TRANSLATIONS += \
     translations/cp2130-conf_en.ts \
