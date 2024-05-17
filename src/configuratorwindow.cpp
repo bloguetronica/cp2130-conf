@@ -27,6 +27,7 @@
 #include <QRegExpValidator>
 #include "common.h"
 #include "nonblocking.h"
+#include "serialgeneratordialog.h"
 #include "configuratorwindow.h"
 #include "ui_configuratorwindow.h"
 
@@ -150,6 +151,15 @@ void ConfiguratorWindow::on_actionOTPROMViewer_triggered()
 void ConfiguratorWindow::on_actionSerialGeneratorEnable_toggled(bool checked)
 {
     ui->pushButtonGenerateSerial->setEnabled(checked);
+}
+
+// Implemented in version 3.0
+void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
+{
+    int errcnt = 0;
+    QString errstr;
+    SerialGeneratorDialog serialGeneratorDialog(this);
+    serialGeneratorDialog.exec();  // Temporary
 }
 
 // Implemented in version 1.6
