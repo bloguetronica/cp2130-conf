@@ -35,6 +35,7 @@ SOURCES += \
     mainwindow.cpp \
     nonblocking.cpp \
     otpromviewerdialog.cpp \
+    serialgenerator.cpp \
     serialgeneratordialog.cpp
 
 HEADERS += \
@@ -48,6 +49,7 @@ HEADERS += \
     mainwindow.h \
     nonblocking.h \
     otpromviewerdialog.h \
+    serialgenerator.h \
     serialgeneratordialog.h
 
 FORMS += \
