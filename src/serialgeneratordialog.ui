@@ -55,7 +55,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QLabel" name="labelProtoSerial">
+  <widget class="QLabel" name="labelPrototypeSerial">
    <property name="geometry">
     <rect>
      <x>10</x>

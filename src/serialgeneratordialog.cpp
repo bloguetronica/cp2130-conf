@@ -33,3 +33,9 @@ SerialGeneratorDialog::~SerialGeneratorDialog()
 {
     delete ui;
 }
+
+void SerialGeneratorDialog::on_checkBoxExportToFile_stateChanged(int state)
+{
+    ui->checkBoxEnable->setEnabled(!state == Qt::Unchecked);
+    ui->checkBoxOverwrite->setEnabled(!state == Qt::Unchecked);
+}

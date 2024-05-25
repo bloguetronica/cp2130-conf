@@ -36,6 +36,9 @@ public:
     explicit SerialGeneratorDialog(QWidget *parent = nullptr);
     ~SerialGeneratorDialog();
 
+private slots:
+    void on_checkBoxExportToFile_stateChanged(int state);
+
 private:
     Ui::SerialGeneratorDialog *ui;
 };
