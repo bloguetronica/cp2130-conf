@@ -21,7 +21,38 @@
 // Includes
 #include "serialgenerator.h"
 
-SerialGenerator::SerialGenerator()
+SerialGenerator::SerialGenerator() :
+    prototypeSerial_("????????"),  // Default constructor initializes an 8-digit generator
+    replaceMode_(0x01)
 {
+}
 
+bool SerialGenerator::replaceWithDigits() const
+{
+    return (0x01 & replaceMode_) != 0x00;
+}
+
+bool SerialGenerator::replaceWithLowercaseLetters() const
+{
+    return (0x04 & replaceMode_) != 0x00;
+}
+
+bool SerialGenerator::replaceWithUppercaseLetters() const
+{
+    return (0x02 & replaceMode_) != 0x00;
+}
+
+void SerialGenerator::setReplaceMode(quint8 replaceMode)
+{
+    replaceMode_ = replaceMode;
+}
+
+void SerialGenerator::setReplaceMode(bool replaceWithDigits, bool replaceWithUppercaseLetters, bool replaceWithLowercaseLetters)
+{
+    replaceMode_ = static_cast<quint8>(replaceWithLowercaseLetters << 2 | replaceWithUppercaseLetters << 1 | replaceWithDigits << 0);
+}
+
+void SerialGenerator::setSerialString(const QString &prototypeSerial)
+{
+    prototypeSerial_ = prototypeSerial;
 }

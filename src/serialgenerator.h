@@ -21,10 +21,25 @@
 #ifndef SERIALGENERATOR_H
 #define SERIALGENERATOR_H
 
+// Includes
+#include <QString>
+
 class SerialGenerator
 {
+private:
+    QString prototypeSerial_;
+    quint8 replaceMode_;
+
 public:
     SerialGenerator();
+
+    bool replaceWithDigits() const;
+    bool replaceWithLowercaseLetters() const;
+    bool replaceWithUppercaseLetters() const;
+
+    void setReplaceMode(quint8 replaceMode);
+    void setReplaceMode(bool replaceWithDigits, bool replaceWithUppercaseLetters, bool replaceWithLowercaseLetters);
+    void setSerialString(const QString &prototypeSerial);
 };
 
 #endif  // SERIALGENERATOR_H
