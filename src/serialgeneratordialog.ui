@@ -80,11 +80,11 @@
      <height>31</height>
     </rect>
    </property>
-   <property name="text">
-    <string>????????</string>
-   </property>
    <property name="maxLength">
     <number>30</number>
+   </property>
+   <property name="clearButtonEnabled">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="labelReplaceWith">
@@ -114,9 +114,6 @@
    </property>
    <property name="text">
     <string>Digits</string>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
    </property>
   </widget>
   <widget class="QCheckBox" name="checkBoxUppercase">
@@ -204,6 +201,15 @@
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEditPrototypeSerial</tabstop>
+  <tabstop>checkBoxDigits</tabstop>
+  <tabstop>checkBoxUppercase</tabstop>
+  <tabstop>checkBoxLowercase</tabstop>
+  <tabstop>checkBoxExportToFile</tabstop>
+  <tabstop>checkBoxEnable</tabstop>
+  <tabstop>checkBoxOverwrite</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>
