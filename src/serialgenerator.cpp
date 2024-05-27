@@ -27,32 +27,50 @@ SerialGenerator::SerialGenerator() :
 {
 }
 
+// Returns the prototype serial string
+QString SerialGenerator::prototypeSerial() const
+{
+    return prototypeSerial_;
+}
+
+// Returns the replace mode
+quint8 SerialGenerator::replaceMode() const
+{
+    return replaceMode_;
+}
+
+// Returns true if the "replace with digits" mode is enabled
 bool SerialGenerator::replaceWithDigits() const
 {
-    return (0x01 & replaceMode_) != 0x00;
+    return (RMDIGIT & replaceMode_) != 0x00;
 }
 
+// Returns true if the "replace with lowercase letters" mode is enabled
 bool SerialGenerator::replaceWithLowercaseLetters() const
 {
-    return (0x04 & replaceMode_) != 0x00;
+    return (RMLOWER & replaceMode_) != 0x00;
 }
 
+// Returns true if the "replace with uppercase letters" mode is enabled
 bool SerialGenerator::replaceWithUppercaseLetters() const
 {
-    return (0x02 & replaceMode_) != 0x00;
+    return (RMUPPER & replaceMode_) != 0x00;
 }
 
+// Sets the replace mode
 void SerialGenerator::setReplaceMode(quint8 replaceMode)
 {
     replaceMode_ = replaceMode;
 }
 
-void SerialGenerator::setReplaceMode(bool replaceWithDigits, bool replaceWithUppercaseLetters, bool replaceWithLowercaseLetters)
+// Sets the replace mode via separate flags
+void SerialGenerator::setReplaceMode(bool replaceWDigit, bool replaceWUpper, bool replaceWLower)
 {
-    replaceMode_ = static_cast<quint8>(replaceWithLowercaseLetters << 2 | replaceWithUppercaseLetters << 1 | replaceWithDigits << 0);
+    replaceMode_ = static_cast<quint8>(replaceWLower << 2 | replaceWUpper << 1 | replaceWDigit << 0);
 }
 
-void SerialGenerator::setSerialString(const QString &prototypeSerial)
+// Sets the prototype serial string
+void SerialGenerator::setPrototypeSerial(const QString &prototypeSerial)
 {
     prototypeSerial_ = prototypeSerial;
 }

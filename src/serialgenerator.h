@@ -31,15 +31,22 @@ private:
     quint8 replaceMode_;
 
 public:
+    // Class definitions
+    static const quint8 RMDIGIT = 0x01;  // Mask for the "replace with digits" replace mode
+    static const quint8 RMUPPER = 0x02;  // Mask for the "replace with uppercase letters" replace mode
+    static const quint8 RMLOWER = 0x04;  // Mask for the "replace with lowercase letters" replace mode
+
     SerialGenerator();
 
+    QString prototypeSerial() const;
+    quint8 replaceMode() const;
     bool replaceWithDigits() const;
     bool replaceWithLowercaseLetters() const;
     bool replaceWithUppercaseLetters() const;
 
     void setReplaceMode(quint8 replaceMode);
-    void setReplaceMode(bool replaceWithDigits, bool replaceWithUppercaseLetters, bool replaceWithLowercaseLetters);
-    void setSerialString(const QString &prototypeSerial);
+    void setReplaceMode(bool replaceWDigit, bool replaceWUpper, bool replaceWLower);
+    void setPrototypeSerial(const QString &prototypeSerial);
 };
 
 #endif  // SERIALGENERATOR_H
