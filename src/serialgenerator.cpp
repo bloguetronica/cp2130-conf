@@ -23,7 +23,7 @@
 
 SerialGenerator::SerialGenerator() :
     prototypeSerial_("????????"),  // Default constructor initializes an 8-digit generator
-    replaceMode_(0x01)
+    replaceMode_(RMDIGIT)
 {
 }
 
