@@ -31,8 +31,6 @@
 #include "configuratorwindow.h"
 #include "ui_configuratorwindow.h"
 
-#include "serialgenerator.h"  // Temporary
-
 // Definitions
 const int ENUM_RETRIES = 10;  // Number of enumeration retries
 const int POWER_LIMIT = 500;  // Maximum current consumption limit, as per the USB 2.0 specification
@@ -339,10 +337,10 @@ void ConfiguratorWindow::on_lineEditVID_textEdited()
     ui->lineEditVID->setCursorPosition(curPosition);
 }
 
+// Implemented in version 3.0
 void ConfiguratorWindow::on_pushButtonGenerateSerial_clicked()
 {
-    SerialGenerator serialgen;
-    ui->lineEditSerial->setText(serialgen.generateSerial());
+    ui->lineEditSerial->setText(serialgen_.generateSerial());
 }
 
 void ConfiguratorWindow::on_pushButtonRevert_clicked()

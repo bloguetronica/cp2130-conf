@@ -28,6 +28,7 @@
 #include <QStringList>
 #include "configuration.h"
 #include "cp2130.h"
+#include "serialgenerator.h"
 #include "informationdialog.h"
 #include "otpromviewerdialog.h"
 
@@ -96,6 +97,7 @@ private:
     QPointer<InformationDialog> informationDialog_;
     QPointer<OTPROMViewerDialog> otpromViewerDialog_;
     QString errmsg_, serialstr_;
+    SerialGenerator serialgen_;
     quint16 lockWord_, pid_, vid_;
     bool err_, requiresReset_, viewEnabled_ = false;
 

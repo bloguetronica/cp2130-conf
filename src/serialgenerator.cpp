@@ -98,7 +98,7 @@ void SerialGenerator::setReplaceMode(bool replaceWDigit, bool replaceWUpper, boo
 // Sets the prototype serial string
 void SerialGenerator::setPrototypeSerial(const QString &prototypeSerial)
 {
-    if (prototypeSerial.size() < 31 && prototypeSerial.contains('?')) {
+    if (prototypeSerial.size() <= 30 && prototypeSerial.contains('?')) {
         prototypeSerial_ = prototypeSerial;
     }
 }
