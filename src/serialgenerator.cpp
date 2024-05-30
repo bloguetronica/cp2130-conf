@@ -60,17 +60,23 @@ bool SerialGenerator::replaceWithUppercaseLetters() const
 // Sets the replace mode
 void SerialGenerator::setReplaceMode(quint8 replaceMode)
 {
-    replaceMode_ = replaceMode;
+    if (replaceMode != 0x00) {
+        replaceMode_ = replaceMode;
+    }
 }
 
 // Sets the replace mode via separate flags
 void SerialGenerator::setReplaceMode(bool replaceWDigit, bool replaceWUpper, bool replaceWLower)
 {
-    replaceMode_ = static_cast<quint8>(replaceWLower << 2 | replaceWUpper << 1 | replaceWDigit << 0);
+    if (replaceWDigit == true || replaceWUpper == true || replaceWLower == true) {
+        replaceMode_ = static_cast<quint8>(replaceWLower << 2 | replaceWUpper << 1 | replaceWDigit << 0);
+    }
 }
 
 // Sets the prototype serial string
 void SerialGenerator::setPrototypeSerial(const QString &prototypeSerial)
 {
-    prototypeSerial_ = prototypeSerial;
+    if (prototypeSerial.contains('?')) {
+        prototypeSerial_ = prototypeSerial;
+    }
 }
