@@ -43,10 +43,8 @@ QString SerialGenerator::generateSerial() const
     }
     int bounds = replaceWith.size();
     QString serial(prototypeSerial_);
-    for (QChar c : serial) {
-        if (c == '?') {
-            c = replaceWith[QRandomGenerator::global()->bounded(bounds)];
-        }
+    while (serial.contains('?')) {
+        serial[serial.indexOf('?')] = replaceWith[QRandomGenerator::global()->bounded(bounds)];
     }
     return serial;
 }
@@ -100,7 +98,7 @@ void SerialGenerator::setReplaceMode(bool replaceWDigit, bool replaceWUpper, boo
 // Sets the prototype serial string
 void SerialGenerator::setPrototypeSerial(const QString &prototypeSerial)
 {
-    if (prototypeSerial.contains('?')) {
+    if (prototypeSerial.size() < 31 && prototypeSerial.contains('?')) {
         prototypeSerial_ = prototypeSerial;
     }
 }

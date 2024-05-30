@@ -74,6 +74,7 @@ private slots:
     void on_lineEditSuspendMode_textEdited();
     void on_lineEditVID_textChanged();
     void on_lineEditVID_textEdited();
+    void on_pushButtonGenerateSerial_clicked();
     void on_pushButtonRevert_clicked();
     void on_pushButtonWrite_clicked();
     void verifyConfiguration();
