@@ -38,6 +38,7 @@ public:
 
     SerialGenerator();
 
+    QString generateSerial() const;
     QString prototypeSerial() const;
     quint8 replaceMode() const;
     bool replaceWithDigits() const;

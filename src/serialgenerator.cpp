@@ -19,12 +19,36 @@
 
 
 // Includes
+#include <QRandomGenerator>
 #include "serialgenerator.h"
 
 SerialGenerator::SerialGenerator() :
     prototypeSerial_("????????"),  // Default constructor initializes an 8-digit generator
     replaceMode_(RMDIGIT)
 {
+}
+
+// Generates a serial number
+QString SerialGenerator::generateSerial() const
+{
+    QString replaceWith;
+    if (replaceWithDigits()) {
+        replaceWith += "0123456789";
+    }
+    if (replaceWithUppercaseLetters()) {
+        replaceWith += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    }
+    if (replaceWithLowercaseLetters()) {
+        replaceWith += "abcdefghijklmnopqrstuvwxyz";
+    }
+    int bounds = replaceWith.size();
+    QString serial(prototypeSerial_);
+    for (QChar c : serial) {
+        if (c == '?') {
+            c = replaceWith[QRandomGenerator::global()->bounded(bounds)];
+        }
+    }
+    return serial;
 }
 
 // Returns the prototype serial string
