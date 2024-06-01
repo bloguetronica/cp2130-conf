@@ -23,6 +23,7 @@
 
 // Includes
 #include <QDialog>
+#include <QString>
 
 namespace Ui {
 class SerialGeneratorDialog;
@@ -35,6 +36,21 @@ class SerialGeneratorDialog : public QDialog
 public:
     explicit SerialGeneratorDialog(QWidget *parent = nullptr);
     ~SerialGeneratorDialog();
+
+    bool digitsCheckBoxIsChecked();
+    bool enableCheckBoxIsChecked();
+    bool exportToFileCheckBoxIsChecked();
+    bool lowercaseCheckBoxIsChecked();
+    bool overwriteCheckBoxIsChecked();
+    QString prototypeSerialLineEditText();
+    void setDigitsCheckBox(bool digit);
+    void setEnableCheckBox(bool enable);
+    void setExportToFileCheckBox(bool toFile);
+    void setLowercaseCheckBox(bool lower);
+    void setOverwriteCheckBox(bool overwrite);
+    void setPrototypeSerialLineEditText(QString prototypeSerial);
+    void setUppercaseCheckBox(bool upper);
+    bool uppercaseCheckBoxIsChecked();
 
 private slots:
     void on_checkBoxExportToFile_stateChanged(int state);
