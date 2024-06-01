@@ -161,14 +161,14 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
     serialGeneratorDialog.setDigitsCheckBox(serialgen_.replaceWithDigits());
     serialGeneratorDialog.setUppercaseCheckBox(serialgen_.replaceWithUppercaseLetters());
     serialGeneratorDialog.setLowercaseCheckBox(serialgen_.replaceWithLowercaseLetters());
-    if (serialGeneratorDialog.exec() == QDialog::Accepted) {  //
+    if (serialGeneratorDialog.exec() == QDialog::Accepted) {  // If the user clicks "OK"
         QString prototypeSerial = serialGeneratorDialog.prototypeSerialLineEditText();
         bool digit = serialGeneratorDialog.digitsCheckBoxIsChecked();
         bool upper = serialGeneratorDialog.uppercaseCheckBoxIsChecked();
         bool lower = serialGeneratorDialog.lowercaseCheckBoxIsChecked();
-        if (!prototypeSerial.contains('?') || (digit == false && upper == false && lower == false)) {
+        if (!prototypeSerial.contains('?') || (digit == false && upper == false && lower == false)) {  // If the user entered invalid settings (i.e. the serial prototype string does not contain a wildcard character or if no replacement option was selected)
             QMessageBox::critical(this, tr("Error"), tr("The serial generator settings are invalid and will not be applied.\n\nPlease verify that the serial prototype string contains at least one wildcard character (?) and at least one replacement option is selected."));
-        } else {
+        } else {  // Valid settings
             serialgen_.setPrototypeSerial(prototypeSerial);
             serialgen_.setReplaceMode(digit, upper, lower);
         }
