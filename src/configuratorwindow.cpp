@@ -124,6 +124,12 @@ void ConfiguratorWindow::on_actionInformation_triggered()
     }
 }
 
+// Implemented in version 3.0
+void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
+{
+
+}
+
 void ConfiguratorWindow::on_actionOTPROMViewer_triggered()
 {
     if (otpromViewerDialog_.isNull()) {  // If the dialog is not open
@@ -144,6 +150,16 @@ void ConfiguratorWindow::on_actionOTPROMViewer_triggered()
     } else {
         otpromViewerDialog_->showNormal();  // Required if the dialog is minimized
         otpromViewerDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
+    }
+}
+
+// Implemented in version 3.0
+void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
+{
+    if(showInvalidInput()) {
+        QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
+    } else {
+
     }
 }
 

@@ -51,7 +51,9 @@ private slots:
     void lockOTP();
     void on_actionAbout_triggered();
     void on_actionInformation_triggered();
+    void on_actionLoadConfiguration_triggered();
     void on_actionOTPROMViewer_triggered();
+    void on_actionSaveConfiguration_triggered();
     void on_actionSerialGeneratorEnable_toggled(bool checked);
     void on_actionSerialGeneratorSettings_triggered();
     void on_lineEditManufacturer_textEdited();
