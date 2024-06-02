@@ -130,6 +130,7 @@ void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
 
 }
 
+// Implemented in version 3.0
 void ConfiguratorWindow::on_actionOTPROMViewer_triggered()
 {
     if (otpromViewerDialog_.isNull()) {  // If the dialog is not open
