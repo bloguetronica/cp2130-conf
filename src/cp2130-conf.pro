@@ -50,7 +50,8 @@ HEADERS += \
     nonblocking.h \
     otpromviewerdialog.h \
     serialgenerator.h \
-    serialgeneratordialog.h
+    serialgeneratordialog.h \
+    serialgeneratorsetting.h
 
 FORMS += \
     aboutdialog.ui \

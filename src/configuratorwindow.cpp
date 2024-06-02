@@ -157,10 +157,13 @@ void ConfiguratorWindow::on_actionSerialGeneratorEnable_toggled(bool checked)
 void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
 {
     SerialGeneratorDialog serialGeneratorDialog(this);
-    serialGeneratorDialog.setPrototypeSerialLineEditText(serialgen_.prototypeSerial());
-    serialGeneratorDialog.setDigitsCheckBox(serialgen_.replaceWithDigits());
-    serialGeneratorDialog.setUppercaseCheckBox(serialgen_.replaceWithUppercaseLetters());
-    serialGeneratorDialog.setLowercaseCheckBox(serialgen_.replaceWithLowercaseLetters());
+    serialGeneratorDialog.setPrototypeSerialLineEditText(serialgensetting_.serialgen.prototypeSerial());
+    serialGeneratorDialog.setDigitsCheckBox(serialgensetting_.serialgen.replaceWithDigits());
+    serialGeneratorDialog.setUppercaseCheckBox(serialgensetting_.serialgen.replaceWithUppercaseLetters());
+    serialGeneratorDialog.setLowercaseCheckBox(serialgensetting_.serialgen.replaceWithLowercaseLetters());
+    serialGeneratorDialog.setExportToFileCheckBox(serialgensetting_.doexport);
+    serialGeneratorDialog.setEnableCheckBox(serialgensetting_.genenable);
+    serialGeneratorDialog.setOverwriteCheckBox(serialgensetting_.overwrite);
     if (serialGeneratorDialog.exec() == QDialog::Accepted) {  // If the user clicks "OK"
         QString prototypeSerial = serialGeneratorDialog.prototypeSerialLineEditText();
         bool digit = serialGeneratorDialog.digitsCheckBoxIsChecked();
@@ -169,8 +172,11 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
         if (!prototypeSerial.contains('?') || (digit == false && upper == false && lower == false)) {  // If the user entered invalid settings (i.e. the serial prototype string does not contain a wildcard character or no replacement option was selected)
             QMessageBox::critical(this, tr("Error"), tr("The serial generator settings are invalid and will not be applied.\n\nPlease verify that the serial prototype string contains at least one wildcard character (?) and at least one replacement option is selected."));
         } else {  // Valid settings
-            serialgen_.setPrototypeSerial(prototypeSerial);
-            serialgen_.setReplaceMode(digit, upper, lower);
+            serialgensetting_.serialgen.setPrototypeSerial(prototypeSerial);
+            serialgensetting_.serialgen.setReplaceMode(digit, upper, lower);
+            serialgensetting_.doexport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
+            serialgensetting_.genenable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+            serialgensetting_.overwrite = serialGeneratorDialog.overwriteCheckBoxIsChecked();  // Same as above, because "checkBoxOverwrite" is automatically unchecked if "checkBoxExportToFile" gets unchecked
         }
     }
 }
@@ -353,7 +359,7 @@ void ConfiguratorWindow::on_lineEditVID_textEdited()
 // Implemented in version 3.0
 void ConfiguratorWindow::on_pushButtonGenerateSerial_clicked()
 {
-    ui->lineEditSerial->setText(serialgen_.generateSerial());
+    ui->lineEditSerial->setText(serialgensetting_.serialgen.generateSerial());
 }
 
 void ConfiguratorWindow::on_pushButtonRevert_clicked()

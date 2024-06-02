@@ -76,16 +76,16 @@ void SerialGeneratorDialog::setDigitsCheckBox(bool digit)
     ui->checkBoxDigits->setChecked(digit);
 }
 
-// Sets the state of "checkBoxEnabled"
+// Sets the state of "checkBoxEnable"
 void SerialGeneratorDialog::setEnableCheckBox(bool enable)
 {
     ui->checkBoxEnable->setChecked(enable);
 }
 
 // Sets the state of "checkBoxExportToFile"
-void SerialGeneratorDialog::setExportToFileCheckBox(bool toFile)
+void SerialGeneratorDialog::setExportToFileCheckBox(bool doexport)
 {
-    ui->checkBoxExportToFile->setChecked(toFile);
+    ui->checkBoxExportToFile->setChecked(doexport);
 }
 
 // Sets the state of "checkBoxLowercase"
@@ -101,9 +101,9 @@ void SerialGeneratorDialog::setOverwriteCheckBox(bool overwrite)
 }
 
 // Sets the text of "lineEditPrototypeSerial"
-void SerialGeneratorDialog::setPrototypeSerialLineEditText(QString prototypeSerial)
+void SerialGeneratorDialog::setPrototypeSerialLineEditText(QString prototype)
 {
-    ui->lineEditPrototypeSerial->setText(prototypeSerial);
+    ui->lineEditPrototypeSerial->setText(prototype);
 }
 
 // Sets the state of "checkBoxUppercase"

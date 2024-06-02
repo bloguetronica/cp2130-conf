@@ -45,10 +45,10 @@ public:
     QString prototypeSerialLineEditText();
     void setDigitsCheckBox(bool digit);
     void setEnableCheckBox(bool enable);
-    void setExportToFileCheckBox(bool toFile);
+    void setExportToFileCheckBox(bool doexport);
     void setLowercaseCheckBox(bool lower);
     void setOverwriteCheckBox(bool overwrite);
-    void setPrototypeSerialLineEditText(QString prototypeSerial);
+    void setPrototypeSerialLineEditText(QString prototype);
     void setUppercaseCheckBox(bool upper);
     bool uppercaseCheckBoxIsChecked();
 
