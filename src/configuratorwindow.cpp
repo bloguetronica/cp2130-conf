@@ -165,14 +165,14 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
     serialGeneratorDialog.setEnableCheckBox(serialgensetting_.genenable);
     serialGeneratorDialog.setOverwriteCheckBox(serialgensetting_.overwrite);
     if (serialGeneratorDialog.exec() == QDialog::Accepted) {  // If the user clicks "OK"
-        QString prototypeSerial = serialGeneratorDialog.prototypeSerialLineEditText();
+        QString prototype = serialGeneratorDialog.prototypeSerialLineEditText();
         bool digit = serialGeneratorDialog.digitsCheckBoxIsChecked();
         bool upper = serialGeneratorDialog.uppercaseCheckBoxIsChecked();
         bool lower = serialGeneratorDialog.lowercaseCheckBoxIsChecked();
-        if (!prototypeSerial.contains('?') || (digit == false && upper == false && lower == false)) {  // If the user entered invalid settings (i.e. the serial prototype string does not contain a wildcard character or no replacement option was selected)
+        if (!prototype.contains('?') || (digit == false && upper == false && lower == false)) {  // If the user entered invalid settings (i.e. the serial prototype string does not contain a wildcard character or no replacement option was selected)
             QMessageBox::critical(this, tr("Error"), tr("The serial generator settings are invalid and will not be applied.\n\nPlease verify that the serial prototype string contains at least one wildcard character (?) and at least one replacement option is selected."));
         } else {  // Valid settings
-            serialgensetting_.serialgen.setPrototypeSerial(prototypeSerial);
+            serialgensetting_.serialgen.setPrototypeSerial(prototype);
             serialgensetting_.serialgen.setReplaceMode(digit, upper, lower);
             serialgensetting_.doexport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
             serialgensetting_.genenable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
