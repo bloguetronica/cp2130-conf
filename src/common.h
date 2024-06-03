@@ -21,6 +21,12 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+// Includes
+#include <QString>
+
+// Global variables
+extern QString filepath;
+
 // Function prototypes
 void closeAboutDialog();
 void showAboutDialog();

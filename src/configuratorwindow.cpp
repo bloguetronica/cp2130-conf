@@ -20,6 +20,7 @@
 
 // Includes
 #include <cstring>
+#include <QFileDialog>
 #include <QMessageBox>
 #include <QMetaObject>
 #include <QProgressDialog>
@@ -127,7 +128,7 @@ void ConfiguratorWindow::on_actionInformation_triggered()
 // Implemented in version 3.0
 void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
 {
-
+    QString filename = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), filepath, tr("XML files (*.xml);;All files (*)"));
 }
 
 // Implemented in version 3.0
@@ -160,7 +161,7 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
     if(showInvalidInput()) {
         QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
     } else {
-
+        QString filename = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), filepath, tr("XML files (*.xml);;All files (*)"));
     }
 }
 
