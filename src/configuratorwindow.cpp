@@ -26,6 +26,8 @@
 #include <QProgressDialog>
 #include <QRegExp>
 #include <QRegExpValidator>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 #include "common.h"
 #include "nonblocking.h"
 #include "serialgeneratordialog.h"
