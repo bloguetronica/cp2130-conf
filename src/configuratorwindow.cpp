@@ -151,6 +151,7 @@ void ConfiguratorWindow::on_actionOTPROMViewer_triggered()
             otpromViewerDialog_->setOTPROMViewPlainText(promConfig);
             otpromViewerDialog_->show();
         }
+        CP2130::listDevices(vid_, pid_, errcnt, errstr);  // This is a workaround to prevent an issue where the device list shows an incorrect serial number pertaining to the device after retrieving its PROM configuration
     } else {
         otpromViewerDialog_->showNormal();  // Required if the dialog is minimized
         otpromViewerDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
