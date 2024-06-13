@@ -20,7 +20,10 @@
 
 // Includes
 #include <cstring>
+#include <QDir>
+#include <QFile>
 #include <QFileDialog>
+#include <QIODevice>
 #include <QMessageBox>
 #include <QMetaObject>
 #include <QProgressDialog>
@@ -131,6 +134,14 @@ void ConfiguratorWindow::on_actionInformation_triggered()
 void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
 {
     QString filename = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), filepath, tr("XML files (*.xml);;All files (*)"));
+    if (!filename.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
+        QFile file(filename);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QMessageBox::critical(this, tr("Error"), tr("Could not read from %1.\n\nPlease verify that you have read access to this file.").arg(QDir::toNativeSeparators(filename)));
+        } else {
+
+        }
+    }
 }
 
 // Implemented in version 3.0
@@ -165,6 +176,9 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
         QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
     } else {
         QString filename = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), filepath, tr("XML files (*.xml);;All files (*)"));
+        if (!filename.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
+
+        }
     }
 }
 
