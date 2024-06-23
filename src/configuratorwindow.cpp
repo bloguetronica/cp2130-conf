@@ -21,7 +21,6 @@
 // Includes
 #include <cstring>
 #include <QDir>
-#include <QFile>
 #include <QFileDialog>
 #include <QIODevice>
 #include <QMessageBox>
@@ -139,8 +138,9 @@ void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QMessageBox::critical(this, tr("Error"), tr("Could not read from %1.\n\nPlease verify that you have read access to this file.").arg(QDir::toNativeSeparators(filename)));
         } else {
-            QXmlStreamReader xmlReader;
-            xmlReader.setDevice(&file);
+            loadConfiguration(file);
+            file.close();
+            filepath = filename;
         }
     }
 }
@@ -178,7 +178,14 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
     } else {
         QString filename = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), filepath, tr("XML files (*.xml);;All files (*)"));
         if (!filename.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
-
+            QFile file(filename);
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                QMessageBox::critical(this, tr("Error"), tr("Could not write to %1.\n\nPlease verify that you have write access to this file.").arg(QDir::toNativeSeparators(filename)));
+            } else {
+                saveConfiguration(file);
+                file.close();
+                filepath = filename;
+            }
         }
     }
 }
@@ -730,6 +737,75 @@ void ConfiguratorWindow::handleError()
     QMessageBox::critical(this, tr("Error"), errmsg_);
 }
 
+// Loads the configuration from a given file (implemented in version 3.0)
+void ConfiguratorWindow::loadConfiguration(QFile &file)
+{
+    QXmlStreamReader xmlReader;
+    xmlReader.setDevice(&file);
+    xmlReader.readNext();
+    while (!xmlReader.atEnd()) {
+        if (xmlReader.isStartElement()) {
+            if (xmlReader.name() == "cp2130config") {
+                xmlReader.readNext();
+                while (!xmlReader.atEnd()) {
+                    if (xmlReader.isStartElement()) {
+                        if (xmlReader.name() == "manufacturer" && (CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF) {
+                            foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                                if (attr.name().toString() == "string") {
+                                    ui->lineEditManufacturer->setText(attr.value().toString());
+                                }
+                            }
+                        } else if (xmlReader.name() == "product" && (CP2130::LWPROD & lockWord_) == CP2130::LWPROD) {
+                            foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                                if (attr.name().toString() == "string") {
+                                    ui->lineEditProduct->setText(attr.value().toString());
+                                }
+                            }
+                      /*} else if (xmlReader.name() == "serial" && (CP2130::LWSER & lockWord_) == CP2130::LWSER) {
+                            foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                                if (attr.name().toString() == "string") {
+                                    ui->lineEditSerial->setText(attr.value().toString());
+                                }
+                            }*/
+                        } else if (xmlReader.name() == "vid" && (CP2130::LWVID & lockWord_) == CP2130::LWVID) {
+                            foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                                if (attr.name().toString() == "value") {
+                                    ui->lineEditVID->setText(attr.value().toString());
+                                }
+                            }
+                        } else if (xmlReader.name() == "pid" && (CP2130::LWPID & lockWord_) == CP2130::LWPID) {
+                            foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                                if (attr.name().toString() == "value") {
+                                    ui->lineEditPID->setText(attr.value().toString());
+                                }
+                            }
+                        }
+                      /*} else if ((CP2130::LWREL & lockWord_) == CP2130::LWREL) {
+                            // To implement
+                        } else if ((CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW) {
+                            // To implement
+                        } else if ((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE) {
+                            // To implement
+                        } else if ((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
+                            // To implement
+                        } else if ((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG) {
+                            // To implement
+                        }*/
+                    }
+                    xmlReader.readNext();
+                }
+            } else {
+                QMessageBox::critical(this, tr("Error"), tr("The selected file is not a valid CP2130 configuration file."));
+                break;
+            }
+        }
+        xmlReader.readNext();
+    }
+    if (xmlReader.hasError()) {
+        // Do error handling
+    }
+}
+
 // Checks for errors and validates device operations
 // Void since version 1.2, since the return value was found to be redundant
 void ConfiguratorWindow::opCheck(const QString &op, int errcnt, QString errstr)
@@ -842,6 +918,35 @@ void ConfiguratorWindow::resetDevice()
         err_ = true;
         errmsg_ = tr("Device ceased to be available. It could be in use by another application.");  // Same as above
     }
+}
+
+// Saves the current configuration to a given file (implemented in version 3.0)
+void ConfiguratorWindow::saveConfiguration(QFile &file)
+{
+    QXmlStreamWriter xmlWriter(&file);
+    xmlWriter.setAutoFormatting(true);
+    xmlWriter.writeStartDocument();
+    xmlWriter.writeStartElement("cp2130config");
+    xmlWriter.writeAttribute("version", "1.0");
+    xmlWriter.writeStartElement("manufacturer");
+    xmlWriter.writeAttribute("string", ui->lineEditManufacturer->text());
+    xmlWriter.writeEndElement();
+    xmlWriter.writeStartElement("product");
+    xmlWriter.writeAttribute("string", ui->lineEditProduct->text());
+    xmlWriter.writeEndElement();
+  /*xmlWriter.writeStartElement("serial");
+    xmlWriter.writeAttribute("string", ui->lineEditSerial->text());
+    xmlWriter.writeEndElement();*/
+    xmlWriter.writeStartElement("vid");
+    xmlWriter.writeAttribute("value", ui->lineEditVID->text());
+    xmlWriter.writeEndElement();
+    xmlWriter.writeStartElement("pid");
+    xmlWriter.writeAttribute("value", ui->lineEditPID->text());
+    xmlWriter.writeEndElement();
+
+
+
+    xmlWriter.writeEndElement();
 }
 
 // Enables or disables the manufacturer descriptor field
