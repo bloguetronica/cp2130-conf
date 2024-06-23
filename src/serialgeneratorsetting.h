@@ -28,7 +28,7 @@ struct SerialGeneratorSetting {
     SerialGenerator serialgen;
     bool doexport;
     bool genenable;
-    bool overwrite;
+    bool autogen;
 };
 
 #endif  // SERIALGENERATORSETTING_H

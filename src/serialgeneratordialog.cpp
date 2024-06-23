@@ -34,6 +34,12 @@ SerialGeneratorDialog::~SerialGeneratorDialog()
     delete ui;
 }
 
+// Returns the state of "checkBoxAutoGenerate"
+bool SerialGeneratorDialog::autoGenerateCheckBoxIsChecked()
+{
+    return ui->checkBoxAutoGenerate->isChecked();
+}
+
 // Returns the state of "checkBoxDigits"
 bool SerialGeneratorDialog::digitsCheckBoxIsChecked()
 {
@@ -58,16 +64,16 @@ bool SerialGeneratorDialog::lowercaseCheckBoxIsChecked()
     return ui->checkBoxLowercase->isChecked();
 }
 
-// Returns the state of "checkBoxOverwrite"
-bool SerialGeneratorDialog::overwriteCheckBoxIsChecked()
-{
-    return ui->checkBoxOverwrite->isChecked();
-}
-
 // Returns the value of "lineEditPrototypeSerial"
 QString SerialGeneratorDialog::prototypeSerialLineEditText()
 {
     return ui->lineEditPrototypeSerial->text();
+}
+
+// Sets the state of "checkBoxAutoGenerate"
+void SerialGeneratorDialog::setAutoGenerateCheckBox(bool overwrite)
+{
+    ui->checkBoxAutoGenerate->setChecked(overwrite);
 }
 
 // Sets the state of "checkBoxDigits"
@@ -94,12 +100,6 @@ void SerialGeneratorDialog::setLowercaseCheckBox(bool lower)
     ui->checkBoxLowercase->setChecked(lower);
 }
 
-// Sets the state of "checkBoxOverwrite"
-void SerialGeneratorDialog::setOverwriteCheckBox(bool overwrite)
-{
-    ui->checkBoxOverwrite->setChecked(overwrite);
-}
-
 // Sets the text of "lineEditPrototypeSerial"
 void SerialGeneratorDialog::setPrototypeSerialLineEditText(QString prototype)
 {
@@ -121,9 +121,9 @@ bool SerialGeneratorDialog::uppercaseCheckBoxIsChecked()
 void SerialGeneratorDialog::on_checkBoxExportToFile_stateChanged(int state)
 {
     ui->checkBoxEnable->setEnabled(!state == Qt::Unchecked);
-    ui->checkBoxOverwrite->setEnabled(!state == Qt::Unchecked);
+    ui->checkBoxAutoGenerate->setEnabled(!state == Qt::Unchecked);
     if (state == Qt::Unchecked) {
         ui->checkBoxEnable->setChecked(false);
-        ui->checkBoxOverwrite->setChecked(false);
+        ui->checkBoxAutoGenerate->setChecked(false);
     }
 }

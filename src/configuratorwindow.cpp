@@ -138,7 +138,7 @@ void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QMessageBox::critical(this, tr("Error"), tr("Could not read from %1.\n\nPlease verify that you have read access to this file.").arg(QDir::toNativeSeparators(filename)));
         } else {
-            loadConfiguration(file);
+            loadConfigurationFromFile(file);
             file.close();
             filepath = filename;
         }
@@ -182,7 +182,7 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
                 QMessageBox::critical(this, tr("Error"), tr("Could not write to %1.\n\nPlease verify that you have write access to this file.").arg(QDir::toNativeSeparators(filename)));
             } else {
-                saveConfiguration(file);
+                saveConfigurationToFile(file);
                 file.close();
                 filepath = filename;
             }
@@ -206,7 +206,7 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
     serialGeneratorDialog.setLowercaseCheckBox(serialgensetting_.serialgen.replaceWithLowercaseLetters());
     serialGeneratorDialog.setExportToFileCheckBox(serialgensetting_.doexport);
     serialGeneratorDialog.setEnableCheckBox(serialgensetting_.genenable);
-    serialGeneratorDialog.setOverwriteCheckBox(serialgensetting_.overwrite);
+    serialGeneratorDialog.setAutoGenerateCheckBox(serialgensetting_.autogen);
     if (serialGeneratorDialog.exec() == QDialog::Accepted) {  // If the user clicks "OK"
         QString prototype = serialGeneratorDialog.prototypeSerialLineEditText();
         bool digit = serialGeneratorDialog.digitsCheckBoxIsChecked();
@@ -219,7 +219,7 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
             serialgensetting_.serialgen.setReplaceMode(digit, upper, lower);
             serialgensetting_.doexport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
             serialgensetting_.genenable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
-            serialgensetting_.overwrite = serialGeneratorDialog.overwriteCheckBoxIsChecked();  // Same as above, because "checkBoxOverwrite" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+            serialgensetting_.autogen = serialGeneratorDialog.autoGenerateCheckBoxIsChecked();  // Same as above, because "checkBoxAutoGenerate" is automatically unchecked if "checkBoxExportToFile" gets unchecked
         }
     }
 }
@@ -738,7 +738,7 @@ void ConfiguratorWindow::handleError()
 }
 
 // Loads the configuration from a given file (implemented in version 3.0)
-void ConfiguratorWindow::loadConfiguration(QFile &file)
+void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
 {
     QXmlStreamReader xmlReader;
     xmlReader.setDevice(&file);
@@ -761,12 +761,12 @@ void ConfiguratorWindow::loadConfiguration(QFile &file)
                                     ui->lineEditProduct->setText(attr.value().toString());
                                 }
                             }
-                      /*} else if (xmlReader.name() == "serial" && (CP2130::LWSER & lockWord_) == CP2130::LWSER) {
+                        } else if (xmlReader.name() == "serial" && (CP2130::LWSER & lockWord_) == CP2130::LWSER) {
                             foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                                 if (attr.name().toString() == "string") {
                                     ui->lineEditSerial->setText(attr.value().toString());
                                 }
-                            }*/
+                            }
                         } else if (xmlReader.name() == "vid" && (CP2130::LWVID & lockWord_) == CP2130::LWVID) {
                             foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                                 if (attr.name().toString() == "value") {
@@ -921,7 +921,7 @@ void ConfiguratorWindow::resetDevice()
 }
 
 // Saves the current configuration to a given file (implemented in version 3.0)
-void ConfiguratorWindow::saveConfiguration(QFile &file)
+void ConfiguratorWindow::saveConfigurationToFile(QFile &file)
 {
     QXmlStreamWriter xmlWriter(&file);
     xmlWriter.setAutoFormatting(true);
@@ -934,9 +934,9 @@ void ConfiguratorWindow::saveConfiguration(QFile &file)
     xmlWriter.writeStartElement("product");
     xmlWriter.writeAttribute("string", ui->lineEditProduct->text());
     xmlWriter.writeEndElement();
-  /*xmlWriter.writeStartElement("serial");
+    xmlWriter.writeStartElement("serial");
     xmlWriter.writeAttribute("string", ui->lineEditSerial->text());
-    xmlWriter.writeEndElement();*/
+    xmlWriter.writeEndElement();
     xmlWriter.writeStartElement("vid");
     xmlWriter.writeAttribute("value", ui->lineEditVID->text());
     xmlWriter.writeEndElement();

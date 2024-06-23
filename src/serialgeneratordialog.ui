@@ -183,7 +183,7 @@
      <string>Enable generator by default</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBoxOverwrite">
+   <widget class="QCheckBox" name="checkBoxAutoGenerate">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -196,7 +196,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Overwrite default serial number</string>
+     <string>Auto-generate when loading</string>
     </property>
    </widget>
   </widget>
@@ -208,7 +208,7 @@
   <tabstop>checkBoxLowercase</tabstop>
   <tabstop>checkBoxExportToFile</tabstop>
   <tabstop>checkBoxEnable</tabstop>
-  <tabstop>checkBoxOverwrite</tabstop>
+  <tabstop>checkBoxAutoGenerate</tabstop>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>

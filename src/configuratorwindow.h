@@ -115,12 +115,12 @@ private:
     void displayUSBConfig(const CP2130::USBConfig &usbconfig);
     void getEditedConfiguration();
     void handleError();
-    void loadConfiguration(QFile &file);
+    void loadConfigurationFromFile(QFile &file);
     void opCheck(const QString &op, int errcnt, QString errstr);
     QStringList prepareTaskList();
     void readDeviceConfiguration();
     void resetDevice();
-    void saveConfiguration(QFile &file);
+    void saveConfigurationToFile(QFile &file);
     void setManufacturerEnabled(bool value);
     void setMaxPowerEnabled(bool value);
     void setPinConfigEnabled(bool value);
