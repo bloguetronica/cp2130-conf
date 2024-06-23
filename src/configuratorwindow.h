@@ -70,6 +70,7 @@ private slots:
     void on_lineEditResumeMask_textEdited();
     void on_lineEditResumeMatch_textChanged();
     void on_lineEditResumeMatch_textEdited();
+    void on_lineEditSerial_textChanged();
     void on_lineEditSerial_textEdited();
     void on_lineEditSuspendLevel_textChanged();
     void on_lineEditSuspendLevel_textEdited();

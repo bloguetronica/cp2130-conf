@@ -139,7 +139,8 @@ void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QMessageBox::critical(this, tr("Error"), tr("Could not read from %1.\n\nPlease verify that you have read access to this file.").arg(QDir::toNativeSeparators(filename)));
         } else {
-
+            QXmlStreamReader xmlReader;
+            xmlReader.setDevice(&file);
         }
     }
 }
@@ -333,6 +334,16 @@ void ConfiguratorWindow::on_lineEditResumeMatch_textEdited()
     int curPosition = ui->lineEditResumeMatch->cursorPosition();
     ui->lineEditResumeMatch->setText(ui->lineEditResumeMatch->text().toLower());
     ui->lineEditResumeMatch->setCursorPosition(curPosition);
+}
+
+// Implemented in version 3.0
+void ConfiguratorWindow::on_lineEditSerial_textChanged()
+{
+    if (ui->lineEditSerial->text().isEmpty()) {
+        ui->lineEditSerial->setStyleSheet("background: rgb(255, 204, 0);");
+    } else {
+        ui->lineEditSerial->setStyleSheet("");
+    }
 }
 
 // Implemented in version 1.6
@@ -928,6 +939,10 @@ void ConfiguratorWindow::setWriteEnabled(bool value)
 bool ConfiguratorWindow::showInvalidInput()
 {
     bool retval = false;
+    if (ui->lineEditSerial->text().isEmpty()) {  // Condition added in version 3.0
+        ui->lineEditSerial->setStyleSheet("background: rgb(255, 102, 102);");
+        retval = true;
+    }
     if (ui->lineEditMaxPower->text().isEmpty()) {
         ui->lineEditMaxPower->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
