@@ -740,38 +740,69 @@ void ConfiguratorWindow::handleError()
 // Loads the configuration from a given file (implemented in version 3.0)
 void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
 {
+    bool err = false;
     QXmlStreamReader xmlReader;
     xmlReader.setDevice(&file);
     if (xmlReader.readNextStartElement() && xmlReader.name() == "cp2130config") {  // If the selected file is a CP2130 configuration file (the XML header is ignored)
         while (xmlReader.readNextStartElement()) {
-            if (xmlReader.name() == "manufacturer" && (CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF) {  // Get manufacturer string
-                foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+            if (xmlReader.name() == "manufacturer") {  // Get manufacturer string
+                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "string") {
-                        ui->lineEditManufacturer->setText(attr.value().toString());
+                        QString manufacturer = attr.value().toString();
+                        if (static_cast<size_t>(manufacturer.size()) > CP2130::DESCMXL_SERIAL) {
+                            err = true;
+                        } else if ((CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF) {
+                            ui->lineEditManufacturer->setText(manufacturer);
+                        }
                     }
                 }
-            } else if (xmlReader.name() == "product" && (CP2130::LWPROD & lockWord_) == CP2130::LWPROD) {  // Get product string
-                foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+            } else if (xmlReader.name() == "product") {  // Get product string
+                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "string") {
-                        ui->lineEditProduct->setText(attr.value().toString());
+                        QString product = attr.value().toString();
+                        if (static_cast<size_t>(product.size()) > CP2130::DESCMXL_SERIAL) {
+                            err = true;
+                        } else if ((CP2130::LWPROD & lockWord_) == CP2130::LWPROD) {
+                            ui->lineEditProduct->setText(product);
+                        }
                     }
                 }
-            } else if (xmlReader.name() == "serial" && (CP2130::LWSER & lockWord_) == CP2130::LWSER) {  // Get serial string
-                foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+            } else if (xmlReader.name() == "serial") {  // Get serial string
+                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "string") {
-                        ui->lineEditSerial->setText(attr.value().toString());
+                        QString serial = attr.value().toString();
+                        if (static_cast<size_t>(serial.size()) > CP2130::DESCMXL_SERIAL) {
+                            err = true;
+                        } else if ((CP2130::LWSER & lockWord_) == CP2130::LWSER) {
+                            ui->lineEditSerial->setText(serial);
+                        }
+
                     }
                 }
-            } else if (xmlReader.name() == "vid" && (CP2130::LWVID & lockWord_) == CP2130::LWVID) {  // Get VID
-                foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+            } else if (xmlReader.name() == "vid") {  // Get VID
+                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "value") {
-                        ui->lineEditVID->setText(attr.value().toString());
+                        QString vid = attr.value().toString().toLower();
+                        int pos = 0;
+                        QRegExpValidator validator(QRegExp("[a-f\\d]{4}"), 0);
+                        if (validator.validate(vid, pos) != QRegExpValidator::Acceptable) {
+                            err = true;
+                        } else if ((CP2130::LWVID & lockWord_) == CP2130::LWVID) {
+                            ui->lineEditVID->setText(vid);
+                        }
                     }
                 }
-            } else if (xmlReader.name() == "pid" && (CP2130::LWPID & lockWord_) == CP2130::LWPID) {  // Get PID
-                foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+            } else if (xmlReader.name() == "pid") {  // Get PID
+                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "value") {
-                        ui->lineEditPID->setText(attr.value().toString());
+                        QString pid = attr.value().toString().toLower();
+                        int pos = 0;
+                        QRegExpValidator validator(QRegExp("[a-f\\d]{4}"), 0);
+                        if (validator.validate(pid, pos) != QRegExpValidator::Acceptable) {
+                            err = true;
+                        } else if ((CP2130::LWPID & lockWord_) == CP2130::LWPID) {
+                            ui->lineEditPID->setText(pid);
+                        }
                     }
                 }
             }
@@ -791,8 +822,8 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
     } else {  // The selected file is not a CP2130 configuration file (no further reading is done, and no subsequent errors are checked)
         QMessageBox::critical(this, tr("Error"), tr("The selected file is not a valid CP2130 configuration file."));
     }
-    if (xmlReader.hasError()) {
-        QMessageBox::critical(this, tr("Error"), tr("An error occured while reading the file. As a result, the configuration may be incorrect.\n\nPlease confirm that the file does not contain any errors and try again."));
+    if (xmlReader.hasError() || err) {
+        QMessageBox::critical(this, tr("Error"), tr("The file contains one or more errors. As a result, the configuration may be incorrect.\n\nPlease confirm that the file does not contain any errors and try again."));
     }
 }
 
