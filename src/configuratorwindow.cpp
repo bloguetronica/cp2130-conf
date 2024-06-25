@@ -742,62 +742,54 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
 {
     QXmlStreamReader xmlReader;
     xmlReader.setDevice(&file);
-    for (int i = 0; i < 2; ++i) {  // Two reads are required so that the XML header is ignored
-        xmlReader.readNext();
-    }
-    if (xmlReader.isStartElement()) {
-        if (xmlReader.name() == "cp2130config") {  // If the selected file is a CP2130 configuration file
-            xmlReader.readNext();
-            while (!xmlReader.atEnd()) {
-                if (xmlReader.isStartElement()) {
-                    if (xmlReader.name() == "manufacturer" && (CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF) {  // Get manufacturer string
-                        foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                            if (attr.name().toString() == "string") {
-                                ui->lineEditManufacturer->setText(attr.value().toString());
-                            }
-                        }
-                    } else if (xmlReader.name() == "product" && (CP2130::LWPROD & lockWord_) == CP2130::LWPROD) {  // Get product string
-                        foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                            if (attr.name().toString() == "string") {
-                                ui->lineEditProduct->setText(attr.value().toString());
-                            }
-                        }
-                    } else if (xmlReader.name() == "serial" && (CP2130::LWSER & lockWord_) == CP2130::LWSER) {  // Get serial string
-                        foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                            if (attr.name().toString() == "string") {
-                                ui->lineEditSerial->setText(attr.value().toString());
-                            }
-                        }
-                    } else if (xmlReader.name() == "vid" && (CP2130::LWVID & lockWord_) == CP2130::LWVID) {  // Get VID
-                        foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                            if (attr.name().toString() == "value") {
-                                ui->lineEditVID->setText(attr.value().toString());
-                            }
-                        }
-                    } else if (xmlReader.name() == "pid" && (CP2130::LWPID & lockWord_) == CP2130::LWPID) {  // Get PID
-                        foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                            if (attr.name().toString() == "value") {
-                                ui->lineEditPID->setText(attr.value().toString());
-                            }
-                        }
+    if (xmlReader.readNextStartElement() && xmlReader.name() == "cp2130config") {  // If the selected file is a CP2130 configuration file (the XML header is ignored)
+        while (xmlReader.readNextStartElement()) {
+            if (xmlReader.name() == "manufacturer" && (CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF) {  // Get manufacturer string
+                foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                    if (attr.name().toString() == "string") {
+                        ui->lineEditManufacturer->setText(attr.value().toString());
                     }
-                  /*} else if ((CP2130::LWREL & lockWord_) == CP2130::LWREL) {
-                        // To implement
-                    } else if ((CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW) {
-                        // To implement
-                    } else if ((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE) {
-                        // To implement
-                    } else if ((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
-                        // To implement
-                    } else if ((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG) {
-                        // To implement
-                    }*/
                 }
-                xmlReader.readNext();
+            } else if (xmlReader.name() == "product" && (CP2130::LWPROD & lockWord_) == CP2130::LWPROD) {  // Get product string
+                foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                    if (attr.name().toString() == "string") {
+                        ui->lineEditProduct->setText(attr.value().toString());
+                    }
+                }
+            } else if (xmlReader.name() == "serial" && (CP2130::LWSER & lockWord_) == CP2130::LWSER) {  // Get serial string
+                foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                    if (attr.name().toString() == "string") {
+                        ui->lineEditSerial->setText(attr.value().toString());
+                    }
+                }
+            } else if (xmlReader.name() == "vid" && (CP2130::LWVID & lockWord_) == CP2130::LWVID) {  // Get VID
+                foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                    if (attr.name().toString() == "value") {
+                        ui->lineEditVID->setText(attr.value().toString());
+                    }
+                }
+            } else if (xmlReader.name() == "pid" && (CP2130::LWPID & lockWord_) == CP2130::LWPID) {  // Get PID
+                foreach(const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                    if (attr.name().toString() == "value") {
+                        ui->lineEditPID->setText(attr.value().toString());
+                    }
+                }
             }
-        } else {  // The selected file is not a CP2130 configuration file (no further read is done and no subsequent errors are checked)
-            QMessageBox::critical(this, tr("Error"), tr("The selected file is not a valid CP2130 configuration file."));
+          /*} else if ((CP2130::LWREL & lockWord_) == CP2130::LWREL) {
+                // To implement
+            } else if ((CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW) {
+                // To implement
+            } else if ((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE) {
+                // To implement
+            } else if ((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
+                // To implement
+            } else if ((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG) {
+                // To implement
+            }*/
+            xmlReader.skipCurrentElement();
         }
+    } else {  // The selected file is not a CP2130 configuration file (no further reading is done, and no subsequent errors are checked)
+        QMessageBox::critical(this, tr("Error"), tr("The selected file is not a valid CP2130 configuration file."));
     }
     if (xmlReader.hasError()) {
         QMessageBox::critical(this, tr("Error"), tr("An error occured while reading the file. As a result, the configuration may be incorrect.\n\nPlease confirm that the file does not contain any errors and try again."));
