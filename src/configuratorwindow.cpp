@@ -804,8 +804,26 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                         }
                     }
                 }
-          /*} else if ((CP2130::LWREL & lockWord_) == CP2130::LWREL) {
-                // To implement*/
+            } else if (xmlReader.name() == "release") {  // Get release version
+                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                    if (attr.name().toString() == "major") {
+                        bool ok;
+                        int major = attr.value().toInt(&ok);
+                        if ((!ok || major < 0) || major > 255) {
+                            err = true;
+                        } else if ((CP2130::LWREL & lockWord_) == CP2130::LWREL) {
+                            ui->spinBoxMajVersion->setValue(major);
+                        }
+                    } else if (attr.name().toString() == "minor") {
+                        bool ok;
+                        int minor = attr.value().toInt(&ok);
+                        if ((!ok || minor < 0) || minor > 255) {
+                            err = true;
+                        } else if ((CP2130::LWREL & lockWord_) == CP2130::LWREL) {
+                            ui->spinBoxMinVersion->setValue(minor);
+                        }
+                    }
+                }
             } else if (xmlReader.name() == "maxpower") {  // Get max power (hexadecimal)
                 foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "value") {
