@@ -749,7 +749,7 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                 foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "string") {
                         QString manufacturer = attr.value().toString();
-                        if (static_cast<size_t>(manufacturer.size()) > CP2130::DESCMXL_SERIAL) {
+                        if (static_cast<size_t>(manufacturer.size()) > CP2130::DESCMXL_MANUFACTURER) {
                             err = true;
                         } else if ((CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF) {
                             ui->lineEditManufacturer->setText(manufacturer);
@@ -760,7 +760,7 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                 foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "string") {
                         QString product = attr.value().toString();
-                        if (static_cast<size_t>(product.size()) > CP2130::DESCMXL_SERIAL) {
+                        if (static_cast<size_t>(product.size()) > CP2130::DESCMXL_PRODUCT) {
                             err = true;
                         } else if ((CP2130::LWPROD & lockWord_) == CP2130::LWPROD) {
                             ui->lineEditProduct->setText(product);
@@ -776,7 +776,6 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                         } else if ((CP2130::LWSER & lockWord_) == CP2130::LWSER) {
                             ui->lineEditSerial->setText(serial);
                         }
-
                     }
                 }
             } else if (xmlReader.name() == "vid") {  // Get VID
@@ -823,7 +822,7 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
         QMessageBox::critical(this, tr("Error"), tr("The selected file is not a valid CP2130 configuration file."));
     }
     if (xmlReader.hasError() || err) {
-        QMessageBox::critical(this, tr("Error"), tr("The file contains one or more errors. As a result, the configuration may be incorrect.\n\nPlease confirm that the file does not contain any errors and try again."));
+        QMessageBox::critical(this, tr("Error"), tr("The file contains one or more errors. Consequently, the configuration may be loaded incorrectly."));
     }
 }
 
