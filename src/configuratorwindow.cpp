@@ -771,7 +771,7 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                 foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "string") {
                         QString serial = attr.value().toString();
-                        if (static_cast<size_t>(serial.size()) > CP2130::DESCMXL_SERIAL) {
+                        if (serial.isEmpty() || static_cast<size_t>(serial.size()) > CP2130::DESCMXL_SERIAL) {
                             err = true;
                         } else if ((CP2130::LWSER & lockWord_) == CP2130::LWSER) {
                             ui->lineEditSerial->setText(serial);
@@ -804,12 +804,24 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                         }
                     }
                 }
-            }
           /*} else if ((CP2130::LWREL & lockWord_) == CP2130::LWREL) {
-                // To implement
-            } else if ((CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW) {
-                // To implement
-            } else if ((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE) {
+                // To implement*/
+            } else if (xmlReader.name() == "maxpower") {  // Get max power (hexadecimal)
+                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                    if (attr.name().toString() == "value") {
+                        QString maxpow = attr.value().toString().toLower();
+                        int pos = 0;
+                        QRegExpValidator validator(QRegExp("[a-f\\d]{2}"), 0);
+                        if (validator.validate(maxpow, pos) != QRegExpValidator::Acceptable) {
+                            err = true;
+                        } else if ((CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW) {
+                            ui->lineEditMaxPower->setText(QString::number(2 * maxpow.toInt(nullptr, 16)));
+                            ui->lineEditMaxPowerHex->setText(maxpow);
+                        }
+                    }
+                }
+            }
+          /*} else if ((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE) {
                 // To implement
             } else if ((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
                 // To implement
@@ -962,6 +974,13 @@ void ConfiguratorWindow::saveConfigurationToFile(QFile &file)
     xmlWriter.writeEndElement();
     xmlWriter.writeStartElement("pid");  // Write PID element
     xmlWriter.writeAttribute("value", ui->lineEditPID->text());
+    xmlWriter.writeEndElement();
+    xmlWriter.writeStartElement("release");  // Write release element
+    xmlWriter.writeAttribute("major", ui->spinBoxMajVersion->text());
+    xmlWriter.writeAttribute("minor", ui->spinBoxMinVersion->text());
+    xmlWriter.writeEndElement();
+    xmlWriter.writeStartElement("maxpower");  // Write maximum power element
+    xmlWriter.writeAttribute("value", ui->lineEditMaxPowerHex->text());
     xmlWriter.writeEndElement();
     // To do
     xmlWriter.writeEndElement();
