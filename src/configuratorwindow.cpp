@@ -806,27 +806,27 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                 }
             } else if (xmlReader.name() == "release") {  // Get release version
                 foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                    if (attr.name().toString() == "major") {
+                    if (attr.name().toString() == "major") {  // Major release number
                         bool ok;
                         int major = attr.value().toInt(&ok);
-                        if ((!ok || major < 0) || major > 255) {
+                        if (!ok || major > 255 || major < 0) {
                             err = true;
                         } else if ((CP2130::LWREL & lockWord_) == CP2130::LWREL) {
                             ui->spinBoxMajVersion->setValue(major);
                         }
-                    } else if (attr.name().toString() == "minor") {
+                    } else if (attr.name().toString() == "minor") {  // Minor release number
                         bool ok;
                         int minor = attr.value().toInt(&ok);
-                        if ((!ok || minor < 0) || minor > 255) {
+                        if (!ok || minor > 255 || minor < 0) {
                             err = true;
                         } else if ((CP2130::LWREL & lockWord_) == CP2130::LWREL) {
                             ui->spinBoxMinVersion->setValue(minor);
                         }
                     }
                 }
-            } else if (xmlReader.name() == "maxpower") {  // Get max power (hexadecimal)
+            } else if (xmlReader.name() == "power") {  // Get power related parameters
                 foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                    if (attr.name().toString() == "value") {
+                    if (attr.name().toString() == "maximum") {  // Maximum power (hexadecimal)
                         QString maxpow = attr.value().toString().toLower();
                         int pos = 0;
                         QRegExpValidator validator(QRegExp("[a-f\\d]{2}"), 0);
@@ -835,6 +835,14 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                         } else if ((CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW) {
                             ui->lineEditMaxPower->setText(QString::number(2 * maxpow.toInt(nullptr, 16)));
                             ui->lineEditMaxPowerHex->setText(maxpow);
+                        }
+                    } else if (attr.name().toString() == "mode") {  // Power mode (index)
+                        bool ok;
+                        int powmode = attr.value().toInt(&ok);
+                        if (!ok || powmode > 2 || powmode < 0) {
+                            err =true;
+                        } else if ((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE) {
+                            ui->comboBoxPowerMode->setCurrentIndex(powmode);
                         }
                     }
                 }
@@ -852,7 +860,7 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
         QMessageBox::critical(this, tr("Error"), tr("The selected file is not a valid CP2130 configuration file."));
     }
     if (xmlReader.hasError() || err) {
-        QMessageBox::critical(this, tr("Error"), tr("The file contains one or more errors. Consequently, the configuration may be loaded incorrectly."));
+        QMessageBox::critical(this, tr("Error"), tr("The file contains one or more errors. As a result, some parameters may have unintended values."));
     }
 }
 
@@ -997,8 +1005,9 @@ void ConfiguratorWindow::saveConfigurationToFile(QFile &file)
     xmlWriter.writeAttribute("major", ui->spinBoxMajVersion->text());
     xmlWriter.writeAttribute("minor", ui->spinBoxMinVersion->text());
     xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("maxpower");  // Write maximum power element
-    xmlWriter.writeAttribute("value", ui->lineEditMaxPowerHex->text());
+    xmlWriter.writeStartElement("power");  // Write maximum power element
+    xmlWriter.writeAttribute("maximum", ui->lineEditMaxPowerHex->text());
+    xmlWriter.writeAttribute("mode", QString::number(ui->comboBoxPowerMode->currentIndex()));
     xmlWriter.writeEndElement();
     // To do
     xmlWriter.writeEndElement();
