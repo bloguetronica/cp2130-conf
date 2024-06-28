@@ -45,9 +45,13 @@ public:
     bool replaceWithLowercaseLetters() const;
     bool replaceWithUppercaseLetters() const;
 
+    void setPrototypeSerial(const QString &prototypeSerial);
     void setReplaceMode(quint8 replaceMode);
     void setReplaceMode(bool replaceWDigit, bool replaceWUpper, bool replaceWLower);
-    void setPrototypeSerial(const QString &prototypeSerial);
+
+    static bool prototypeSerialIsValid(const QString &prototypeSerial);
+    static bool replaceModeIsValid(quint8 replaceMode);
+    static bool replaceModeIsValid(bool replaceWDigit, bool replaceWUpper, bool replaceWLower);
 };
 
 #endif  // SERIALGENERATOR_H

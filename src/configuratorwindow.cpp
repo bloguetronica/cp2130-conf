@@ -212,7 +212,7 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
         bool digit = serialGeneratorDialog.digitsCheckBoxIsChecked();
         bool upper = serialGeneratorDialog.uppercaseCheckBoxIsChecked();
         bool lower = serialGeneratorDialog.lowercaseCheckBoxIsChecked();
-        if (!prototype.contains('?') || (digit == false && upper == false && lower == false)) {  // If the user entered invalid settings (i.e. the prototype serial number does not contain a wildcard character or no replacement option was selected)
+        if (!SerialGenerator::prototypeSerialIsValid(prototype) || !SerialGenerator::replaceModeIsValid(digit, upper, lower)) {  // If the user entered invalid settings (i.e. the prototype serial number does not contain a wildcard character or no replacement option was selected)
             QMessageBox::critical(this, tr("Error"), tr("The serial generator settings are not valid and will not be applied.\n\nPlease verify that the prototype serial number contains at least one wildcard character (?) and that at least one replacement option is selected."));
         } else {  // Valid settings
             serialgensetting_.serialgen.setPrototypeSerial(prototype);
@@ -778,20 +778,43 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                         }
                     }
                 }
-                while (xmlReader.readNextStartElement()) {
+                /*while (xmlReader.readNextStartElement()) {
                     if (xmlReader.name() == "generator") {  // Get serial generator settings
                         foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                             if (attr.name().toString() == "prototype") {
-                                //
+                                QString prototype = attr.value().toString();
+                                if (!SerialGenerator::prototypeSerialIsValid(prototype)) {
+                                    err = true;
+                                } else {
+                                    serialgensetting_.serialgen.setPrototypeSerial(prototype);
+                                }
                             } else if (attr.name().toString() == "mode") {
-                                //
-                            } else if (attr.name().toString() == "auto") {
-                                //
+                                bool ok;
+                                int mode = attr.value().toInt(&ok);
+                                if (!ok || mode > 0 || mode < 0) {
+                                    err = true;
+                                } else {
+                                    serialgensetting_.serialgen.setReplaceMode(static_cast<quint8>(mode));
+                                }
+                            } else if (attr.name().toString() == "enable") {
+                                QString genenable = attr.value().toString();
+                                if (genenable != "true" || genenable != "false") {
+                                    err = true;
+                                } else {
+                                    serialgensetting_.genenable = genenable == "true";
+                                }
+                            } else if (attr.name().toString() == "auto-generate") {
+                                QString autogen = attr.value().toString();
+                                if (autogen != "true" || autogen != "false") {
+                                    err = true;
+                                } else {
+                                    serialgensetting_.autogen = autogen == "true";
+                                }
                             }
                         }
                     }
                     xmlReader.skipCurrentElement();
-                }
+                }*/
             } else if (xmlReader.name() == "vid") {  // Get VID
                 foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "value") {
@@ -1010,8 +1033,8 @@ void ConfiguratorWindow::saveConfigurationToFile(QFile &file)
         xmlWriter.writeStartElement("generator");  // Write generator element
         xmlWriter.writeAttribute("prototype", serialgensetting_.serialgen.prototypeSerial());
         xmlWriter.writeAttribute("mode", QString::number(serialgensetting_.serialgen.replaceMode()));
-        xmlWriter.writeAttribute("enable", QString::number(serialgensetting_.genenable));
-        xmlWriter.writeAttribute("auto-generate", QString::number(serialgensetting_.autogen));
+        xmlWriter.writeAttribute("enable", (serialgensetting_.genenable ? "true" : "false"));
+        xmlWriter.writeAttribute("auto-generate", (serialgensetting_.autogen ? "true" : "false"));
         xmlWriter.writeEndElement();
     }
     xmlWriter.writeEndElement();

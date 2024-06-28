@@ -79,10 +79,18 @@ bool SerialGenerator::replaceWithUppercaseLetters() const
     return (RMUPPER & replaceMode_) != 0x00;
 }
 
+// Sets the prototype serial string
+void SerialGenerator::setPrototypeSerial(const QString &prototypeSerial)
+{
+    if (prototypeSerialIsValid(prototypeSerial)) {
+        prototypeSerial_ = prototypeSerial;
+    }
+}
+
 // Sets the replace mode
 void SerialGenerator::setReplaceMode(quint8 replaceMode)
 {
-    if ((0x07 & replaceMode) != 0x00) {
+    if (replaceModeIsValid(replaceMode)) {
         replaceMode_ = replaceMode;
     }
 }
@@ -90,15 +98,25 @@ void SerialGenerator::setReplaceMode(quint8 replaceMode)
 // Sets the replace mode via separate flags
 void SerialGenerator::setReplaceMode(bool replaceWDigit, bool replaceWUpper, bool replaceWLower)
 {
-    if (replaceWDigit == true || replaceWUpper == true || replaceWLower == true) {
+    if (replaceModeIsValid(replaceWDigit, replaceWUpper, replaceWLower)) {
         replaceMode_ = static_cast<quint8>(replaceWLower << 2 | replaceWUpper << 1 | replaceWDigit << 0);
     }
 }
 
-// Sets the prototype serial string
-void SerialGenerator::setPrototypeSerial(const QString &prototypeSerial)
+// Helper function to check if a given prototype serial string is valid
+bool SerialGenerator::prototypeSerialIsValid(const QString &prototypeSerial)
 {
-    if (prototypeSerial.size() <= 30 && prototypeSerial.contains('?')) {
-        prototypeSerial_ = prototypeSerial;
-    }
+    return prototypeSerial.size() <= 30 && prototypeSerial.contains('?');
+}
+
+// Helper function to check if a given replace mode is valid
+bool SerialGenerator::replaceModeIsValid(quint8 replaceMode)
+{
+    return (0x07 & replaceMode) != 0x00;
+}
+
+// Helper function to check if a given bitwise replace mode is valid
+bool SerialGenerator::replaceModeIsValid(bool replaceWDigit, bool replaceWUpper, bool replaceWLower)
+{
+    return replaceWDigit == true || replaceWUpper == true || replaceWLower == true;
 }
