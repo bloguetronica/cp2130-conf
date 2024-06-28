@@ -778,6 +778,20 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                         }
                     }
                 }
+                while (xmlReader.readNextStartElement()) {
+                    if (xmlReader.name() == "generator") {  // Get serial generator settings
+                        foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                            if (attr.name().toString() == "prototype") {
+                                //
+                            } else if (attr.name().toString() == "mode") {
+                                //
+                            } else if (attr.name().toString() == "auto") {
+                                //
+                            }
+                        }
+                    }
+                    xmlReader.skipCurrentElement();
+                }
             } else if (xmlReader.name() == "vid") {  // Get VID
                 foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "value") {
@@ -847,9 +861,7 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                     }
                 }
             }
-          /*} else if ((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE) {
-                // To implement
-            } else if ((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
+          /*} else if ((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
                 // To implement
             } else if ((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG) {
                 // To implement
@@ -994,6 +1006,14 @@ void ConfiguratorWindow::saveConfigurationToFile(QFile &file)
     xmlWriter.writeEndElement();
     xmlWriter.writeStartElement("serial");  // Write serial element
     xmlWriter.writeAttribute("string", ui->lineEditSerial->text());
+    if (serialgensetting_.doexport) {
+        xmlWriter.writeStartElement("generator");  // Write generator element
+        xmlWriter.writeAttribute("prototype", serialgensetting_.serialgen.prototypeSerial());
+        xmlWriter.writeAttribute("mode", QString::number(serialgensetting_.serialgen.replaceMode()));
+        xmlWriter.writeAttribute("enable", QString::number(serialgensetting_.genenable));
+        xmlWriter.writeAttribute("auto-generate", QString::number(serialgensetting_.autogen));
+        xmlWriter.writeEndElement();
+    }
     xmlWriter.writeEndElement();
     xmlWriter.writeStartElement("vid");  // Write VID element
     xmlWriter.writeAttribute("value", ui->lineEditVID->text());

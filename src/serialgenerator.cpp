@@ -82,7 +82,7 @@ bool SerialGenerator::replaceWithUppercaseLetters() const
 // Sets the replace mode
 void SerialGenerator::setReplaceMode(quint8 replaceMode)
 {
-    if (replaceMode != 0x00) {
+    if ((0x07 & replaceMode) != 0x00) {
         replaceMode_ = replaceMode;
     }
 }
