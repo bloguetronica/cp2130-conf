@@ -115,7 +115,7 @@ bool SerialGenerator::replaceModeIsValid(quint8 replaceMode)
     return (0x07 & replaceMode) != 0x00;
 }
 
-// Helper function to check if a given bitwise replace mode is valid
+// Helper function to check if a replace mode, which is given via its flags, is valid
 bool SerialGenerator::replaceModeIsValid(bool replaceWDigit, bool replaceWUpper, bool replaceWLower)
 {
     return replaceWDigit == true || replaceWUpper == true || replaceWLower == true;
