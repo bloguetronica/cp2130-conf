@@ -103,7 +103,7 @@ void SerialGenerator::setReplaceMode(bool replaceWDigit, bool replaceWUpper, boo
     }
 }
 
-// Helper function to check the validity of  a given prototype serial string
+// Helper function to check the validity of a given prototype serial string
 bool SerialGenerator::prototypeSerialIsValid(const QString &prototypeSerial)
 {
     return prototypeSerial.size() <= 30 && prototypeSerial.contains('?');
