@@ -103,19 +103,19 @@ void SerialGenerator::setReplaceMode(bool replaceWDigit, bool replaceWUpper, boo
     }
 }
 
-// Helper function to check if a given prototype serial string is valid
+// Helper function to check the validity of  a given prototype serial string
 bool SerialGenerator::prototypeSerialIsValid(const QString &prototypeSerial)
 {
     return prototypeSerial.size() <= 30 && prototypeSerial.contains('?');
 }
 
-// Helper function to check if a given replace mode is valid
+// Helper function to check the validity of a given replace mode
 bool SerialGenerator::replaceModeIsValid(quint8 replaceMode)
 {
     return (0x07 & replaceMode) != 0x00;
 }
 
-// Helper function to check if a replace mode, which is given via its flags, is valid
+// Helper function to check the validity of a given replace mode, via its flags
 bool SerialGenerator::replaceModeIsValid(bool replaceWDigit, bool replaceWUpper, bool replaceWLower)
 {
     return replaceWDigit == true || replaceWUpper == true || replaceWLower == true;

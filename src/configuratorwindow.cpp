@@ -778,43 +778,40 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                         }
                     }
                 }
-                /*while (xmlReader.readNextStartElement()) {
-                    if (xmlReader.name() == "generator") {  // Get serial generator settings
-                        foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                            if (attr.name().toString() == "prototype") {
-                                QString prototype = attr.value().toString();
-                                if (!SerialGenerator::prototypeSerialIsValid(prototype)) {
-                                    err = true;
-                                } else {
-                                    serialgensetting_.serialgen.setPrototypeSerial(prototype);
-                                }
-                            } else if (attr.name().toString() == "mode") {
-                                bool ok;
-                                int mode = attr.value().toInt(&ok);
-                                if (!ok || mode > 0 || mode < 0) {
-                                    err = true;
-                                } else {
-                                    serialgensetting_.serialgen.setReplaceMode(static_cast<quint8>(mode));
-                                }
-                            } else if (attr.name().toString() == "enable") {
-                                QString genenable = attr.value().toString();
-                                if (genenable != "true" || genenable != "false") {
-                                    err = true;
-                                } else {
-                                    serialgensetting_.genenable = genenable == "true";
-                                }
-                            } else if (attr.name().toString() == "auto-generate") {
-                                QString autogen = attr.value().toString();
-                                if (autogen != "true" || autogen != "false") {
-                                    err = true;
-                                } else {
-                                    serialgensetting_.autogen = autogen == "true";
-                                }
-                            }
+            } else if (xmlReader.readNextStartElement() && xmlReader.name() == "generator") {  // Get serial generator settings
+                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
+                    if (attr.name().toString() == "prototype") {
+                        QString prototype = attr.value().toString();
+                        if (!SerialGenerator::prototypeSerialIsValid(prototype)) {
+                            err = true;
+                        } else {
+                            serialgensetting_.serialgen.setPrototypeSerial(prototype);
+                        }
+                    } else if (attr.name().toString() == "mode") {
+                        bool ok;
+                        int mode = attr.value().toInt(&ok);
+                        if (!ok || mode > 0 || mode < 0) {
+                            err = true;
+                        } else {
+                            serialgensetting_.serialgen.setReplaceMode(static_cast<quint8>(mode));
+                        }
+                    } else if (attr.name().toString() == "enable") {
+                        QString genenable = attr.value().toString();
+                        if (genenable != "true" || genenable != "false") {
+                            err = true;
+                        } else {
+                            serialgensetting_.genenable = genenable == "true";
+                        }
+                    } else if (attr.name().toString() == "auto-generate") {
+                        QString autogen = attr.value().toString();
+                        if (autogen != "true" || autogen != "false") {
+                            err = true;
+                        } else {
+                            serialgensetting_.autogen = autogen == "true";
                         }
                     }
-                    xmlReader.skipCurrentElement();
-                }*/
+                }
+                xmlReader.skipCurrentElement();
             } else if (xmlReader.name() == "vid") {  // Get VID
                 foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
                     if (attr.name().toString() == "value") {
