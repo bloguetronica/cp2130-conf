@@ -200,13 +200,13 @@ void ConfiguratorWindow::on_actionSerialGeneratorEnable_toggled(bool checked)
 void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
 {
     SerialGeneratorDialog serialGeneratorDialog(this);
-    serialGeneratorDialog.setPrototypeSerialLineEditText(serialgensetting_.serialgen.prototypeSerial());
-    serialGeneratorDialog.setDigitsCheckBox(serialgensetting_.serialgen.replaceWithDigits());
-    serialGeneratorDialog.setUppercaseCheckBox(serialgensetting_.serialgen.replaceWithUppercaseLetters());
-    serialGeneratorDialog.setLowercaseCheckBox(serialgensetting_.serialgen.replaceWithLowercaseLetters());
-    serialGeneratorDialog.setExportToFileCheckBox(serialgensetting_.doexport);
-    serialGeneratorDialog.setEnableCheckBox(serialgensetting_.genenable);
-    serialGeneratorDialog.setAutoGenerateCheckBox(serialgensetting_.autogen);
+    serialGeneratorDialog.setPrototypeSerialLineEditText(serialGenSetting_.serialgen.prototypeSerial());
+    serialGeneratorDialog.setDigitsCheckBox(serialGenSetting_.serialgen.replaceWithDigits());
+    serialGeneratorDialog.setUppercaseCheckBox(serialGenSetting_.serialgen.replaceWithUppercaseLetters());
+    serialGeneratorDialog.setLowercaseCheckBox(serialGenSetting_.serialgen.replaceWithLowercaseLetters());
+    serialGeneratorDialog.setExportToFileCheckBox(serialGenSetting_.doexport);
+    serialGeneratorDialog.setEnableCheckBox(serialGenSetting_.genenable);
+    serialGeneratorDialog.setAutoGenerateCheckBox(serialGenSetting_.autogen);
     if (serialGeneratorDialog.exec() == QDialog::Accepted) {  // If the user clicks "OK"
         QString prototype = serialGeneratorDialog.prototypeSerialLineEditText();
         bool digit = serialGeneratorDialog.digitsCheckBoxIsChecked();
@@ -215,11 +215,11 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
         if (!SerialGenerator::prototypeSerialIsValid(prototype) || !SerialGenerator::replaceModeIsValid(digit, upper, lower)) {  // If the user entered invalid settings (i.e. the prototype serial number does not contain a wildcard character or no replacement option was selected)
             QMessageBox::critical(this, tr("Error"), tr("The serial generator settings are not valid and will not be applied.\n\nPlease verify that the prototype serial number contains at least one wildcard character (?) and that at least one replacement option is selected."));
         } else {  // Valid settings
-            serialgensetting_.serialgen.setPrototypeSerial(prototype);
-            serialgensetting_.serialgen.setReplaceMode(digit, upper, lower);
-            serialgensetting_.doexport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
-            serialgensetting_.genenable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
-            serialgensetting_.autogen = serialGeneratorDialog.autoGenerateCheckBoxIsChecked();  // Same as above, because "checkBoxAutoGenerate" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+            serialGenSetting_.serialgen.setPrototypeSerial(prototype);
+            serialGenSetting_.serialgen.setReplaceMode(digit, upper, lower);
+            serialGenSetting_.doexport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
+            serialGenSetting_.genenable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+            serialGenSetting_.autogen = serialGeneratorDialog.autoGenerateCheckBoxIsChecked();  // Same as above, because "checkBoxAutoGenerate" is automatically unchecked if "checkBoxExportToFile" gets unchecked
         }
     }
 }
@@ -412,7 +412,7 @@ void ConfiguratorWindow::on_lineEditVID_textEdited()
 // Implemented in version 3.0
 void ConfiguratorWindow::on_pushButtonGenerateSerial_clicked()
 {
-    ui->lineEditSerial->setText(serialgensetting_.serialgen.generateSerial());
+    ui->lineEditSerial->setText(serialGenSetting_.serialgen.generateSerial());
 }
 
 void ConfiguratorWindow::on_pushButtonRevert_clicked()
@@ -785,7 +785,7 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                         if (!SerialGenerator::prototypeSerialIsValid(prototype)) {
                             err = true;
                         } else {
-                            serialgensetting_.serialgen.setPrototypeSerial(prototype);
+                            serialGenSetting_.serialgen.setPrototypeSerial(prototype);
                         }
                     } else if (attr.name().toString() == "mode") {
                         bool ok;
@@ -793,21 +793,21 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
                         if (!ok || mode > 0 || mode < 0) {
                             err = true;
                         } else {
-                            serialgensetting_.serialgen.setReplaceMode(static_cast<quint8>(mode));
+                            serialGenSetting_.serialgen.setReplaceMode(static_cast<quint8>(mode));
                         }
                     } else if (attr.name().toString() == "enable") {
                         QString genenable = attr.value().toString();
                         if (genenable != "true" || genenable != "false") {
                             err = true;
                         } else {
-                            serialgensetting_.genenable = genenable == "true";
+                            serialGenSetting_.genenable = genenable == "true";
                         }
                     } else if (attr.name().toString() == "auto-generate") {
                         QString autogen = attr.value().toString();
                         if (autogen != "true" || autogen != "false") {
                             err = true;
                         } else {
-                            serialgensetting_.autogen = autogen == "true";
+                            serialGenSetting_.autogen = autogen == "true";
                         }
                     }
                 }
@@ -1026,12 +1026,12 @@ void ConfiguratorWindow::saveConfigurationToFile(QFile &file)
     xmlWriter.writeEndElement();
     xmlWriter.writeStartElement("serial");  // Write serial element
     xmlWriter.writeAttribute("string", ui->lineEditSerial->text());
-    if (serialgensetting_.doexport) {
+    if (serialGenSetting_.doexport) {
         xmlWriter.writeStartElement("generator");  // Write generator element
-        xmlWriter.writeAttribute("prototype", serialgensetting_.serialgen.prototypeSerial());
-        xmlWriter.writeAttribute("mode", QString::number(serialgensetting_.serialgen.replaceMode()));
-        xmlWriter.writeAttribute("enable", (serialgensetting_.genenable ? "true" : "false"));
-        xmlWriter.writeAttribute("auto-generate", (serialgensetting_.autogen ? "true" : "false"));
+        xmlWriter.writeAttribute("prototype", serialGenSetting_.serialgen.prototypeSerial());
+        xmlWriter.writeAttribute("mode", QString::number(serialGenSetting_.serialgen.replaceMode()));
+        xmlWriter.writeAttribute("enable", (serialGenSetting_.genenable ? "true" : "false"));
+        xmlWriter.writeAttribute("auto-generate", (serialGenSetting_.autogen ? "true" : "false"));
         xmlWriter.writeEndElement();
     }
     xmlWriter.writeEndElement();

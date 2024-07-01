@@ -101,7 +101,7 @@ private:
     QPointer<InformationDialog> informationDialog_;
     QPointer<OTPROMViewerDialog> otpromViewerDialog_;
     QString errmsg_, serialstr_;
-    SerialGeneratorSetting serialgensetting_;
+    SerialGeneratorSetting serialGenSetting_;
     quint16 lockWord_, pid_, vid_;
     bool err_, requiresReset_, viewEnabled_ = false;
 

@@ -27,6 +27,7 @@ SOURCES += \
     aboutdialog.cpp \
     common.cpp \
     configuration.cpp \
+    configurationwriter.cpp \
     configuratorwindow.cpp \
     cp2130.cpp \
     informationdialog.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     aboutdialog.h \
     common.h \
     configuration.h \
+    configurationwriter.h \
     configuratorwindow.h \
     cp2130.h \
     informationdialog.h \
