@@ -23,7 +23,7 @@
 #include <QXmlStreamWriter>
 #include "configurationwriter.h"
 
-ConfigurationWriter::ConfigurationWriter(const Configuration &configuration, SerialGeneratorSetting &serialGeneratorSetting) :
+ConfigurationWriter::ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSetting &serialGeneratorSetting) :
     configuration_(configuration),
     serialGeneratorSetting_(serialGeneratorSetting)
 {

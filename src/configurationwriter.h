@@ -33,7 +33,7 @@ private:
     const SerialGeneratorSetting &serialGeneratorSetting_;
 
 public:
-    ConfigurationWriter(const Configuration &configuration, SerialGeneratorSetting &serialGeneratorSetting);
+    ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSetting &serialGeneratorSetting);
 
     void writeToFile(QFile &file);
 };
