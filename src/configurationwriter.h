@@ -34,6 +34,8 @@ private:
 
 public:
     ConfigurationWriter(const Configuration &configuration, SerialGeneratorSetting &serialGeneratorSetting);
+
+    void writeToFile(QFile &file);
 };
 
 #endif  // CONFIGURATIONWRITER_H

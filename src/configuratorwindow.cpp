@@ -21,6 +21,7 @@
 // Includes
 #include <cstring>
 #include <QDir>
+#include <QFile>
 #include <QFileDialog>
 #include <QIODevice>
 #include <QMessageBox>
@@ -29,8 +30,8 @@
 #include <QRegExp>
 #include <QRegExpValidator>
 #include <QXmlStreamReader>
-#include <QXmlStreamWriter>
 #include "common.h"
+#include "configurationwriter.h"
 #include "nonblocking.h"
 #include "serialgeneratordialog.h"
 #include "configuratorwindow.h"
@@ -182,7 +183,9 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
                 QMessageBox::critical(this, tr("Error"), tr("Could not write to %1.\n\nPlease verify that you have write access to this file.").arg(QDir::toNativeSeparators(filename)));
             } else {
-                saveConfigurationToFile(file);
+                getEditedConfiguration();
+                ConfigurationWriter configWriter(editedConfig_, serialGenSetting_);
+                configWriter.writeToFile(file);
                 file.close();
                 filepath = filename;
             }
@@ -1008,49 +1011,6 @@ void ConfiguratorWindow::resetDevice()
         err_ = true;
         errmsg_ = tr("Device ceased to be available. It could be in use by another application.");  // Same as above
     }
-}
-
-// Saves the current configuration to a given file (implemented in version 3.0)
-void ConfiguratorWindow::saveConfigurationToFile(QFile &file)
-{
-    QXmlStreamWriter xmlWriter(&file);
-    xmlWriter.setAutoFormatting(true);
-    xmlWriter.writeStartDocument();
-    xmlWriter.writeStartElement("cp2130config");  // Write root element
-    xmlWriter.writeAttribute("version", "1.0");
-    xmlWriter.writeStartElement("manufacturer");  // Write manufacturer element
-    xmlWriter.writeAttribute("string", ui->lineEditManufacturer->text());
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("product");  // Write product element
-    xmlWriter.writeAttribute("string", ui->lineEditProduct->text());
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("serial");  // Write serial element
-    xmlWriter.writeAttribute("string", ui->lineEditSerial->text());
-    if (serialGenSetting_.doexport) {
-        xmlWriter.writeStartElement("generator");  // Write generator element
-        xmlWriter.writeAttribute("prototype", serialGenSetting_.serialgen.prototypeSerial());
-        xmlWriter.writeAttribute("mode", QString::number(serialGenSetting_.serialgen.replaceMode()));
-        xmlWriter.writeAttribute("enable", (serialGenSetting_.genenable ? "true" : "false"));
-        xmlWriter.writeAttribute("auto-generate", (serialGenSetting_.autogen ? "true" : "false"));
-        xmlWriter.writeEndElement();
-    }
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("vid");  // Write VID element
-    xmlWriter.writeAttribute("value", ui->lineEditVID->text());
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("pid");  // Write PID element
-    xmlWriter.writeAttribute("value", ui->lineEditPID->text());
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("release");  // Write release element
-    xmlWriter.writeAttribute("major", ui->spinBoxMajVersion->text());
-    xmlWriter.writeAttribute("minor", ui->spinBoxMinVersion->text());
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("power");  // Write maximum power element
-    xmlWriter.writeAttribute("maximum", ui->lineEditMaxPowerHex->text());
-    xmlWriter.writeAttribute("mode", QString::number(ui->comboBoxPowerMode->currentIndex()));
-    xmlWriter.writeEndElement();
-    // To do
-    xmlWriter.writeEndElement();
 }
 
 // Enables or disables the manufacturer descriptor field

@@ -22,7 +22,7 @@
 #define CONFIGURATORWINDOW_H
 
 // Includes
-#include <QFile>
+#include <QFile>  // DELETE THIS!!!!!!!!!!!!
 #include <QMainWindow>
 #include <QPointer>
 #include <QString>
@@ -120,7 +120,6 @@ private:
     QStringList prepareTaskList();
     void readDeviceConfiguration();
     void resetDevice();
-    void saveConfigurationToFile(QFile &file);
     void setManufacturerEnabled(bool value);
     void setMaxPowerEnabled(bool value);
     void setPinConfigEnabled(bool value);
