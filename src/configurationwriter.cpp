@@ -64,7 +64,7 @@ void ConfigurationWriter::writeToFile(QFile &file)
     xmlWriter.writeAttribute("major", QString::number(configuration_.usbconfig.majrel));
     xmlWriter.writeAttribute("minor", QString::number(configuration_.usbconfig.minrel));
     xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("power");  // Write maximum power element
+    xmlWriter.writeStartElement("power");  // Write power element
     xmlWriter.writeAttribute("maximum", QString::number(configuration_.usbconfig.maxpow, 16));
     xmlWriter.writeAttribute("mode", QString::number(configuration_.usbconfig.powmode));
     xmlWriter.writeEndElement();
