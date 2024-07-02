@@ -27,6 +27,7 @@ SOURCES += \
     aboutdialog.cpp \
     common.cpp \
     configuration.cpp \
+    configurationreader.cpp \
     configurationwriter.cpp \
     configuratorwindow.cpp \
     cp2130.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     aboutdialog.h \
     common.h \
     configuration.h \
+    configurationreader.h \
     configurationwriter.h \
     configuratorwindow.h \
     cp2130.h \

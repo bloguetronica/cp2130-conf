@@ -22,7 +22,6 @@
 #define CONFIGURATORWINDOW_H
 
 // Includes
-#include <QFile>  // DELETE THIS!!!!!!!!!!!!
 #include <QMainWindow>
 #include <QPointer>
 #include <QString>
@@ -115,7 +114,6 @@ private:
     void displayUSBConfig(const CP2130::USBConfig &usbconfig);
     void getEditedConfiguration();
     void handleError();
-    void loadConfigurationFromFile(QFile &file);
     void opCheck(const QString &op, int errcnt, QString errstr);
     QStringList prepareTaskList();
     void readDeviceConfiguration();

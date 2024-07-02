@@ -29,8 +29,8 @@
 #include <QProgressDialog>
 #include <QRegExp>
 #include <QRegExpValidator>
-#include <QXmlStreamReader>
 #include "common.h"
+#include "configurationreader.h"
 #include "configurationwriter.h"
 #include "nonblocking.h"
 #include "serialgeneratordialog.h"
@@ -139,8 +139,11 @@ void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QMessageBox::critical(this, tr("Error"), tr("Could not read from %1.\n\nPlease verify that you have read access to this file.").arg(QDir::toNativeSeparators(filename)));
         } else {
-            loadConfigurationFromFile(file);
+            getEditedConfiguration();
+            ConfigurationReader configReader(editedConfig_, serialGenSetting_);
+            configReader.readFromFile(&file);
             file.close();
+            // Display config here
             filepath = filename;
         }
     }
@@ -185,7 +188,7 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
             } else {
                 getEditedConfiguration();
                 ConfigurationWriter configWriter(editedConfig_, serialGenSetting_);
-                configWriter.writeToFile(file);
+                configWriter.writeToFile(&file);
                 file.close();
                 filepath = filename;
             }
@@ -738,165 +741,6 @@ void ConfiguratorWindow::handleError()
         cp2130_.close();  // If the device is already closed, this will have no effect
     }
     QMessageBox::critical(this, tr("Error"), errmsg_);
-}
-
-// Loads the configuration from a given file (implemented in version 3.0)
-void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
-{
-    bool err = false;
-    QXmlStreamReader xmlReader;
-    xmlReader.setDevice(&file);
-    if (xmlReader.readNextStartElement() && xmlReader.name() == "cp2130config") {  // If the selected file is a CP2130 configuration file (the XML header is ignored)
-        while (xmlReader.readNextStartElement()) {
-            if (xmlReader.name() == "manufacturer") {  // Get manufacturer string
-                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                    if (attr.name().toString() == "string") {
-                        QString manufacturer = attr.value().toString();
-                        if (static_cast<size_t>(manufacturer.size()) > CP2130::DESCMXL_MANUFACTURER) {
-                            err = true;
-                        } else if ((CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF) {
-                            ui->lineEditManufacturer->setText(manufacturer);
-                        }
-                    }
-                }
-            } else if (xmlReader.name() == "product") {  // Get product string
-                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                    if (attr.name().toString() == "string") {
-                        QString product = attr.value().toString();
-                        if (static_cast<size_t>(product.size()) > CP2130::DESCMXL_PRODUCT) {
-                            err = true;
-                        } else if ((CP2130::LWPROD & lockWord_) == CP2130::LWPROD) {
-                            ui->lineEditProduct->setText(product);
-                        }
-                    }
-                }
-            } else if (xmlReader.name() == "serial") {  // Get serial string
-                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                    if (attr.name().toString() == "string") {
-                        QString serial = attr.value().toString();
-                        if (serial.isEmpty() || static_cast<size_t>(serial.size()) > CP2130::DESCMXL_SERIAL) {
-                            err = true;
-                        } else if ((CP2130::LWSER & lockWord_) == CP2130::LWSER) {
-                            ui->lineEditSerial->setText(serial);
-                        }
-                    }
-                }
-            } else if (xmlReader.readNextStartElement() && xmlReader.name() == "generator") {  // Get serial generator settings
-                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                    if (attr.name().toString() == "prototype") {
-                        QString prototype = attr.value().toString();
-                        if (!SerialGenerator::prototypeSerialIsValid(prototype)) {
-                            err = true;
-                        } else {
-                            serialGenSetting_.serialgen.setPrototypeSerial(prototype);
-                        }
-                    } else if (attr.name().toString() == "mode") {
-                        bool ok;
-                        int mode = attr.value().toInt(&ok);
-                        if (!ok || mode > 0 || mode < 0) {
-                            err = true;
-                        } else {
-                            serialGenSetting_.serialgen.setReplaceMode(static_cast<quint8>(mode));
-                        }
-                    } else if (attr.name().toString() == "enable") {
-                        QString genenable = attr.value().toString();
-                        if (genenable != "true" || genenable != "false") {
-                            err = true;
-                        } else {
-                            serialGenSetting_.genenable = genenable == "true";
-                        }
-                    } else if (attr.name().toString() == "auto-generate") {
-                        QString autogen = attr.value().toString();
-                        if (autogen != "true" || autogen != "false") {
-                            err = true;
-                        } else {
-                            serialGenSetting_.autogen = autogen == "true";
-                        }
-                    }
-                }
-                xmlReader.skipCurrentElement();
-            } else if (xmlReader.name() == "vid") {  // Get VID
-                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                    if (attr.name().toString() == "value") {
-                        QString vid = attr.value().toString().toLower();
-                        int pos = 0;
-                        QRegExpValidator validator(QRegExp("[a-f\\d]{4}"), 0);
-                        if (validator.validate(vid, pos) != QRegExpValidator::Acceptable) {
-                            err = true;
-                        } else if ((CP2130::LWVID & lockWord_) == CP2130::LWVID) {
-                            ui->lineEditVID->setText(vid);
-                        }
-                    }
-                }
-            } else if (xmlReader.name() == "pid") {  // Get PID
-                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                    if (attr.name().toString() == "value") {
-                        QString pid = attr.value().toString().toLower();
-                        int pos = 0;
-                        QRegExpValidator validator(QRegExp("[a-f\\d]{4}"), 0);
-                        if (validator.validate(pid, pos) != QRegExpValidator::Acceptable) {
-                            err = true;
-                        } else if ((CP2130::LWPID & lockWord_) == CP2130::LWPID) {
-                            ui->lineEditPID->setText(pid);
-                        }
-                    }
-                }
-            } else if (xmlReader.name() == "release") {  // Get release version
-                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                    if (attr.name().toString() == "major") {  // Major release number
-                        bool ok;
-                        int major = attr.value().toInt(&ok);
-                        if (!ok || major > 255 || major < 0) {
-                            err = true;
-                        } else if ((CP2130::LWREL & lockWord_) == CP2130::LWREL) {
-                            ui->spinBoxMajVersion->setValue(major);
-                        }
-                    } else if (attr.name().toString() == "minor") {  // Minor release number
-                        bool ok;
-                        int minor = attr.value().toInt(&ok);
-                        if (!ok || minor > 255 || minor < 0) {
-                            err = true;
-                        } else if ((CP2130::LWREL & lockWord_) == CP2130::LWREL) {
-                            ui->spinBoxMinVersion->setValue(minor);
-                        }
-                    }
-                }
-            } else if (xmlReader.name() == "power") {  // Get power related parameters
-                foreach (const QXmlStreamAttribute &attr, xmlReader.attributes()) {
-                    if (attr.name().toString() == "maximum") {  // Maximum power (hexadecimal)
-                        QString maxpow = attr.value().toString().toLower();
-                        int pos = 0;
-                        QRegExpValidator validator(QRegExp("[a-f\\d]{2}"), 0);
-                        if (validator.validate(maxpow, pos) != QRegExpValidator::Acceptable) {
-                            err = true;
-                        } else if ((CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW) {
-                            ui->lineEditMaxPower->setText(QString::number(2 * maxpow.toInt(nullptr, 16)));
-                            ui->lineEditMaxPowerHex->setText(maxpow);
-                        }
-                    } else if (attr.name().toString() == "mode") {  // Power mode (index)
-                        bool ok;
-                        int powmode = attr.value().toInt(&ok);
-                        if (!ok || powmode > 2 || powmode < 0) {
-                            err =true;
-                        } else if ((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE) {
-                            ui->comboBoxPowerMode->setCurrentIndex(powmode);
-                        }
-                    }
-                }
-            }
-          /*} else if ((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
-                // To implement
-            } else if ((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG) {
-                // To implement
-            }*/
-            xmlReader.skipCurrentElement();
-        }
-    } else {  // The selected file is not a CP2130 configuration file (no further reading is done, and no subsequent errors are checked)
-        QMessageBox::critical(this, tr("Error"), tr("The selected file is not a valid CP2130 configuration file."));
-    }
-    if (xmlReader.hasError() || err) {
-        QMessageBox::critical(this, tr("Error"), tr("The file contains one or more errors. As a result, some parameters may have unintended values."));
-    }
 }
 
 // Checks for errors and validates device operations

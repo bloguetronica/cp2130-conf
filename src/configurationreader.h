@@ -18,26 +18,26 @@
    Please feel free to contact me via e-mail: samuel.fmlourenco@gmail.com */
 
 
-#ifndef CONFIGURATIONWRITER_H
-#define CONFIGURATIONWRITER_H
+#ifndef CONFIGURATIONREADER_H
+#define CONFIGURATIONREADER_H
 
 // Includes
 #include <QFile>
-#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 #include "configuration.h"
 #include "serialgeneratorsetting.h"
 
-class ConfigurationWriter
+class ConfigurationReader
 {
 private:
-    const Configuration &configuration_;
-    const SerialGeneratorSetting &serialGeneratorSetting_;
-    QXmlStreamWriter xmlWriter_;
+    Configuration &configuration_;
+    SerialGeneratorSetting &serialGeneratorSetting_;
+    QXmlStreamReader xmlReader_;
 
 public:
-    ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSetting &serialGeneratorSetting);
+    ConfigurationReader(Configuration &configuration, SerialGeneratorSetting &serialGeneratorSetting);
 
-    void writeToFile(QFile *file);
+    int readFromFile(QFile *file);
 };
 
-#endif  // CONFIGURATIONWRITER_H
+#endif  // CONFIGURATIONREADER_H

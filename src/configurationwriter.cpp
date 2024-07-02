@@ -20,7 +20,6 @@
 
 // Include
 #include <QString>
-#include <QXmlStreamWriter>
 #include "configurationwriter.h"
 
 ConfigurationWriter::ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSetting &serialGeneratorSetting) :
@@ -30,44 +29,44 @@ ConfigurationWriter::ConfigurationWriter(const Configuration &configuration, con
 }
 
 // Writes the current configuration to a given file
-void ConfigurationWriter::writeToFile(QFile &file)
+void ConfigurationWriter::writeToFile(QFile *file)
 {
-    QXmlStreamWriter xmlWriter(&file);
-    xmlWriter.setAutoFormatting(true);
-    xmlWriter.writeStartDocument();
-    xmlWriter.writeStartElement("cp2130config");  // Write root element
-    xmlWriter.writeAttribute("version", "1.0");
-    xmlWriter.writeStartElement("manufacturer");  // Write manufacturer element
-    xmlWriter.writeAttribute("string", configuration_.manufacturer);
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("product");  // Write product element
-    xmlWriter.writeAttribute("string", configuration_.product);
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("serial");  // Write serial element
-    xmlWriter.writeAttribute("string", configuration_.serial);
+    xmlWriter_.setDevice(file);
+    xmlWriter_.setAutoFormatting(true);
+    xmlWriter_.writeStartDocument();
+    xmlWriter_.writeStartElement("cp2130config");  // Write root element
+    xmlWriter_.writeAttribute("version", "1.0");
+    xmlWriter_.writeStartElement("manufacturer");  // Write manufacturer element
+    xmlWriter_.writeAttribute("string", configuration_.manufacturer);
+    xmlWriter_.writeEndElement();
+    xmlWriter_.writeStartElement("product");  // Write product element
+    xmlWriter_.writeAttribute("string", configuration_.product);
+    xmlWriter_.writeEndElement();
+    xmlWriter_.writeStartElement("serial");  // Write serial element
+    xmlWriter_.writeAttribute("string", configuration_.serial);
     if (serialGeneratorSetting_.doexport) {
-        xmlWriter.writeStartElement("generator");  // Write generator element
-        xmlWriter.writeAttribute("prototype", serialGeneratorSetting_.serialgen.prototypeSerial());
-        xmlWriter.writeAttribute("mode", QString::number(serialGeneratorSetting_.serialgen.replaceMode()));
-        xmlWriter.writeAttribute("enable", (serialGeneratorSetting_.genenable ? "true" : "false"));
-        xmlWriter.writeAttribute("auto-generate", (serialGeneratorSetting_.autogen ? "true" : "false"));
-        xmlWriter.writeEndElement();
+        xmlWriter_.writeStartElement("generator");  // Write generator element
+        xmlWriter_.writeAttribute("prototype", serialGeneratorSetting_.serialgen.prototypeSerial());
+        xmlWriter_.writeAttribute("mode", QString::number(serialGeneratorSetting_.serialgen.replaceMode()));
+        xmlWriter_.writeAttribute("enable", (serialGeneratorSetting_.genenable ? "true" : "false"));
+        xmlWriter_.writeAttribute("auto-generate", (serialGeneratorSetting_.autogen ? "true" : "false"));
+        xmlWriter_.writeEndElement();
     }
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("vid");  // Write VID element
-    xmlWriter.writeAttribute("value", QString::number(configuration_.usbconfig.vid, 16));
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("pid");  // Write PID element
-    xmlWriter.writeAttribute("value", QString::number(configuration_.usbconfig.pid, 16));
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("release");  // Write release element
-    xmlWriter.writeAttribute("major", QString::number(configuration_.usbconfig.majrel));
-    xmlWriter.writeAttribute("minor", QString::number(configuration_.usbconfig.minrel));
-    xmlWriter.writeEndElement();
-    xmlWriter.writeStartElement("power");  // Write power element
-    xmlWriter.writeAttribute("maximum", QString::number(configuration_.usbconfig.maxpow, 16));
-    xmlWriter.writeAttribute("mode", QString::number(configuration_.usbconfig.powmode));
-    xmlWriter.writeEndElement();
+    xmlWriter_.writeEndElement();
+    xmlWriter_.writeStartElement("vid");  // Write VID element
+    xmlWriter_.writeAttribute("value", QString::number(configuration_.usbconfig.vid, 16));
+    xmlWriter_.writeEndElement();
+    xmlWriter_.writeStartElement("pid");  // Write PID element
+    xmlWriter_.writeAttribute("value", QString::number(configuration_.usbconfig.pid, 16));
+    xmlWriter_.writeEndElement();
+    xmlWriter_.writeStartElement("release");  // Write release element
+    xmlWriter_.writeAttribute("major", QString::number(configuration_.usbconfig.majrel));
+    xmlWriter_.writeAttribute("minor", QString::number(configuration_.usbconfig.minrel));
+    xmlWriter_.writeEndElement();
+    xmlWriter_.writeStartElement("power");  // Write power element
+    xmlWriter_.writeAttribute("maximum", QString::number(configuration_.usbconfig.maxpow, 16));
+    xmlWriter_.writeAttribute("mode", QString::number(configuration_.usbconfig.powmode));
+    xmlWriter_.writeEndElement();
     // To do
-    xmlWriter.writeEndElement();
+    xmlWriter_.writeEndElement();
 }
