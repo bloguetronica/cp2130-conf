@@ -70,6 +70,7 @@ int ConfigurationReader::readFromFile(QFile *file)
                     }
                 }
             } else if (xmlReader_.readNextStartElement() && xmlReader_.name() == "generator") {  // Get serial generator settings
+                serialGeneratorSetting_.doexport = true;
                 foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
                     if (attr.name().toString() == "prototype") {
                         QString prototype = attr.value().toString();
