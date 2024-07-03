@@ -691,7 +691,7 @@ void ConfiguratorWindow::displayMaxPower(quint8 maxpow)
 }
 
 // Updates the product ID field (implemented in version 3.0)
-void ConfiguratorWindow::displayPID(quint8 pid)
+void ConfiguratorWindow::displayPID(quint16 pid)
 {
     ui->lineEditPID->setText(QString("%1").arg(pid, 4, 16, QChar('0')));  // This will autofill with up to four leading zeros
 }
@@ -749,7 +749,7 @@ void ConfiguratorWindow::displayTransferPrio(quint8 trfprio)
 }
 
 // Updates the vendor ID field (implemented in version 3.0)
-void ConfiguratorWindow::displayVID(quint8 vid)
+void ConfiguratorWindow::displayVID(quint16 vid)
 {
     ui->lineEditVID->setText(QString("%1").arg(vid, 4, 16, QChar('0')));  // This will autofill with up to four leading zeros
 }

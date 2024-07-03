@@ -109,14 +109,14 @@ private:
     void displayConfiguration(const Configuration &config, bool fullUpdate);
     void displayManufacturer(const QString &manufacturer);
     void displayMaxPower(quint8 maxpow);
-    void displayPID(quint8 pid);
+    void displayPID(quint16 pid);
     void displayPinConfig(const CP2130::PinConfig &pinconfig);
     void displayPowerMode(quint8 powmode);
     void displayProduct(const QString &product);
     void displayRelease(quint8 majrel, quint8 minrel);
     void displaySerial(const QString &serial);
     void displayTransferPrio(quint8 trfprio);
-    void displayVID(quint8 vid);
+    void displayVID(quint16 vid);
     void getEditedConfiguration();
     void handleError();
     void opCheck(const QString &op, int errcnt, QString errstr);
