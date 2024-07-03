@@ -77,7 +77,7 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
         serialstr_ = serialstr;  // and the serial number as well
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialstr_));
-        displayConfiguration(deviceConfig_);
+        displayConfiguration(deviceConfig_, true);
         viewEnabled_ = true;
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
@@ -143,7 +143,7 @@ void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
             ConfigurationReader configReader(editedConfig_, serialGenSetting_);
             configReader.readFrom(&file);
             file.close();
-            // Display config here
+            displayConfiguration(editedConfig_, false);  // This partial update won't modify any fields that are locked
             filePath = fileName;
         }
     }
@@ -423,7 +423,7 @@ void ConfiguratorWindow::on_pushButtonGenerateSerial_clicked()
 
 void ConfiguratorWindow::on_pushButtonRevert_clicked()
 {
-    displayConfiguration(deviceConfig_);
+    displayConfiguration(deviceConfig_, true);
 }
 
 void ConfiguratorWindow::on_pushButtonWrite_clicked()
@@ -629,31 +629,71 @@ void ConfiguratorWindow::disableView()
     viewEnabled_ = false;
 }
 
-// This is the main display routine, used to display the given configuration, updating all fields accordingly
-void ConfiguratorWindow::displayConfiguration(const Configuration &config)
+// This is the main display routine, used to display the given configuration, updating all fields accordingly (modified in version 3.0, in order to implement partial or full updates)
+void ConfiguratorWindow::displayConfiguration(const Configuration &config, bool fullUpdate)
 {
-    displayManufacturer(config.manufacturer);
-    setManufacturerEnabled((CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF);
-    displayProduct(config.product);
-    setProductEnabled((CP2130::LWPROD & lockWord_) == CP2130::LWPROD);
-    displaySerial(config.serial);
-    setSerialEnabled((CP2130::LWSER & lockWord_) == CP2130::LWSER);
-    displayUSBConfig(config.usbconfig);
-    setVIDEnabled((CP2130::LWVID & lockWord_) == CP2130::LWVID);
-    setPIDEnabled((CP2130::LWPID & lockWord_) == CP2130::LWPID);
-    setReleaseEnabled((CP2130::LWREL & lockWord_) == CP2130::LWREL);
-    setMaxPowerEnabled((CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW);
-    setPowerModeEnabled((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE);
-    setTransferPrioEnabled((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO);
-    displayPinConfig(config.pinconfig);
-    setPinConfigEnabled((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG);
-    setWriteEnabled((CP2130::LWALL & lockWord_) != 0x0000);  // Since version 3.0, this also enables the "Load Configuration..." menu action
+    if (fullUpdate || (CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF) {
+        displayManufacturer(config.manufacturer);
+    }
+    if (fullUpdate || (CP2130::LWPROD & lockWord_) == CP2130::LWPROD) {
+        displayProduct(config.product);
+    }
+    if (fullUpdate || (CP2130::LWSER & lockWord_) == CP2130::LWSER) {
+        displaySerial(config.serial);
+    }
+    if (fullUpdate || (CP2130::LWVID & lockWord_) == CP2130::LWVID) {
+        displayVID(config.usbconfig.vid);
+    }
+    if (fullUpdate || (CP2130::LWPID & lockWord_) == CP2130::LWPID) {
+        displayPID(config.usbconfig.pid);
+    }
+    if (fullUpdate || (CP2130::LWREL & lockWord_) == CP2130::LWREL) {
+        displayRelease(config.usbconfig.majrel, config.usbconfig.minrel);
+    }
+    if (fullUpdate || (CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW) {
+        displayMaxPower(config.usbconfig.maxpow);
+    }
+    if (fullUpdate || (CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE) {
+        displayPowerMode(config.usbconfig.powmode);
+    }
+    if (fullUpdate || (CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
+        displayTransferPrio(config.usbconfig.trfprio);
+    }
+    if (fullUpdate || (CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG) {
+        displayPinConfig(config.pinconfig);
+    }
+    if (fullUpdate) {
+        setManufacturerEnabled((CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF);
+        setProductEnabled((CP2130::LWPROD & lockWord_) == CP2130::LWPROD);
+        setSerialEnabled((CP2130::LWSER & lockWord_) == CP2130::LWSER);
+        setVIDEnabled((CP2130::LWVID & lockWord_) == CP2130::LWVID);
+        setPIDEnabled((CP2130::LWPID & lockWord_) == CP2130::LWPID);
+        setReleaseEnabled((CP2130::LWREL & lockWord_) == CP2130::LWREL);
+        setMaxPowerEnabled((CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW);
+        setPowerModeEnabled((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE);
+        setTransferPrioEnabled((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO);
+        setPinConfigEnabled((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG);
+        setWriteEnabled((CP2130::LWALL & lockWord_) != 0x0000);  // Since version 3.0, this also enables the "Load Configuration..." menu action
+    }
 }
 
 // Updates the manufacturer descriptor field
 void ConfiguratorWindow::displayManufacturer(const QString &manufacturer)
 {
     ui->lineEditManufacturer->setText(manufacturer);
+}
+
+// Updates the maximum power consumption field (implemented in version 3.0)
+void ConfiguratorWindow::displayMaxPower(quint8 maxpow)
+{
+    ui->lineEditMaxPower->setText(QString::number(2 * maxpow));
+    ui->lineEditMaxPowerHex->setText(QString("%1").arg(maxpow, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
+}
+
+// Updates the product ID field (implemented in version 3.0)
+void ConfiguratorWindow::displayPID(quint8 pid)
+{
+    ui->lineEditPID->setText(QString("%1").arg(pid, 4, 16, QChar('0')));  // This will autofill with up to four leading zeros
 }
 
 // Updates all fields pertaining to the CP2130 pin configuration
@@ -677,10 +717,23 @@ void ConfiguratorWindow::displayPinConfig(const CP2130::PinConfig &pinconfig)
     ui->lineEditResumeMatch->setText(QString("%1").arg(pinconfig.wkupmatch, 4, 16, QChar('0')));  // Same as above
 }
 
+// Updates the power mode combo box (implemented in version 3.0)
+void ConfiguratorWindow::displayPowerMode(quint8 powmode)
+{
+    ui->comboBoxPowerMode->setCurrentIndex(powmode);
+}
+
 // Updates the product descriptor field
 void ConfiguratorWindow::displayProduct(const QString &product)
 {
     ui->lineEditProduct->setText(product);
+}
+
+// Updates the release version fields (implemented in version 3.0)
+void ConfiguratorWindow::displayRelease(quint8 majrel, quint8 minrel)
+{
+    ui->spinBoxMajVersion->setValue(majrel);
+    ui->spinBoxMinVersion->setValue(minrel);
 }
 
 // Updates the serial descriptor field
@@ -689,17 +742,16 @@ void ConfiguratorWindow::displaySerial(const QString &serial)
     ui->lineEditSerial->setText(serial);
 }
 
-// Updates all fields pertaining to USB configuration
-void ConfiguratorWindow::displayUSBConfig(const CP2130::USBConfig &usbconfig)
+// Updates the transfer priority combo box (implemented in version 3.0)
+void ConfiguratorWindow::displayTransferPrio(quint8 trfprio)
 {
-    ui->lineEditVID->setText(QString("%1").arg(usbconfig.vid, 4, 16, QChar('0')));  // This will autofill with up to four leading zeros
-    ui->lineEditPID->setText(QString("%1").arg(usbconfig.pid, 4, 16, QChar('0')));  // Same as before
-    ui->spinBoxMajVersion->setValue(usbconfig.majrel);
-    ui->spinBoxMinVersion->setValue(usbconfig.minrel);
-    ui->lineEditMaxPower->setText(QString::number(2 * usbconfig.maxpow));
-    ui->lineEditMaxPowerHex->setText(QString("%1").arg(usbconfig.maxpow, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
-    ui->comboBoxPowerMode->setCurrentIndex(usbconfig.powmode);
-    ui->comboBoxTransferPrio->setCurrentIndex(usbconfig.trfprio);
+    ui->comboBoxTransferPrio->setCurrentIndex(trfprio);
+}
+
+// Updates the vendor ID field (implemented in version 3.0)
+void ConfiguratorWindow::displayVID(quint8 vid)
+{
+    ui->lineEditVID->setText(QString("%1").arg(vid, 4, 16, QChar('0')));  // This will autofill with up to four leading zeros
 }
 
 // Retrieves the user set configuration from the fields
@@ -844,7 +896,7 @@ void ConfiguratorWindow::resetDevice()
     if (err == CP2130::SUCCESS) {  // Device was successfully reopened
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
-        displayConfiguration(deviceConfig_);
+        displayConfiguration(deviceConfig_, true);
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
         exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
