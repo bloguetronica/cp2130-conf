@@ -648,7 +648,7 @@ void ConfiguratorWindow::displayConfiguration(const Configuration &config, bool 
         displayPID(config.usbconfig.pid);
     }
     if (fullUpdate || (CP2130::LWREL & lockWord_) == CP2130::LWREL) {
-        displayRelease(config.usbconfig.majrel, config.usbconfig.minrel);
+        displayReleaseVersion(config.usbconfig.majrel, config.usbconfig.minrel);
     }
     if (fullUpdate || (CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW) {
         displayMaxPower(config.usbconfig.maxpow);
@@ -730,7 +730,7 @@ void ConfiguratorWindow::displayProduct(const QString &product)
 }
 
 // Updates the release version fields (implemented in version 3.0)
-void ConfiguratorWindow::displayRelease(quint8 majrel, quint8 minrel)
+void ConfiguratorWindow::displayReleaseVersion(quint8 majrel, quint8 minrel)
 {
     ui->spinBoxMajVersion->setValue(majrel);
     ui->spinBoxMinVersion->setValue(minrel);

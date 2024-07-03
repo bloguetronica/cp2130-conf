@@ -113,7 +113,7 @@ private:
     void displayPinConfig(const CP2130::PinConfig &pinconfig);
     void displayPowerMode(quint8 powmode);
     void displayProduct(const QString &product);
-    void displayRelease(quint8 majrel, quint8 minrel);
+    void displayReleaseVersion(quint8 majrel, quint8 minrel);
     void displaySerial(const QString &serial);
     void displayTransferPrio(quint8 trfprio);
     void displayVID(quint16 vid);
