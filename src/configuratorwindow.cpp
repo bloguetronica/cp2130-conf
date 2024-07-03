@@ -133,18 +133,18 @@ void ConfiguratorWindow::on_actionInformation_triggered()
 // Implemented in version 3.0
 void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), filepath, tr("XML files (*.xml);;All files (*)"));
-    if (!filename.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
-        QFile file(filename);
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), filePath, tr("XML files (*.xml);;All files (*)"));
+    if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
+        QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            QMessageBox::critical(this, tr("Error"), tr("Could not read from %1.\n\nPlease verify that you have read access to this file.").arg(QDir::toNativeSeparators(filename)));
+            QMessageBox::critical(this, tr("Error"), tr("Could not read from %1.\n\nPlease verify that you have read access to this file.").arg(QDir::toNativeSeparators(fileName)));
         } else {
             getEditedConfiguration();
             ConfigurationReader configReader(editedConfig_, serialGenSetting_);
-            configReader.readFromFile(&file);
+            configReader.readFrom(&file);
             file.close();
             // Display config here
-            filepath = filename;
+            filePath = fileName;
         }
     }
 }
@@ -180,17 +180,17 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
     if(showInvalidInput()) {
         QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
     } else {
-        QString filename = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), filepath, tr("XML files (*.xml);;All files (*)"));
-        if (!filename.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
-            QFile file(filename);
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), filePath, tr("XML files (*.xml);;All files (*)"));
+        if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
+            QFile file(fileName);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                QMessageBox::critical(this, tr("Error"), tr("Could not write to %1.\n\nPlease verify that you have write access to this file.").arg(QDir::toNativeSeparators(filename)));
+                QMessageBox::critical(this, tr("Error"), tr("Could not write to %1.\n\nPlease verify that you have write access to this file.").arg(QDir::toNativeSeparators(fileName)));
             } else {
                 getEditedConfiguration();
                 ConfigurationWriter configWriter(editedConfig_, serialGenSetting_);
-                configWriter.writeToFile(&file);
+                configWriter.writeTo(&file);
                 file.close();
-                filepath = filename;
+                filePath = fileName;
             }
         }
     }

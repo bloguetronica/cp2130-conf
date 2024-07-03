@@ -22,7 +22,7 @@
 #define CONFIGURATIONREADER_H
 
 // Includes
-#include <QFile>
+#include <QIODevice>
 #include <QXmlStreamReader>
 #include "configuration.h"
 #include "serialgeneratorsetting.h"
@@ -37,7 +37,7 @@ private:
 public:
     ConfigurationReader(Configuration &configuration, SerialGeneratorSetting &serialGeneratorSetting);
 
-    int readFromFile(QFile *file);
+    int readFrom(QIODevice *device);
 };
 
 #endif  // CONFIGURATIONREADER_H

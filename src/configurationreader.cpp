@@ -29,11 +29,11 @@ ConfigurationReader::ConfigurationReader(Configuration &configuration, SerialGen
 }
 
 // Writes the current configuration to a given file
-int ConfigurationReader::readFromFile(QFile *file)
+int ConfigurationReader::readFrom(QIODevice *device)
 {
     int retval = 0;
     bool err = false;
-    xmlReader_.setDevice(file);
+    xmlReader_.setDevice(device);
     if (xmlReader_.readNextStartElement() && xmlReader_.name() == "cp2130config") {  // If the selected file is a CP2130 configuration file (the XML header is ignored)
         while (xmlReader_.readNextStartElement()) {
             if (xmlReader_.name() == "manufacturer") {  // Get manufacturer string
@@ -81,11 +81,11 @@ int ConfigurationReader::readFromFile(QFile *file)
                         }
                     } else if (attr.name().toString() == "mode") {
                         bool ok;
-                        int mode = attr.value().toInt(&ok);
-                        if (!ok || mode > 0 || mode < 0) {
+                        quint8 mode = static_cast<quint8>(attr.value().toUShort(&ok));
+                        if (!ok || !SerialGenerator::replaceModeIsValid(mode)) {
                             err = true;
                         } else {
-                            serialGeneratorSetting_.serialgen.setReplaceMode(static_cast<quint8>(mode));
+                            serialGeneratorSetting_.serialgen.setReplaceMode(mode);
                         }
                     } else if (attr.name().toString() == "enable") {
                         QString genenable = attr.value().toString();
@@ -108,11 +108,11 @@ int ConfigurationReader::readFromFile(QFile *file)
                 foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
                     if (attr.name().toString() == "value") {
                         bool ok;
-                        int vid = attr.value().toInt(&ok, 16);
-                        if (!ok || vid > 0xffff || vid <= 0x0000) {
+                        quint16 vid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
+                        if (!ok || vid == 0x0000) {
                             err = true;
                         } else {
-                            configuration_.usbconfig.vid = static_cast<quint16>(vid);
+                            configuration_.usbconfig.vid = vid;
                         }
                     }
                 }
@@ -120,11 +120,11 @@ int ConfigurationReader::readFromFile(QFile *file)
                 foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
                     if (attr.name().toString() == "value") {
                         bool ok;
-                        int pid = attr.value().toInt(&ok, 16);
-                        if (!ok || pid > 0xffff || pid <= 0x0000) {
+                        quint16 pid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
+                        if (!ok || pid == 0x0000) {
                             err = true;
                         } else {
-                            configuration_.usbconfig.pid = static_cast<quint16>(pid);
+                            configuration_.usbconfig.pid = pid;
                         }
                     }
                 }
@@ -132,16 +132,16 @@ int ConfigurationReader::readFromFile(QFile *file)
                 foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
                     if (attr.name().toString() == "major") {  // Major release number
                         bool ok;
-                        int major = attr.value().toInt(&ok);
-                        if (!ok || major > 255 || major < 0) {
+                        ushort major = attr.value().toUShort(&ok);
+                        if (!ok || major > 255) {
                             err = true;
                         } else {
                             configuration_.usbconfig.majrel = static_cast<quint8>(major);
                         }
                     } else if (attr.name().toString() == "minor") {  // Minor release number
                         bool ok;
-                        int minor = attr.value().toInt(&ok);
-                        if (!ok || minor > 255 || minor < 0) {
+                        ushort minor = attr.value().toUShort(&ok);
+                        if (!ok || minor > 255) {
                             err = true;
                         } else {
                             configuration_.usbconfig.minrel = static_cast<quint8>(minor);
@@ -152,16 +152,16 @@ int ConfigurationReader::readFromFile(QFile *file)
                 foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
                     if (attr.name().toString() == "maximum") {  // Maximum power (hexadecimal)
                         bool ok;
-                        int maxpow = attr.value().toInt(&ok, 16);
-                        if (!ok || maxpow > 0xff || maxpow < 0x00) {
+                        ushort maxpow = attr.value().toUShort(&ok, 16);
+                        if (!ok || maxpow > 0xff) {
                             err = true;
                         } else {
                             configuration_.usbconfig.maxpow = static_cast<quint8>(maxpow);
                         }
                     } else if (attr.name().toString() == "mode") {  // Power mode (index)
                         bool ok;
-                        int powmode = attr.value().toInt(&ok);
-                        if (!ok || powmode > 2 || powmode < 0) {
+                        ushort powmode = attr.value().toUShort(&ok);
+                        if (!ok || powmode > 2) {
                             err = true;
                         } else {
                             configuration_.usbconfig.powmode = static_cast<quint8>(powmode);

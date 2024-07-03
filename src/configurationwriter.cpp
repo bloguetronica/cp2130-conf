@@ -29,9 +29,9 @@ ConfigurationWriter::ConfigurationWriter(const Configuration &configuration, con
 }
 
 // Writes the current configuration to a given file
-void ConfigurationWriter::writeToFile(QFile *file)
+void ConfigurationWriter::writeTo(QIODevice *device)
 {
-    xmlWriter_.setDevice(file);
+    xmlWriter_.setDevice(device);
     xmlWriter_.setAutoFormatting(true);
     xmlWriter_.writeStartDocument();
     xmlWriter_.writeStartElement("cp2130config");  // Write root element

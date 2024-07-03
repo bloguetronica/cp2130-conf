@@ -25,7 +25,7 @@
 #include "common.h"
 
 // Global definitions
-QString filepath = QDir::homePath();
+QString filePath = QDir::homePath();
 
 // Local definitions
 QPointer<AboutDialog> aboutDialog_;

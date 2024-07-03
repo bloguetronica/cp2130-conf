@@ -22,7 +22,7 @@
 #define CONFIGURATIONWRITER_H
 
 // Includes
-#include <QFile>
+#include <QIODevice>
 #include <QXmlStreamWriter>
 #include "configuration.h"
 #include "serialgeneratorsetting.h"
@@ -37,7 +37,7 @@ private:
 public:
     ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSetting &serialGeneratorSetting);
 
-    void writeToFile(QFile *file);
+    void writeTo(QIODevice *device);
 };
 
 #endif  // CONFIGURATIONWRITER_H
