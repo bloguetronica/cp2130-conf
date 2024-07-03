@@ -197,6 +197,14 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
 }
 
 // Implemented in version 3.0
+void ConfiguratorWindow::on_actionSerialGeneratorEnable_enabledChanged(bool enabled)
+{
+    if (!enabled) {
+        setSerialGeneratorEnabled(false);  // This also unckecks actionSerialGeneratorEnable and disables pushButtonGenerateSerial
+    }
+}
+
+// Implemented in version 3.0
 void ConfiguratorWindow::on_actionSerialGeneratorEnable_toggled(bool checked)
 {
     ui->pushButtonGenerateSerial->setEnabled(checked);
@@ -623,13 +631,12 @@ void ConfiguratorWindow::disableView()
     ui->actionLoadConfiguration->setEnabled(false);  // Added in version 3.0
     ui->actionClose->setText(tr("&Close Window"));  // Implemented in version 2.0, to hint the user that the device is effectively closed and only its window remains open
     ui->actionOTPROMViewer->setEnabled(false);  // Added in version 3.0
-    ui->actionSerialGeneratorEnable->setEnabled(false);  // Added in version 3.0
-    ui->actionSerialGeneratorEnable->setChecked(false);  // Added in version 3.0
+    ui->actionSerialGeneratorEnable->setEnabled(false);  // Added in version 3.0 (this also unckecks actionSerialGeneratorEnable and, therefore, disables pushButtonGenerateSerial)
     ui->centralWidget->setEnabled(false);
     viewEnabled_ = false;
 }
 
-// This is the main display routine, used to display the given configuration, updating all fields accordingly (modified in version 3.0, in order to implement partial or full updates)
+// This is the main display routine, used to display the given configuration, updating some or all fields accordingly (expanded in version 3.0, in order to implement partial or full updates)
 void ConfiguratorWindow::displayConfiguration(const Configuration &config, bool fullUpdate)
 {
     if (fullUpdate || (CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF) {
@@ -736,10 +743,11 @@ void ConfiguratorWindow::displayReleaseVersion(quint8 majrel, quint8 minrel)
     ui->spinBoxMinVersion->setValue(minrel);
 }
 
-// Updates the serial descriptor field
+// Updates the serial descriptor field and associated settings (expanded in version 3.0)
 void ConfiguratorWindow::displaySerial(const QString &serial)
 {
-    ui->lineEditSerial->setText(serial);
+    setSerialGeneratorEnabled((CP2130::LWSER & lockWord_) == CP2130::LWSER && serialGenSetting_.genenable);  // During a partial update, this also enables or disables pushButtonGenerateSerial (the extra condition ensures that it will not be enabled when it shouldn't, during a full update)
+    ui->lineEditSerial->setText(serialGenSetting_.autogen ? serialGenSetting_.serialgen.generateSerial() : serial);
 }
 
 // Updates the transfer priority combo box (implemented in version 3.0)
@@ -968,14 +976,17 @@ void ConfiguratorWindow::setReleaseEnabled(bool value)
     ui->spinBoxMinVersion->setReadOnly(!value);
 }
 
-// Enables or disables the serial descriptor field and the related "Serial Number Generator > Enable" action
+// Enables or disables the serial descriptor field and the related "Serial Number Generator > Enable" action (expanded in version 3.0)
 void ConfiguratorWindow::setSerialEnabled(bool value)
 {
     ui->actionSerialGeneratorEnable->setEnabled(value);  // Added in version 3.0
-    if (!value) {  // Implemented in version 3.0
-        ui->actionSerialGeneratorEnable->setChecked(false);  // This also disables pushButtonGenerateSerial
-    }
     ui->lineEditSerial->setReadOnly(!value);
+}
+
+// Enables or disables the serial generator (added in version 3.0)
+void ConfiguratorWindow::setSerialGeneratorEnabled(bool value)
+{
+    ui->actionSerialGeneratorEnable->setChecked(value);  // This also enables or disables pushButtonGenerateSerial
 }
 
 // Enables or disables the transfer priority configuration field

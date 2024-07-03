@@ -54,6 +54,7 @@ private slots:
     void on_actionLoadConfiguration_triggered();
     void on_actionOTPROMViewer_triggered();
     void on_actionSaveConfiguration_triggered();
+    void on_actionSerialGeneratorEnable_enabledChanged(bool enabled);
     void on_actionSerialGeneratorEnable_toggled(bool checked);
     void on_actionSerialGeneratorSettings_triggered();
     void on_lineEditManufacturer_textEdited();
@@ -131,6 +132,7 @@ private:
     void setProductEnabled(bool value);
     void setReleaseEnabled(bool value);
     void setSerialEnabled(bool value);
+    void setSerialGeneratorEnabled(bool value);
     void setTransferPrioEnabled(bool value);
     void setVIDEnabled(bool value);
     void setWriteEnabled(bool value);
