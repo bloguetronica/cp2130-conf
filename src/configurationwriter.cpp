@@ -22,9 +22,9 @@
 #include <QString>
 #include "configurationwriter.h"
 
-ConfigurationWriter::ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSettings &serialGeneratorSetting) :
+ConfigurationWriter::ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSettings &serialGeneratorSettings) :
     configuration_(configuration),
-    serialGeneratorSettings_(serialGeneratorSetting)
+    serialGeneratorSettings_(serialGeneratorSettings)
 {
 }
 

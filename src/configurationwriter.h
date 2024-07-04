@@ -35,7 +35,7 @@ private:
     QXmlStreamWriter xmlWriter_;
 
 public:
-    ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSettings &serialGeneratorSetting);
+    ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSettings &serialGeneratorSettings);
 
     void writeTo(QIODevice *device);
 };

@@ -41,7 +41,7 @@ public:
     static const int ERROR_NOT_VALID = 1;  // Returned by readFrom() if the file is not a valid CP2130 configuration file
     static const int ERROR_SYNTAX = 2;     // Returned by readFrom() if the file contains syntax errors
 
-    ConfigurationReader(Configuration &configuration, SerialGeneratorSettings &serialGeneratorSetting);
+    ConfigurationReader(Configuration &configuration, SerialGeneratorSettings &serialGeneratorSettings);
 
     int readFrom(QIODevice *device);
 };

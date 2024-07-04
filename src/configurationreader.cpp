@@ -22,9 +22,9 @@
 #include "cp2130.h"
 #include "configurationreader.h"
 
-ConfigurationReader::ConfigurationReader(Configuration &configuration, SerialGeneratorSettings &serialGeneratorSetting) :
+ConfigurationReader::ConfigurationReader(Configuration &configuration, SerialGeneratorSettings &serialGeneratorSettings) :
     configuration_(configuration),
-    serialGeneratorSettings_(serialGeneratorSetting)
+    serialGeneratorSettings_(serialGeneratorSettings)
 {
 }
 
