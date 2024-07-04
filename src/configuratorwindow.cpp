@@ -617,8 +617,8 @@ void ConfiguratorWindow::disableView()
     ui->actionLoadConfiguration->setEnabled(false);  // Added in version 3.0
     ui->actionClose->setText(tr("&Close Window"));  // Implemented in version 2.0, to hint the user that the device is effectively closed and only its window remains open
     ui->actionOTPROMViewer->setEnabled(false);  // Added in version 3.0
-    ui->actionSerialGeneratorEnable->setEnabled(false);  // Added in version 3.0
     ui->actionSerialGeneratorEnable->setChecked(false);  // Added in version 3.0 (this also disables pushButtonGenerateSerial)
+    ui->actionSerialGeneratorEnable->setEnabled(false);  // Added in version 3.0
     ui->centralWidget->setEnabled(false);
     viewEnabled_ = false;
 }
@@ -796,8 +796,11 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
     SerialGeneratorSettings serialGenSettings = serialGenSettings_;  // Local variable required to hold serial generator settings that may or may not be applied
     ConfigurationReader configReader(editedConfig_, serialGenSettings_);
     int err = configReader.readFrom(&file);
-    // Treat errors here first
-    if (!err) {  // Temporary
+    if (err == ConfigurationReader::ERROR_NOT_VALID) {
+        QMessageBox::critical(this, tr("Error"), tr("The selected file is not a valid CP2130 configuration file."));
+    } else if (err == ConfigurationReader::ERROR_SYNTAX) {
+        QMessageBox::critical(this, tr("Error"), tr("The file contains one or more errors. The configuration was not loaded."));
+    } else {
         displayConfiguration(editedConfig_, false);  // This partial update will not modify any fields that are locked
         serialGenSettings_ = serialGenSettings;  // Apply serial generator settings
         if ((CP2130::LWSER & lockWord_) == CP2130::LWSER) {
@@ -993,10 +996,10 @@ void ConfiguratorWindow::setReleaseEnabled(bool value)
 // Enables or disables the serial descriptor field and the related "Serial Number Generator > Enable" action (expanded in version 3.0)
 void ConfiguratorWindow::setSerialEnabled(bool value)
 {
-    ui->actionSerialGeneratorEnable->setEnabled(value);  // Added in version 3.0
     if (!value) {  // Implemented in version 3.0
         ui->actionSerialGeneratorEnable->setChecked(false);  // This also disables pushButtonGenerateSerial
     }
+    ui->actionSerialGeneratorEnable->setEnabled(value);  // Added in version 3.0
     ui->lineEditSerial->setReadOnly(!value);
 }
 
@@ -1012,7 +1015,7 @@ void ConfiguratorWindow::setVIDEnabled(bool value)
     ui->lineEditVID->setReadOnly(!value);
 }
 
-// Enables or disables editing related actions, buttons and checkboxes
+// Enables or disables editing related actions, buttons and checkboxes (expanded in version 3.0)
 void ConfiguratorWindow::setWriteEnabled(bool value)
 {
     ui->actionLoadConfiguration->setEnabled(value);  // Added in version 3.0
@@ -1022,7 +1025,7 @@ void ConfiguratorWindow::setWriteEnabled(bool value)
     ui->pushButtonWrite->setEnabled(value);
 }
 
-// Checks user input, returning false if it is valid, or true otherwise, while also highlighting invalid fields
+// Checks user input, returning false if it is valid, or true otherwise, while also highlighting invalid fields (modified in version 3.0)
 bool ConfiguratorWindow::showInvalidInput()
 {
     bool retval = false;
