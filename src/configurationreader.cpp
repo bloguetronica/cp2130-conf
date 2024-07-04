@@ -31,7 +31,7 @@ ConfigurationReader::ConfigurationReader(Configuration &configuration, SerialGen
 // Writes the current configuration to a given file
 int ConfigurationReader::readFrom(QIODevice *device)
 {
-    int retval = SUCCESS;
+    int retval;
     serialGeneratorSettings_.doexport = false;  // Default settings if no "generator" element is found
     serialGeneratorSettings_.genenable = false;
     serialGeneratorSettings_.autogen = false;
@@ -178,11 +178,13 @@ int ConfigurationReader::readFrom(QIODevice *device)
             }*/
             xmlReader_.skipCurrentElement();
         }
+        if (xmlReader_.hasError() || err_) {
+            retval = ERROR_SYNTAX;
+        } else {
+            retval = SUCCESS;
+        }
     } else {  // The selected file is not a CP2130 configuration file (no further reading is done, and no subsequent errors are checked)
         retval = ERROR_NOT_VALID;
-    }
-    if (xmlReader_.hasError() || err_) {
-        retval = ERROR_SYNTAX;
     }
     return retval;
 }
