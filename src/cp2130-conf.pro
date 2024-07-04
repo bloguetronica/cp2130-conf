@@ -55,7 +55,7 @@ HEADERS += \
     otpromviewerdialog.h \
     serialgenerator.h \
     serialgeneratordialog.h \
-    serialgeneratorsetting.h
+    serialgeneratorsettings.h
 
 FORMS += \
     aboutdialog.ui \

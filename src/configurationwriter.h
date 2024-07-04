@@ -25,17 +25,17 @@
 #include <QIODevice>
 #include <QXmlStreamWriter>
 #include "configuration.h"
-#include "serialgeneratorsetting.h"
+#include "serialgeneratorsettings.h"
 
 class ConfigurationWriter
 {
 private:
     const Configuration &configuration_;
-    const SerialGeneratorSetting &serialGeneratorSetting_;
+    const SerialGeneratorSettings &serialGeneratorSettings_;
     QXmlStreamWriter xmlWriter_;
 
 public:
-    ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSetting &serialGeneratorSetting);
+    ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSettings &serialGeneratorSetting);
 
     void writeTo(QIODevice *device);
 };

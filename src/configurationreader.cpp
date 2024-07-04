@@ -22,9 +22,9 @@
 #include "cp2130.h"
 #include "configurationreader.h"
 
-ConfigurationReader::ConfigurationReader(Configuration &configuration, SerialGeneratorSetting &serialGeneratorSetting) :
+ConfigurationReader::ConfigurationReader(Configuration &configuration, SerialGeneratorSettings &serialGeneratorSetting) :
     configuration_(configuration),
-    serialGeneratorSetting_(serialGeneratorSetting)
+    serialGeneratorSettings_(serialGeneratorSetting)
 {
 }
 
@@ -70,14 +70,14 @@ int ConfigurationReader::readFrom(QIODevice *device)
                     }
                 }
             } else if (xmlReader_.readNextStartElement() && xmlReader_.name() == "generator") {  // Get serial generator settings
-                serialGeneratorSetting_.doexport = true;
+                serialGeneratorSettings_.doexport = true;
                 foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
                     if (attr.name().toString() == "prototype") {
                         QString prototype = attr.value().toString();
                         if (!SerialGenerator::prototypeSerialIsValid(prototype)) {
                             err = true;
                         } else {
-                            serialGeneratorSetting_.serialgen.setPrototypeSerial(prototype);
+                            serialGeneratorSettings_.serialgen.setPrototypeSerial(prototype);
                         }
                     } else if (attr.name().toString() == "mode") {
                         bool ok;
@@ -85,21 +85,21 @@ int ConfigurationReader::readFrom(QIODevice *device)
                         if (!ok || !SerialGenerator::replaceModeIsValid(mode)) {
                             err = true;
                         } else {
-                            serialGeneratorSetting_.serialgen.setReplaceMode(mode);
+                            serialGeneratorSettings_.serialgen.setReplaceMode(mode);
                         }
                     } else if (attr.name().toString() == "enable") {
                         QString genenable = attr.value().toString();
                         if (genenable != "true" || genenable != "false") {
                             err = true;
                         } else {
-                            serialGeneratorSetting_.genenable = genenable == "true";
+                            serialGeneratorSettings_.genenable = genenable == "true";
                         }
                     } else if (attr.name().toString() == "auto-generate") {
                         QString autogen = attr.value().toString();
                         if (autogen != "true" || autogen != "false") {
                             err = true;
                         } else {
-                            serialGeneratorSetting_.autogen = autogen == "true";
+                            serialGeneratorSettings_.autogen = autogen == "true";
                         }
                     }
                 }

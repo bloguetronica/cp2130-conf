@@ -18,26 +18,17 @@
    Please feel free to contact me via e-mail: samuel.fmlourenco@gmail.com */
 
 
-#ifndef CONFIGURATIONREADER_H
-#define CONFIGURATIONREADER_H
+#ifndef SERIALGENERATORSETTINGS_H
+#define SERIALGENERATORSETTINGS_H
 
 // Includes
-#include <QIODevice>
-#include <QXmlStreamReader>
-#include "configuration.h"
-#include "serialgeneratorsettings.h"
+#include "serialgenerator.h"
 
-class ConfigurationReader
-{
-private:
-    Configuration &configuration_;
-    SerialGeneratorSettings &serialGeneratorSettings_;
-    QXmlStreamReader xmlReader_;
-
-public:
-    ConfigurationReader(Configuration &configuration, SerialGeneratorSettings &serialGeneratorSetting);
-
-    int readFrom(QIODevice *device);
+struct SerialGeneratorSettings {
+    SerialGenerator serialgen;
+    bool doexport;
+    bool genenable;
+    bool autogen;
 };
 
-#endif  // CONFIGURATIONREADER_H
+#endif  // SERIALGENERATORSETTINGS_H

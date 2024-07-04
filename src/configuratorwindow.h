@@ -22,6 +22,7 @@
 #define CONFIGURATORWINDOW_H
 
 // Includes
+#include <QFile>
 #include <QMainWindow>
 #include <QPointer>
 #include <QString>
@@ -30,7 +31,7 @@
 #include "cp2130.h"
 #include "informationdialog.h"
 #include "otpromviewerdialog.h"
-#include "serialgeneratorsetting.h"
+#include "serialgeneratorsettings.h"
 
 namespace Ui {
 class ConfiguratorWindow;
@@ -54,7 +55,6 @@ private slots:
     void on_actionLoadConfiguration_triggered();
     void on_actionOTPROMViewer_triggered();
     void on_actionSaveConfiguration_triggered();
-    void on_actionSerialGeneratorEnable_enabledChanged(bool enabled);
     void on_actionSerialGeneratorEnable_toggled(bool checked);
     void on_actionSerialGeneratorSettings_triggered();
     void on_lineEditManufacturer_textEdited();
@@ -101,7 +101,7 @@ private:
     QPointer<InformationDialog> informationDialog_;
     QPointer<OTPROMViewerDialog> otpromViewerDialog_;
     QString errmsg_, serialstr_;
-    SerialGeneratorSetting serialGenSetting_;
+    SerialGeneratorSettings serialGenSettings_;
     quint16 lockWord_, pid_, vid_;
     bool err_, requiresReset_, viewEnabled_ = false;
 
@@ -120,10 +120,12 @@ private:
     void displayVID(quint16 vid);
     void getEditedConfiguration();
     void handleError();
+    void loadConfigurationFromFile(QFile &file);
     void opCheck(const QString &op, int errcnt, QString errstr);
     QStringList prepareTaskList();
     void readDeviceConfiguration();
     void resetDevice();
+    void saveConfigurationToFile(QFile &file);
     void setManufacturerEnabled(bool value);
     void setMaxPowerEnabled(bool value);
     void setPinConfigEnabled(bool value);
@@ -132,7 +134,6 @@ private:
     void setProductEnabled(bool value);
     void setReleaseEnabled(bool value);
     void setSerialEnabled(bool value);
-    void setSerialGeneratorEnabled(bool value);
     void setTransferPrioEnabled(bool value);
     void setVIDEnabled(bool value);
     void setWriteEnabled(bool value);

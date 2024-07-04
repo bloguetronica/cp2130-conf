@@ -22,9 +22,9 @@
 #include <QString>
 #include "configurationwriter.h"
 
-ConfigurationWriter::ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSetting &serialGeneratorSetting) :
+ConfigurationWriter::ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSettings &serialGeneratorSetting) :
     configuration_(configuration),
-    serialGeneratorSetting_(serialGeneratorSetting)
+    serialGeneratorSettings_(serialGeneratorSetting)
 {
 }
 
@@ -44,12 +44,12 @@ void ConfigurationWriter::writeTo(QIODevice *device)
     xmlWriter_.writeEndElement();
     xmlWriter_.writeStartElement("serial");  // Write serial element
     xmlWriter_.writeAttribute("string", configuration_.serial);
-    if (serialGeneratorSetting_.doexport) {
+    if (serialGeneratorSettings_.doexport) {
         xmlWriter_.writeStartElement("generator");  // Write generator element
-        xmlWriter_.writeAttribute("prototype", serialGeneratorSetting_.serialgen.prototypeSerial());
-        xmlWriter_.writeAttribute("mode", QString::number(serialGeneratorSetting_.serialgen.replaceMode()));
-        xmlWriter_.writeAttribute("enable", (serialGeneratorSetting_.genenable ? "true" : "false"));
-        xmlWriter_.writeAttribute("auto-generate", (serialGeneratorSetting_.autogen ? "true" : "false"));
+        xmlWriter_.writeAttribute("prototype", serialGeneratorSettings_.serialgen.prototypeSerial());
+        xmlWriter_.writeAttribute("mode", QString::number(serialGeneratorSettings_.serialgen.replaceMode()));
+        xmlWriter_.writeAttribute("enable", (serialGeneratorSettings_.genenable ? "true" : "false"));
+        xmlWriter_.writeAttribute("auto-generate", (serialGeneratorSettings_.autogen ? "true" : "false"));
         xmlWriter_.writeEndElement();
     }
     xmlWriter_.writeEndElement();

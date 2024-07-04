@@ -21,7 +21,6 @@
 // Includes
 #include <cstring>
 #include <QDir>
-#include <QFile>
 #include <QFileDialog>
 #include <QIODevice>
 #include <QMessageBox>
@@ -77,7 +76,7 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
         serialstr_ = serialstr;  // and the serial number as well
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialstr_));
-        displayConfiguration(deviceConfig_, true);
+        displayConfiguration(deviceConfig_, true);  // Modified in version 3.0
         viewEnabled_ = true;
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
@@ -139,11 +138,8 @@ void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QMessageBox::critical(this, tr("Error"), tr("Could not read from %1.\n\nPlease verify that you have read access to this file.").arg(QDir::toNativeSeparators(fileName)));
         } else {
-            getEditedConfiguration();
-            ConfigurationReader configReader(editedConfig_, serialGenSetting_);
-            configReader.readFrom(&file);
+            loadConfigurationFromFile(file);
             file.close();
-            displayConfiguration(editedConfig_, false);  // This partial update won't modify any fields that are locked
             filePath = fileName;
         }
     }
@@ -186,21 +182,11 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
                 QMessageBox::critical(this, tr("Error"), tr("Could not write to %1.\n\nPlease verify that you have write access to this file.").arg(QDir::toNativeSeparators(fileName)));
             } else {
-                getEditedConfiguration();
-                ConfigurationWriter configWriter(editedConfig_, serialGenSetting_);
-                configWriter.writeTo(&file);
+                saveConfigurationToFile(file);
                 file.close();
                 filePath = fileName;
             }
         }
-    }
-}
-
-// Implemented in version 3.0
-void ConfiguratorWindow::on_actionSerialGeneratorEnable_enabledChanged(bool enabled)
-{
-    if (!enabled) {
-        setSerialGeneratorEnabled(false);  // This also unckecks actionSerialGeneratorEnable and disables pushButtonGenerateSerial
     }
 }
 
@@ -214,13 +200,13 @@ void ConfiguratorWindow::on_actionSerialGeneratorEnable_toggled(bool checked)
 void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
 {
     SerialGeneratorDialog serialGeneratorDialog(this);
-    serialGeneratorDialog.setPrototypeSerialLineEditText(serialGenSetting_.serialgen.prototypeSerial());
-    serialGeneratorDialog.setDigitsCheckBox(serialGenSetting_.serialgen.replaceWithDigits());
-    serialGeneratorDialog.setUppercaseCheckBox(serialGenSetting_.serialgen.replaceWithUppercaseLetters());
-    serialGeneratorDialog.setLowercaseCheckBox(serialGenSetting_.serialgen.replaceWithLowercaseLetters());
-    serialGeneratorDialog.setExportToFileCheckBox(serialGenSetting_.doexport);
-    serialGeneratorDialog.setEnableCheckBox(serialGenSetting_.genenable);
-    serialGeneratorDialog.setAutoGenerateCheckBox(serialGenSetting_.autogen);
+    serialGeneratorDialog.setPrototypeSerialLineEditText(serialGenSettings_.serialgen.prototypeSerial());
+    serialGeneratorDialog.setDigitsCheckBox(serialGenSettings_.serialgen.replaceWithDigits());
+    serialGeneratorDialog.setUppercaseCheckBox(serialGenSettings_.serialgen.replaceWithUppercaseLetters());
+    serialGeneratorDialog.setLowercaseCheckBox(serialGenSettings_.serialgen.replaceWithLowercaseLetters());
+    serialGeneratorDialog.setExportToFileCheckBox(serialGenSettings_.doexport);
+    serialGeneratorDialog.setEnableCheckBox(serialGenSettings_.genenable);
+    serialGeneratorDialog.setAutoGenerateCheckBox(serialGenSettings_.autogen);
     if (serialGeneratorDialog.exec() == QDialog::Accepted) {  // If the user clicks "OK"
         QString prototype = serialGeneratorDialog.prototypeSerialLineEditText();
         bool digit = serialGeneratorDialog.digitsCheckBoxIsChecked();
@@ -229,11 +215,11 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
         if (!SerialGenerator::prototypeSerialIsValid(prototype) || !SerialGenerator::replaceModeIsValid(digit, upper, lower)) {  // If the user entered invalid settings (i.e. the prototype serial number does not contain a wildcard character or no replacement option was selected)
             QMessageBox::critical(this, tr("Error"), tr("The serial generator settings are not valid and will not be applied.\n\nPlease verify that the prototype serial number contains at least one wildcard character (?) and that at least one replacement option is selected."));
         } else {  // Valid settings
-            serialGenSetting_.serialgen.setPrototypeSerial(prototype);
-            serialGenSetting_.serialgen.setReplaceMode(digit, upper, lower);
-            serialGenSetting_.doexport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
-            serialGenSetting_.genenable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
-            serialGenSetting_.autogen = serialGeneratorDialog.autoGenerateCheckBoxIsChecked();  // Same as above, because "checkBoxAutoGenerate" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+            serialGenSettings_.serialgen.setPrototypeSerial(prototype);
+            serialGenSettings_.serialgen.setReplaceMode(digit, upper, lower);
+            serialGenSettings_.doexport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
+            serialGenSettings_.genenable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+            serialGenSettings_.autogen = serialGeneratorDialog.autoGenerateCheckBoxIsChecked();  // Same as above, because "checkBoxAutoGenerate" is automatically unchecked if "checkBoxExportToFile" gets unchecked
         }
     }
 }
@@ -426,12 +412,12 @@ void ConfiguratorWindow::on_lineEditVID_textEdited()
 // Implemented in version 3.0
 void ConfiguratorWindow::on_pushButtonGenerateSerial_clicked()
 {
-    ui->lineEditSerial->setText(serialGenSetting_.serialgen.generateSerial());
+    ui->lineEditSerial->setText(serialGenSettings_.serialgen.generateSerial());
 }
 
 void ConfiguratorWindow::on_pushButtonRevert_clicked()
 {
-    displayConfiguration(deviceConfig_, true);
+    displayConfiguration(deviceConfig_, false);  // Since version 3.0 and for efficiency purposes, this action will only revert unlocked fields
 }
 
 void ConfiguratorWindow::on_pushButtonWrite_clicked()
@@ -624,14 +610,15 @@ void ConfiguratorWindow::configureDevice()
     }
 }
 
-// Partially disables configurator window (fixed in version 2.1)
+// Partially disables configurator window (fixed in version 2.1 and expanded in version 3.0)
 void ConfiguratorWindow::disableView()
 {
     ui->actionInformation->setEnabled(false);
     ui->actionLoadConfiguration->setEnabled(false);  // Added in version 3.0
     ui->actionClose->setText(tr("&Close Window"));  // Implemented in version 2.0, to hint the user that the device is effectively closed and only its window remains open
     ui->actionOTPROMViewer->setEnabled(false);  // Added in version 3.0
-    ui->actionSerialGeneratorEnable->setEnabled(false);  // Added in version 3.0 (this also unckecks actionSerialGeneratorEnable and, therefore, disables pushButtonGenerateSerial)
+    ui->actionSerialGeneratorEnable->setEnabled(false);  // Added in version 3.0
+    ui->actionSerialGeneratorEnable->setChecked(false);  // Added in version 3.0 (this also disables pushButtonGenerateSerial)
     ui->centralWidget->setEnabled(false);
     viewEnabled_ = false;
 }
@@ -743,11 +730,10 @@ void ConfiguratorWindow::displayReleaseVersion(quint8 majrel, quint8 minrel)
     ui->spinBoxMinVersion->setValue(minrel);
 }
 
-// Updates the serial descriptor field and associated settings (expanded in version 3.0)
+// Updates the serial descriptor field
 void ConfiguratorWindow::displaySerial(const QString &serial)
 {
-    setSerialGeneratorEnabled((CP2130::LWSER & lockWord_) == CP2130::LWSER && serialGenSetting_.genenable);  // During a partial update, this also enables or disables pushButtonGenerateSerial (the extra condition ensures that it will not be enabled when it shouldn't, during a full update)
-    ui->lineEditSerial->setText(serialGenSetting_.autogen ? serialGenSetting_.serialgen.generateSerial() : serial);
+    ui->lineEditSerial->setText(serial);
 }
 
 // Updates the transfer priority combo box (implemented in version 3.0)
@@ -801,6 +787,26 @@ void ConfiguratorWindow::handleError()
         cp2130_.close();  // If the device is already closed, this will have no effect
     }
     QMessageBox::critical(this, tr("Error"), errmsg_);
+}
+
+// Loads the configuration from a given file (implemented in version 3.0)
+void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
+{
+    getEditedConfiguration();
+    SerialGeneratorSettings serialGenSettings = serialGenSettings_;  // Local variable required to hold serial generator settings that may or may not be applied
+    ConfigurationReader configReader(editedConfig_, serialGenSettings_);
+    int err = configReader.readFrom(&file);
+    // Treat errors here first
+    if (!err) {  // Temporary
+        displayConfiguration(editedConfig_, false);  // This partial update will not modify any fields that are locked
+        serialGenSettings_ = serialGenSettings;  // Apply serial generator settings
+        if ((CP2130::LWSER & lockWord_) == CP2130::LWSER) {
+            ui->actionSerialGeneratorEnable->setChecked(serialGenSettings_.genenable);  // This also enables or disables pushButtonGenerateSerial
+            if (serialGenSettings_.autogen) {
+                ui->lineEditSerial->setText(serialGenSettings_.serialgen.generateSerial());
+            }
+        }
+    }
 }
 
 // Checks for errors and validates device operations
@@ -904,7 +910,7 @@ void ConfiguratorWindow::resetDevice()
     if (err == CP2130::SUCCESS) {  // Device was successfully reopened
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
-        displayConfiguration(deviceConfig_, true);
+        displayConfiguration(deviceConfig_, true);  // Modified in version 3.0
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
         exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
@@ -915,6 +921,14 @@ void ConfiguratorWindow::resetDevice()
         err_ = true;
         errmsg_ = tr("Device ceased to be available. It could be in use by another application.");  // Same as above
     }
+}
+
+// Saves the current configuration to a given file (implemented in version 3.0)
+void ConfiguratorWindow::saveConfigurationToFile(QFile &file)
+{
+    getEditedConfiguration();
+    ConfigurationWriter configWriter(editedConfig_, serialGenSettings_);
+    configWriter.writeTo(&file);
 }
 
 // Enables or disables the manufacturer descriptor field
@@ -980,13 +994,10 @@ void ConfiguratorWindow::setReleaseEnabled(bool value)
 void ConfiguratorWindow::setSerialEnabled(bool value)
 {
     ui->actionSerialGeneratorEnable->setEnabled(value);  // Added in version 3.0
+    if (!value) {  // Implemented in version 3.0
+        ui->actionSerialGeneratorEnable->setChecked(false);  // This also disables pushButtonGenerateSerial
+    }
     ui->lineEditSerial->setReadOnly(!value);
-}
-
-// Enables or disables the serial generator (added in version 3.0)
-void ConfiguratorWindow::setSerialGeneratorEnabled(bool value)
-{
-    ui->actionSerialGeneratorEnable->setChecked(value);  // This also enables or disables pushButtonGenerateSerial
 }
 
 // Enables or disables the transfer priority configuration field
