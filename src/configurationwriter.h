@@ -35,11 +35,15 @@ private:
     const SerialGeneratorSettings &serialGeneratorSettings_;
     QXmlStreamWriter xmlWriter_;
 
+    void writeBitmaps();
     void writeDescriptor(QString name, QString value);
+    void writeDivider();
     void writeGenerator();
-    void writeID(QString name, quint16 value);
+    void writeGPIO(int number, quint8 mode);
+    void writePins();
     void writePower();
     void writeRelease();
+    void writeWordGeneric(QString name, quint16 value);
 
 public:
     ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSettings &serialGeneratorSettings);

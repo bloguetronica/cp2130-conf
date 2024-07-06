@@ -22,6 +22,17 @@
 #include <QString>
 #include "configurationwriter.h"
 
+// Writes "bitmaps" element
+void ConfigurationWriter::writeBitmaps()
+{
+    xmlWriter_.writeStartElement("bitmaps");
+    writeWordGeneric("suspendlevel", configuration_.pinconfig.sspndlvl);
+    writeWordGeneric("suspendmode", configuration_.pinconfig.sspndmode);
+    writeWordGeneric("wakeupmask", configuration_.pinconfig.wkupmask);
+    writeWordGeneric("wakeupmatch", configuration_.pinconfig.wkupmatch);
+    xmlWriter_.writeEndElement();
+}
+
 // Writes descriptor element (used for manufacturer, product and serial descriptors)
 void ConfigurationWriter::writeDescriptor(QString name, QString value)
 {
@@ -30,6 +41,14 @@ void ConfigurationWriter::writeDescriptor(QString name, QString value)
     if (name == "serial" && serialGeneratorSettings_.doexport) {
         writeGenerator();
     }
+    xmlWriter_.writeEndElement();
+}
+
+// Writes "divider" element
+void ConfigurationWriter::writeDivider()
+{
+    xmlWriter_.writeStartElement("divider");
+    xmlWriter_.writeAttribute("value", QString::number(configuration_.pinconfig.divider));
     xmlWriter_.writeEndElement();
 }
 
@@ -44,11 +63,35 @@ void ConfigurationWriter::writeGenerator()
     xmlWriter_.writeEndElement();
 }
 
-// Writes ID element (used for VID and PID)
-void ConfigurationWriter::writeID(QString name, quint16 value)
+// Writes GPIO element
+void ConfigurationWriter::writeGPIO(int number, quint8 mode)
 {
-    xmlWriter_.writeStartElement(name);
-    xmlWriter_.writeAttribute("value", QString::number(value, 16));
+    xmlWriter_.writeStartElement(QString("gpio%1").arg(number));
+    xmlWriter_.writeAttribute("mode", QString::number(mode));
+    xmlWriter_.writeEndElement();
+}
+
+// Writes "pins" element
+void ConfigurationWriter::writePins()
+{
+    xmlWriter_.writeStartElement("pins");
+    QVector<quint8> pins = {
+        configuration_.pinconfig.gpio0,
+        configuration_.pinconfig.gpio1,
+        configuration_.pinconfig.gpio2,
+        configuration_.pinconfig.gpio3,
+        configuration_.pinconfig.gpio4,
+        configuration_.pinconfig.gpio5,
+        configuration_.pinconfig.gpio6,
+        configuration_.pinconfig.gpio7,
+        configuration_.pinconfig.gpio8,
+        configuration_.pinconfig.gpio9,
+        configuration_.pinconfig.gpio10
+    };
+    int numberOfPins = pins.size();
+    for (int i = 0; i < numberOfPins; ++i) {
+        writeGPIO(i, pins[i]);
+    }
     xmlWriter_.writeEndElement();
 }
 
@@ -70,6 +113,14 @@ void ConfigurationWriter::writeRelease()
     xmlWriter_.writeEndElement();
 }
 
+// Generic procedure to write a named element with a word value in hexadecimal as its attribute (used for VID, PID and bitmaps in general)
+void ConfigurationWriter::writeWordGeneric(QString name, quint16 value)
+{
+    xmlWriter_.writeStartElement(name);
+    xmlWriter_.writeAttribute("value", QString::number(value, 16));
+    xmlWriter_.writeEndElement();
+}
+
 ConfigurationWriter::ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSettings &serialGeneratorSettings) :
     configuration_(configuration),
     serialGeneratorSettings_(serialGeneratorSettings)
@@ -87,10 +138,12 @@ void ConfigurationWriter::writeTo(QIODevice *device)
     writeDescriptor("manufacturer", configuration_.manufacturer);
     writeDescriptor("product", configuration_.product);
     writeDescriptor("serial", configuration_.serial);
-    writeID("vid", configuration_.usbconfig.vid);
-    writeID("pid", configuration_.usbconfig.pid);
+    writeWordGeneric("vid", configuration_.usbconfig.vid);
+    writeWordGeneric("pid", configuration_.usbconfig.pid);
     writeRelease();
     writePower();
-    // To do
+    writePins();
+    writeDivider();
+    writeBitmaps();
     xmlWriter_.writeEndElement();
 }

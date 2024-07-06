@@ -758,7 +758,7 @@ void ConfiguratorWindow::getEditedConfiguration()
     editedConfig_.usbconfig.pid = static_cast<quint16>(ui->lineEditPID->text().toUInt(nullptr, 16));
     editedConfig_.usbconfig.majrel = static_cast<quint8>(ui->spinBoxMajVersion->value());
     editedConfig_.usbconfig.minrel = static_cast<quint8>(ui->spinBoxMinVersion->value());
-    editedConfig_.usbconfig.maxpow = static_cast<quint8>(ui->lineEditMaxPower->text().toUInt() / 2);
+    editedConfig_.usbconfig.maxpow = static_cast<quint8>(ui->lineEditMaxPowerHex->text().toUInt(nullptr, 16));  // Modified in version 3.0
     editedConfig_.usbconfig.powmode = static_cast<quint8>(ui->comboBoxPowerMode->currentIndex());
     editedConfig_.usbconfig.trfprio = static_cast<quint8>(ui->comboBoxTransferPrio->currentIndex());
     editedConfig_.pinconfig.gpio0 = static_cast<quint8>(ui->comboBoxGPIO0->currentIndex());
@@ -772,10 +772,10 @@ void ConfiguratorWindow::getEditedConfiguration()
     editedConfig_.pinconfig.gpio8 = static_cast<quint8>(ui->comboBoxGPIO8->currentIndex());
     editedConfig_.pinconfig.gpio9 = static_cast<quint8>(ui->comboBoxGPIO9->currentIndex());
     editedConfig_.pinconfig.gpio10 = static_cast<quint8>(ui->comboBoxGPIO10->currentIndex());
-    editedConfig_.pinconfig.sspndlvl = static_cast<quint16>(ui->lineEditSuspendLevel->text().toUInt());
-    editedConfig_.pinconfig.sspndmode = static_cast<quint16>(ui->lineEditSuspendMode->text().toUInt());
-    editedConfig_.pinconfig.wkupmask = static_cast<quint16>(ui->lineEditResumeMask->text().toUInt());
-    editedConfig_.pinconfig.wkupmatch = static_cast<quint16>(ui->lineEditResumeMatch->text().toUInt());
+    editedConfig_.pinconfig.sspndlvl = static_cast<quint16>(ui->lineEditSuspendLevel->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
+    editedConfig_.pinconfig.sspndmode = static_cast<quint16>(ui->lineEditSuspendMode->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
+    editedConfig_.pinconfig.wkupmask = static_cast<quint16>(ui->lineEditResumeMask->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
+    editedConfig_.pinconfig.wkupmatch = static_cast<quint16>(ui->lineEditResumeMatch->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
     editedConfig_.pinconfig.divider = static_cast<quint8>(ui->spinBoxDivider->value());
 }
 
