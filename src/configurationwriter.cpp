@@ -75,7 +75,7 @@ void ConfigurationWriter::writeGPIO(int number, quint8 mode)
 void ConfigurationWriter::writePins()
 {
     xmlWriter_.writeStartElement("pins");
-    QVector<quint8> pins = {
+    QVector<quint8> pins{
         configuration_.pinconfig.gpio0,
         configuration_.pinconfig.gpio1,
         configuration_.pinconfig.gpio2,
@@ -90,7 +90,7 @@ void ConfigurationWriter::writePins()
     };
     int numberOfPins = pins.size();
     for (int i = 0; i < numberOfPins; ++i) {
-        writeGPIO(i, pins[i]);
+        writeGPIO(i, pins.at(i));
     }
     xmlWriter_.writeEndElement();
 }
