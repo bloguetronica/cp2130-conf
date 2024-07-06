@@ -76,7 +76,7 @@ int ConfigurationReader::readFrom(QIODevice *device)
                 foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
                     if (attr.name().toString() == "prototype") {
                         QString prototype = attr.value().toString();
-                        if (!SerialGenerator::prototypeSerialIsValid(prototype)) {
+                        if (!SerialGenerator::isValidPrototypeSerial(prototype)) {
                             err_ = true;
                         } else {
                             serialGeneratorSettings_.serialgen.setPrototypeSerial(prototype);
@@ -84,7 +84,7 @@ int ConfigurationReader::readFrom(QIODevice *device)
                     } else if (attr.name().toString() == "mode") {
                         bool ok;
                         quint8 mode = static_cast<quint8>(attr.value().toUShort(&ok));
-                        if (!ok || !SerialGenerator::replaceModeIsValid(mode)) {
+                        if (!ok || !SerialGenerator::isValidReplaceMode(mode)) {
                             err_ = true;
                         } else {
                             serialGeneratorSettings_.serialgen.setReplaceMode(mode);

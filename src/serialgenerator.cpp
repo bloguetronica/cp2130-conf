@@ -82,7 +82,7 @@ bool SerialGenerator::replaceWithUppercaseLetters() const
 // Sets the prototype serial string
 void SerialGenerator::setPrototypeSerial(const QString &prototypeSerial)
 {
-    if (prototypeSerialIsValid(prototypeSerial)) {
+    if (isValidPrototypeSerial(prototypeSerial)) {
         prototypeSerial_ = prototypeSerial;
     }
 }
@@ -90,7 +90,7 @@ void SerialGenerator::setPrototypeSerial(const QString &prototypeSerial)
 // Sets the replace mode
 void SerialGenerator::setReplaceMode(quint8 replaceMode)
 {
-    if (replaceModeIsValid(replaceMode)) {
+    if (isValidReplaceMode(replaceMode)) {
         replaceMode_ = replaceMode;
     }
 }
@@ -98,25 +98,25 @@ void SerialGenerator::setReplaceMode(quint8 replaceMode)
 // Sets the replace mode via separate flags
 void SerialGenerator::setReplaceMode(bool replaceWDigit, bool replaceWUpper, bool replaceWLower)
 {
-    if (replaceModeIsValid(replaceWDigit, replaceWUpper, replaceWLower)) {
+    if (isValidReplaceMode(replaceWDigit, replaceWUpper, replaceWLower)) {
         replaceMode_ = static_cast<quint8>(replaceWLower << 2 | replaceWUpper << 1 | replaceWDigit << 0);
     }
 }
 
-// Helper function to check the validity of a given prototype serial string
-bool SerialGenerator::prototypeSerialIsValid(const QString &prototypeSerial)
+// Helper function to check if a given string constitutes a valid prototype serial string
+bool SerialGenerator::isValidPrototypeSerial(const QString &prototypeSerial)
 {
     return prototypeSerial.size() <= 30 && prototypeSerial.contains('?');
 }
 
-// Helper function to check the validity of a given replace mode
-bool SerialGenerator::replaceModeIsValid(quint8 replaceMode)
+// Helper function to check if a given value constitutes a valid replace mode
+bool SerialGenerator::isValidReplaceMode(quint8 replaceMode)
 {
     return (0x07 & replaceMode) != 0x00;
 }
 
-// Helper function to check the validity of a given replace mode, via its flags
-bool SerialGenerator::replaceModeIsValid(bool replaceWDigit, bool replaceWUpper, bool replaceWLower)
+// Helper function to check if a given set of flags constitutes a valid replace mode
+bool SerialGenerator::isValidReplaceMode(bool replaceWDigit, bool replaceWUpper, bool replaceWLower)
 {
     return replaceWDigit == true || replaceWUpper == true || replaceWLower == true;
 }

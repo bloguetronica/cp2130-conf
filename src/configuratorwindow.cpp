@@ -212,7 +212,7 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
         bool digit = serialGeneratorDialog.digitsCheckBoxIsChecked();
         bool upper = serialGeneratorDialog.uppercaseCheckBoxIsChecked();
         bool lower = serialGeneratorDialog.lowercaseCheckBoxIsChecked();
-        if (!SerialGenerator::prototypeSerialIsValid(prototype) || !SerialGenerator::replaceModeIsValid(digit, upper, lower)) {  // If the user entered invalid settings (i.e. the prototype serial number does not contain a wildcard character or no replacement option was selected)
+        if (!SerialGenerator::isValidPrototypeSerial(prototype) || !SerialGenerator::isValidReplaceMode(digit, upper, lower)) {  // If the user entered invalid settings (i.e. the prototype serial number does not contain a wildcard character or no replacement option was selected)
             QMessageBox::critical(this, tr("Error"), tr("The serial generator settings are not valid and will not be applied.\n\nPlease verify that the prototype serial number contains at least one wildcard character (?) and that at least one replacement option is selected."));
         } else {  // Valid settings
             serialGenSettings_.serialgen.setPrototypeSerial(prototype);

@@ -49,9 +49,9 @@ public:
     void setReplaceMode(quint8 replaceMode);
     void setReplaceMode(bool replaceWDigit, bool replaceWUpper, bool replaceWLower);
 
-    static bool prototypeSerialIsValid(const QString &prototypeSerial);
-    static bool replaceModeIsValid(quint8 replaceMode);
-    static bool replaceModeIsValid(bool replaceWDigit, bool replaceWUpper, bool replaceWLower);
+    static bool isValidPrototypeSerial(const QString &prototypeSerial);
+    static bool isValidReplaceMode(quint8 replaceMode);
+    static bool isValidReplaceMode(bool replaceWDigit, bool replaceWUpper, bool replaceWLower);
 };
 
 #endif  // SERIALGENERATOR_H
