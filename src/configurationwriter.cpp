@@ -19,7 +19,7 @@
 
 
 // Include
-#include <QString>
+#include <QVector>
 #include "configurationwriter.h"
 
 // Writes "bitmaps" element
