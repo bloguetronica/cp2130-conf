@@ -23,6 +23,7 @@
 
 // Includes
 #include <QIODevice>
+#include <QString>
 #include <QXmlStreamWriter>
 #include "configuration.h"
 #include "serialgeneratorsettings.h"
@@ -33,6 +34,12 @@ private:
     const Configuration &configuration_;
     const SerialGeneratorSettings &serialGeneratorSettings_;
     QXmlStreamWriter xmlWriter_;
+
+    void writeDescriptor(QString name, QString value);
+    void writeGenerator();
+    void writeID(QString name, quint16 value);
+    void writePower();
+    void writeRelease();
 
 public:
     ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSettings &serialGeneratorSettings);
