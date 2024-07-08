@@ -23,6 +23,7 @@
 
 // Includes
 #include <QIODevice>
+#include <QString>
 #include <QXmlStreamReader>
 #include "configuration.h"
 #include "serialgeneratorsettings.h"
@@ -34,6 +35,9 @@ private:
     SerialGeneratorSettings &serialGeneratorSettings_;
     QXmlStreamReader xmlReader_;
     bool err_ = false;
+
+    void readDescriptor(QString name, QString &toValue);
+    void readWordGeneric(quint16 &toValue);
 
 public:
     // Class definitions
