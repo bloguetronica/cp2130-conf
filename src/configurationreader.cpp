@@ -22,41 +22,73 @@
 #include "cp2130.h"
 #include "configurationreader.h"
 
-void ConfigurationReader::readDescriptor(QString name, QString &toValue)
+void ConfigurationReader::readManufacturer()
 {
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
         if (attr.name().toString() == "string") {
-            QString descriptor = attr.value().toString();
-            size_t limit;
-            if (name == "manufacturer") {
-                limit = CP2130::DESCMXL_MANUFACTURER;
-            } else if (name == "product") {
-                limit = CP2130::DESCMXL_PRODUCT;
-            } else {
-                limit = CP2130::DESCMXL_SERIAL;
-            }
-            if ((name == "serial" && descriptor.isEmpty()) || static_cast<size_t>(descriptor.size()) > limit) {
+            QString manufacturer = attr.value().toString();
+            if (static_cast<size_t>(manufacturer.size()) > CP2130::DESCMXL_MANUFACTURER) {
                 err_ = true;
             } else {
-                toValue = descriptor;
+                configuration_.manufacturer = manufacturer;
             }
-            /*if (name == "serial") {
-
-            }*/
         }
     }
 }
 
-void ConfigurationReader::readWordGeneric(quint16 &toValue)
+void ConfigurationReader::readPID()
 {
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
         if (attr.name().toString() == "value") {
             bool ok;
-            quint16 word = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
-            if (!ok || word == 0x0000) {
+            quint16 pid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
+            if (!ok || pid == 0x0000) {
                 err_ = true;
             } else {
-                toValue = word;
+                configuration_.usbconfig.pid = pid;
+            }
+        }
+    }
+}
+
+void ConfigurationReader::readProduct()
+{
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "string") {
+            QString product = attr.value().toString();
+            if (static_cast<size_t>(product.size()) > CP2130::DESCMXL_PRODUCT) {
+                err_ = true;
+            } else {
+                configuration_.product = product;
+            }
+        }
+    }
+}
+
+void ConfigurationReader::readSerial()
+{
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "string") {
+            QString serial = attr.value().toString();
+            if (serial.isEmpty() || static_cast<size_t>(serial.size()) > CP2130::DESCMXL_SERIAL) {
+                err_ = true;
+            } else {
+                configuration_.serial = serial;
+            }
+        }
+    }
+}
+
+void ConfigurationReader::readVID()
+{
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "value") {
+            bool ok;
+            quint16 vid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
+            if (!ok || vid == 0x0000) {
+                err_ = true;
+            } else {
+                configuration_.usbconfig.vid = vid;
             }
         }
     }
@@ -79,11 +111,11 @@ int ConfigurationReader::readFrom(QIODevice *device)
     if (xmlReader_.readNextStartElement() && xmlReader_.name() == "cp2130config") {  // If the selected file is a CP2130 configuration file (the XML header is ignored)
         while (xmlReader_.readNextStartElement()) {
             if (xmlReader_.name() == "manufacturer") {
-                readDescriptor("manufacturer", configuration_.manufacturer);
+                readManufacturer();
             } else if (xmlReader_.name() == "product") {
-                readDescriptor("product", configuration_.product);
+                readProduct();
             } else if (xmlReader_.name() == "serial") {
-                readDescriptor("serial", configuration_.serial);
+                readSerial();
           /*} else if (xmlReader_.readNextStartElement() && xmlReader_.name() == "generator") {  // Get serial generator settings
                 serialGeneratorSettings_.doexport = true;
                 foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
@@ -120,9 +152,9 @@ int ConfigurationReader::readFrom(QIODevice *device)
                 }
                 xmlReader_.skipCurrentElement();
           */} else if (xmlReader_.name() == "vid") {
-                readWordGeneric(configuration_.usbconfig.vid);
+                readVID();
             } else if (xmlReader_.name() == "pid") {
-                readWordGeneric(configuration_.usbconfig.pid);
+                readPID();
             } else if (xmlReader_.name() == "release") {  // Get release version
                 foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
                     if (attr.name().toString() == "major") {  // Major release number

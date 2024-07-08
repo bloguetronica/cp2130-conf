@@ -36,8 +36,11 @@ private:
     QXmlStreamReader xmlReader_;
     bool err_ = false;
 
-    void readDescriptor(QString name, QString &toValue);
-    void readWordGeneric(quint16 &toValue);
+    void readManufacturer();
+    void readPID();
+    void readProduct();
+    void readSerial();
+    void readVID();
 
 public:
     // Class definitions
