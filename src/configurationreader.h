@@ -38,7 +38,9 @@ private:
 
     void readManufacturer();
     void readPID();
+    void readPower();
     void readProduct();
+    void readRelease();
     void readSerial();
     void readVID();
 

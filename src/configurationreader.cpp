@@ -51,6 +51,29 @@ void ConfigurationReader::readPID()
     }
 }
 
+void ConfigurationReader::readPower()
+{
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "maximum") {  // Maximum power (hexadecimal)
+            bool ok;
+            ushort maxpow = attr.value().toUShort(&ok, 16);
+            if (!ok || maxpow > 0xff) {
+                err_ = true;
+            } else {
+                configuration_.usbconfig.maxpow = static_cast<quint8>(maxpow);
+            }
+        } else if (attr.name().toString() == "mode") {  // Power mode (index)
+            bool ok;
+            ushort powmode = attr.value().toUShort(&ok);
+            if (!ok || powmode > 2) {
+                err_ = true;
+            } else {
+                configuration_.usbconfig.powmode = static_cast<quint8>(powmode);
+            }
+        }
+    }
+}
+
 void ConfigurationReader::readProduct()
 {
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
@@ -60,6 +83,29 @@ void ConfigurationReader::readProduct()
                 err_ = true;
             } else {
                 configuration_.product = product;
+            }
+        }
+    }
+}
+
+void ConfigurationReader::readRelease()
+{
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "major") {  // Major release number
+            bool ok;
+            ushort major = attr.value().toUShort(&ok);
+            if (!ok || major > 255) {
+                err_ = true;
+            } else {
+                configuration_.usbconfig.majrel = static_cast<quint8>(major);
+            }
+        } else if (attr.name().toString() == "minor") {  // Minor release number
+            bool ok;
+            ushort minor = attr.value().toUShort(&ok);
+            if (!ok || minor > 255) {
+                err_ = true;
+            } else {
+                configuration_.usbconfig.minrel = static_cast<quint8>(minor);
             }
         }
     }
@@ -156,45 +202,9 @@ int ConfigurationReader::readFrom(QIODevice *device)
             } else if (xmlReader_.name() == "pid") {
                 readPID();
             } else if (xmlReader_.name() == "release") {  // Get release version
-                foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-                    if (attr.name().toString() == "major") {  // Major release number
-                        bool ok;
-                        ushort major = attr.value().toUShort(&ok);
-                        if (!ok || major > 255) {
-                            err_ = true;
-                        } else {
-                            configuration_.usbconfig.majrel = static_cast<quint8>(major);
-                        }
-                    } else if (attr.name().toString() == "minor") {  // Minor release number
-                        bool ok;
-                        ushort minor = attr.value().toUShort(&ok);
-                        if (!ok || minor > 255) {
-                            err_ = true;
-                        } else {
-                            configuration_.usbconfig.minrel = static_cast<quint8>(minor);
-                        }
-                    }
-                }
+                readRelease();
             } else if (xmlReader_.name() == "power") {  // Get power related parameters
-                foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-                    if (attr.name().toString() == "maximum") {  // Maximum power (hexadecimal)
-                        bool ok;
-                        ushort maxpow = attr.value().toUShort(&ok, 16);
-                        if (!ok || maxpow > 0xff) {
-                            err_ = true;
-                        } else {
-                            configuration_.usbconfig.maxpow = static_cast<quint8>(maxpow);
-                        }
-                    } else if (attr.name().toString() == "mode") {  // Power mode (index)
-                        bool ok;
-                        ushort powmode = attr.value().toUShort(&ok);
-                        if (!ok || powmode > 2) {
-                            err_ = true;
-                        } else {
-                            configuration_.usbconfig.powmode = static_cast<quint8>(powmode);
-                        }
-                    }
-                }
+                readPower();
             }
           /*} else if ((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
                 // To implement
