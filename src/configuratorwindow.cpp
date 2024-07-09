@@ -795,11 +795,8 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
     getEditedConfiguration();
     SerialGeneratorSettings serialGenSettings = serialGenSettings_;  // Local variable required to hold serial generator settings that may or may not be applied
     ConfigurationReader configReader(editedConfig_, serialGenSettings);  // It is essential to work on the local variable set above!
-    int err = configReader.readFrom(&file);
-    if (err == ConfigurationReader::ERROR_NOT_VALID) {
-        QMessageBox::critical(this, tr("Error"), tr("The selected file is not a valid CP2130 configuration file."));
-    } else if (err == ConfigurationReader::ERROR_SYNTAX) {
-        QMessageBox::critical(this, tr("Error"), tr("The file contains one or more errors. The configuration was not loaded."));
+    if (!configReader.readFrom(&file)) {
+        QMessageBox::critical(this, tr("Error"), configReader.errorString());
     } else {
         displayConfiguration(editedConfig_, false);  // This partial update will not modify any fields that are locked
         serialGenSettings_ = serialGenSettings;  // Apply serial generator settings

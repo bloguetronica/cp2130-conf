@@ -34,14 +34,16 @@ private:
     Configuration &configuration_;
     SerialGeneratorSettings &serialGeneratorSettings_;
     QXmlStreamReader xmlReader_;
-    bool err_ = false;
 
+    void readConfiguration();
+    void readGenerator();
     void readManufacturer();
     void readPID();
     void readPower();
     void readProduct();
     void readRelease();
     void readSerial();
+    void readSerialSub();
     void readVID();
 
 public:
@@ -52,7 +54,9 @@ public:
 
     ConfigurationReader(Configuration &configuration, SerialGeneratorSettings &serialGeneratorSettings);
 
-    int readFrom(QIODevice *device);
+    QString errorString() const;
+
+    bool readFrom(QIODevice *device);
 };
 
 #endif  // CONFIGURATIONREADER_H
