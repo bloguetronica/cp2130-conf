@@ -35,11 +35,15 @@ private:
     SerialGeneratorSettings &serialGeneratorSettings_;
     QXmlStreamReader xmlReader_;
 
+    void readBitmaps();
     void readConfiguration();
+    void readDivider();
     void readGenerator();
     void readManufacturer();
     void readPID();
+    void readPins();
     void readPower();
+    void readTransfer();
     void readProduct();
     void readRelease();
     void readSerial();

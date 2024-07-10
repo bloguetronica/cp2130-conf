@@ -23,6 +23,19 @@
 #include "cp2130.h"
 #include "configurationreader.h"
 
+void ConfigurationReader::readBitmaps()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("bitmaps"));
+
+    while (xmlReader_.readNextStartElement()) {
+        if (xmlReader_.name() == QLatin1String("bitmaps")) {
+            //
+        } else {
+            xmlReader_.skipCurrentElement();
+        }
+    }
+}
+
 void ConfigurationReader::readConfiguration()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("cp2130config"));
@@ -42,14 +55,36 @@ void ConfigurationReader::readConfiguration()
             readRelease();
         } else if (xmlReader_.name() == QLatin1String("power")) {
             readPower();
-      /*} else if ((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
-            // To implement
-        } else if ((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG) {
-            // To implement*/
+        } else if (xmlReader_.name() == QLatin1String("transfer")) {
+            readTransfer();
+        } else if (xmlReader_.name() == QLatin1String("pins")) {
+            readPins();
+        } else if (xmlReader_.name() == QLatin1String("divider")) {
+            readDivider();
+        } else if (xmlReader_.name() == QLatin1String("bitmaps")) {
+            readBitmaps();
         } else {
             xmlReader_.skipCurrentElement();
         }
     }
+}
+
+void ConfigurationReader::readDivider()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("divider"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "value") {
+            bool ok;
+            ushort divider = attr.value().toUShort(&ok);
+            if (!ok || divider > 255) {
+                xmlReader_.raiseError(QObject::tr("Invalid divider value."));
+            } else {
+                configuration_.pinconfig.divider = static_cast<quint8>(divider);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
 }
 
 void ConfigurationReader::readGenerator()
@@ -126,12 +161,25 @@ void ConfigurationReader::readPID()
     xmlReader_.skipCurrentElement();
 }
 
+void ConfigurationReader::readPins()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("pins"));
+
+    while (xmlReader_.readNextStartElement()) {
+        if (xmlReader_.name() == QLatin1String("pins")) {
+            //
+        } else {
+            xmlReader_.skipCurrentElement();
+        }
+    }
+}
+
 void ConfigurationReader::readPower()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("power"));
 
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "maximum") {  // Maximum power (hexadecimal)
+        if (attr.name().toString() == "maximum") {
             bool ok;
             ushort maxpow = attr.value().toUShort(&ok, 16);
             if (!ok || maxpow > 0xff) {
@@ -139,13 +187,31 @@ void ConfigurationReader::readPower()
             } else {
                 configuration_.usbconfig.maxpow = static_cast<quint8>(maxpow);
             }
-        } else if (attr.name().toString() == "mode") {  // Power mode (index)
+        } else if (attr.name().toString() == "mode") {
             bool ok;
             ushort powmode = attr.value().toUShort(&ok);
             if (!ok || powmode > 2) {
                 xmlReader_.raiseError(QObject::tr("Invalid power mode."));
             } else {
                 configuration_.usbconfig.powmode = static_cast<quint8>(powmode);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+void ConfigurationReader::readTransfer()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("transfer"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "priority") {
+            bool ok;
+            ushort trfprio = attr.value().toUShort(&ok);
+            if (!ok || trfprio > 1) {
+                xmlReader_.raiseError(QObject::tr("Invalid transfer priority."));
+            } else {
+                configuration_.usbconfig.trfprio = static_cast<quint8>(trfprio);
             }
         }
     }
@@ -174,7 +240,7 @@ void ConfigurationReader::readRelease()
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("release"));
 
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "major") {  // Major release number
+        if (attr.name().toString() == "major") {
             bool ok;
             ushort major = attr.value().toUShort(&ok);
             if (!ok || major > 255) {
@@ -182,7 +248,7 @@ void ConfigurationReader::readRelease()
             } else {
                 configuration_.usbconfig.majrel = static_cast<quint8>(major);
             }
-        } else if (attr.name().toString() == "minor") {  // Minor release number
+        } else if (attr.name().toString() == "minor") {
             bool ok;
             ushort minor = attr.value().toUShort(&ok);
             if (!ok || minor > 255) {

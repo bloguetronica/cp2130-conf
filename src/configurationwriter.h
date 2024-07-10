@@ -42,7 +42,7 @@ private:
     void writeGPIO(int number, quint8 mode);
     void writePins();
     void writePower();
-    void writePriority();
+    void writeTransfer();
     void writeRelease();
     void writeWordGeneric(QString name, quint16 value);
 

@@ -104,11 +104,11 @@ void ConfigurationWriter::writePower()
     xmlWriter_.writeEndElement();
 }
 
-// Writes "priority" element
-void ConfigurationWriter::writePriority()
+// Writes "transfer" element
+void ConfigurationWriter::writeTransfer()
 {
-    xmlWriter_.writeStartElement("priority");
-    xmlWriter_.writeAttribute("mode", QString::number(configuration_.usbconfig.trfprio));
+    xmlWriter_.writeStartElement("transfer");
+    xmlWriter_.writeAttribute("priority", QString::number(configuration_.usbconfig.trfprio));
     xmlWriter_.writeEndElement();
 }
 
@@ -141,7 +141,7 @@ void ConfigurationWriter::writeTo(QIODevice *device)
     xmlWriter_.setDevice(device);
     xmlWriter_.setAutoFormatting(true);
     xmlWriter_.writeStartDocument();
-    xmlWriter_.writeStartElement("cp2130config");  // Write root element
+    xmlWriter_.writeStartElement("cp2130config");  // Root element
     xmlWriter_.writeAttribute("version", "1.0");
     writeDescriptor("manufacturer", configuration_.manufacturer);
     writeDescriptor("product", configuration_.product);
@@ -150,7 +150,7 @@ void ConfigurationWriter::writeTo(QIODevice *device)
     writeWordGeneric("pid", configuration_.usbconfig.pid);
     writeRelease();
     writePower();
-    writePriority();
+    writeTransfer();
     writePins();
     writeDivider();
     writeBitmaps();
