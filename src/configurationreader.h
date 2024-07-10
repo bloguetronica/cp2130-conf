@@ -47,11 +47,6 @@ private:
     void readVID();
 
 public:
-    // Class definitions
-    static const int SUCCESS = 0;          // Returned by readFrom() if successful
-    static const int ERROR_NOT_VALID = 1;  // Returned by readFrom() if the file is not a valid CP2130 configuration file
-    static const int ERROR_SYNTAX = 2;     // Returned by readFrom() if the file contains syntax errors
-
     ConfigurationReader(Configuration &configuration, SerialGeneratorSettings &serialGeneratorSettings);
 
     QString errorString() const;

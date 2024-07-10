@@ -104,6 +104,14 @@ void ConfigurationWriter::writePower()
     xmlWriter_.writeEndElement();
 }
 
+// Writes "priority" element
+void ConfigurationWriter::writePriority()
+{
+    xmlWriter_.writeStartElement("priority");
+    xmlWriter_.writeAttribute("mode", QString::number(configuration_.usbconfig.trfprio));
+    xmlWriter_.writeEndElement();
+}
+
 // Writes "release" element
 void ConfigurationWriter::writeRelease()
 {
@@ -142,6 +150,7 @@ void ConfigurationWriter::writeTo(QIODevice *device)
     writeWordGeneric("pid", configuration_.usbconfig.pid);
     writeRelease();
     writePower();
+    writePriority();
     writePins();
     writeDivider();
     writeBitmaps();
