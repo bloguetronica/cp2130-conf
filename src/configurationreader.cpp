@@ -25,21 +25,22 @@
 
 void ConfigurationReader::readConfiguration()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == "cp2130config");
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("cp2130config"));
+
     while (xmlReader_.readNextStartElement()) {
-        if (xmlReader_.name() == "manufacturer") {
+        if (xmlReader_.name() == QLatin1String("manufacturer")) {
             readManufacturer();
-        } else if (xmlReader_.name() == "product") {
+        } else if (xmlReader_.name() == QLatin1String("product")) {
             readProduct();
-        } else if (xmlReader_.name() == "serial") {
+        } else if (xmlReader_.name() == QLatin1String("serial")) {
             readSerial();
-        } else if (xmlReader_.name() == "vid") {
+        } else if (xmlReader_.name() == QLatin1String("vid")) {
             readVID();
-        } else if (xmlReader_.name() == "pid") {
+        } else if (xmlReader_.name() == QLatin1String("pid")) {
             readPID();
-        } else if (xmlReader_.name() == "release") {  // Get release version
+        } else if (xmlReader_.name() == QLatin1String("release")) {
             readRelease();
-        } else if (xmlReader_.name() == "power") {  // Get power related parameters
+        } else if (xmlReader_.name() == QLatin1String("power")) {
             readPower();
       /*} else if ((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
             // To implement
@@ -53,7 +54,8 @@ void ConfigurationReader::readConfiguration()
 
 void ConfigurationReader::readGenerator()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == "generator");
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("generator"));
+
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
         if (attr.name().toString() == "prototype") {
             QString prototype = attr.value().toString();
@@ -72,17 +74,17 @@ void ConfigurationReader::readGenerator()
             }
         } else if (attr.name().toString() == "enable") {
             QString genenable = attr.value().toString();
-            if (genenable != "true" && genenable != "false") {
+            if (genenable != "true" && genenable != "false" && genenable != "1" && genenable != "0") {
                 xmlReader_.raiseError(QObject::tr("Invalid enable flag."));
             } else {
-                serialGeneratorSettings_.genenable = genenable == "true";
+                serialGeneratorSettings_.genenable = genenable == "true" || genenable == "1";
             }
         } else if (attr.name().toString() == "auto-generate") {
             QString autogen = attr.value().toString();
-            if (autogen != "true" && autogen != "false") {
+            if (autogen != "true" && autogen != "false" && autogen != "1" && autogen != "0") {
                 xmlReader_.raiseError(QObject::tr("Invalid auto-generate flag."));
             } else {
-                serialGeneratorSettings_.autogen = autogen == "true";
+                serialGeneratorSettings_.autogen = autogen == "true" || autogen == "1";
             }
         }
     }
@@ -91,7 +93,8 @@ void ConfigurationReader::readGenerator()
 
 void ConfigurationReader::readManufacturer()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == "manufacturer");
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("manufacturer"));
+
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
         if (attr.name().toString() == "string") {
             QString manufacturer = attr.value().toString();
@@ -107,7 +110,8 @@ void ConfigurationReader::readManufacturer()
 
 void ConfigurationReader::readPID()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == "pid");
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("pid"));
+
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
         if (attr.name().toString() == "value") {
             bool ok;
@@ -124,7 +128,8 @@ void ConfigurationReader::readPID()
 
 void ConfigurationReader::readPower()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == "power");
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("power"));
+
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
         if (attr.name().toString() == "maximum") {  // Maximum power (hexadecimal)
             bool ok;
@@ -149,7 +154,8 @@ void ConfigurationReader::readPower()
 
 void ConfigurationReader::readProduct()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == "product");
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("product"));
+
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
         if (attr.name().toString() == "string") {
             QString product = attr.value().toString();
@@ -165,7 +171,8 @@ void ConfigurationReader::readProduct()
 
 void ConfigurationReader::readRelease()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == "release");
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("release"));
+
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
         if (attr.name().toString() == "major") {  // Major release number
             bool ok;
@@ -190,7 +197,8 @@ void ConfigurationReader::readRelease()
 
 void ConfigurationReader::readSerial()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == "serial");
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("serial"));
+
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
         if (attr.name().toString() == "string") {
             QString serial = attr.value().toString();
@@ -201,16 +209,18 @@ void ConfigurationReader::readSerial()
             } else {
                 configuration_.serial = serial;
             }
-            readSerialSub();
         }
     }
+    readSerialSubElements();
 }
 
-void ConfigurationReader::readSerialSub()
+void ConfigurationReader::readSerialSubElements()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == "serial");
-    if (xmlReader_.readNextStartElement()) {
-        if (xmlReader_.name() == "generator") {
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("serial"));
+
+    while (xmlReader_.readNextStartElement()) {
+        if (xmlReader_.name() == QLatin1String("generator")) {
+            serialGeneratorSettings_.doexport = true;
             readGenerator();
         } else {
             xmlReader_.skipCurrentElement();
@@ -220,7 +230,8 @@ void ConfigurationReader::readSerialSub()
 
 void ConfigurationReader::readVID()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == "vid");
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("vid"));
+
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
         if (attr.name().toString() == "value") {
             bool ok;
@@ -254,7 +265,7 @@ bool ConfigurationReader::readFrom(QIODevice *device)
     serialGeneratorSettings_.autogen = false;
     xmlReader_.setDevice(device);
     if (xmlReader_.readNextStartElement()) {
-        if (xmlReader_.name() == "cp2130config") {
+        if (xmlReader_.name() == QLatin1String("cp2130config")) {
             readConfiguration();
         } else {
             xmlReader_.raiseError(QObject::tr("Unknown root element.\n\nThe selected file is not a valid CP2130 configuration file."));

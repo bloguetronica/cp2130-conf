@@ -43,7 +43,7 @@ private:
     void readProduct();
     void readRelease();
     void readSerial();
-    void readSerialSub();
+    void readSerialSubElements();
     void readVID();
 
 public:
