@@ -28,8 +28,8 @@ void ConfigurationWriter::writeBitmaps()
     xmlWriter_.writeStartElement("bitmaps");
     writeWordGeneric("suspendlevel", configuration_.pinconfig.sspndlvl);
     writeWordGeneric("suspendmode", configuration_.pinconfig.sspndmode);
-    writeWordGeneric("wakeupmask", configuration_.pinconfig.wkupmask);
-    writeWordGeneric("wakeupmatch", configuration_.pinconfig.wkupmatch);
+    writeWordGeneric("resumemask", configuration_.pinconfig.wkupmask);
+    writeWordGeneric("resumematch", configuration_.pinconfig.wkupmatch);
     xmlWriter_.writeEndElement();
 }
 

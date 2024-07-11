@@ -28,8 +28,14 @@ void ConfigurationReader::readBitmaps()
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("bitmaps"));
 
     while (xmlReader_.readNextStartElement()) {
-        if (xmlReader_.name() == QLatin1String("bitmaps")) {
-            //
+        if (xmlReader_.name() == QLatin1String("suspendlevel")) {
+            readSuspendLevel();
+        } else if (xmlReader_.name() == QLatin1String("suspendmode")) {
+            readSuspendMode();
+        } else if (xmlReader_.name() == QLatin1String("resumemask")) {
+            readResumeMask();
+        } else if (xmlReader_.name() == QLatin1String("resumematch")) {
+            readResumeMatch();
         } else {
             xmlReader_.skipCurrentElement();
         }
@@ -261,6 +267,42 @@ void ConfigurationReader::readRelease()
     xmlReader_.skipCurrentElement();
 }
 
+void ConfigurationReader::readResumeMask()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("resumemask"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "value") {
+            bool ok;
+            ushort wkupmask = attr.value().toUShort(&ok, 16);
+            if (!ok || wkupmask > 0x7fff) {
+                xmlReader_.raiseError(QObject::tr("Invalid resume mask value."));
+            } else {
+                configuration_.pinconfig.wkupmask = wkupmask;
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+void ConfigurationReader::readResumeMatch()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("resumematch"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "value") {
+            bool ok;
+            ushort wkupmatch = attr.value().toUShort(&ok, 16);
+            if (!ok || wkupmatch > 0x7fff) {
+                xmlReader_.raiseError(QObject::tr("Invalid resume match value."));
+            } else {
+                configuration_.pinconfig.wkupmatch = wkupmatch;
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
 void ConfigurationReader::readSerial()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("serial"));
@@ -292,6 +334,42 @@ void ConfigurationReader::readSerialSubElements()
             xmlReader_.skipCurrentElement();
         }
     }
+}
+
+void ConfigurationReader::readSuspendLevel()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("suspendlevel"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "value") {
+            bool ok;
+            ushort sspndlvl = attr.value().toUShort(&ok, 16);
+            if (!ok || sspndlvl > 0x7fff) {
+                xmlReader_.raiseError(QObject::tr("Invalid suspend level value."));
+            } else {
+                configuration_.pinconfig.sspndlvl = sspndlvl;
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+void ConfigurationReader::readSuspendMode()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("suspendmode"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "value") {
+            bool ok;
+            ushort sspndmode = attr.value().toUShort(&ok, 16);
+            if (!ok) {
+                xmlReader_.raiseError(QObject::tr("Invalid suspend mode value."));
+            } else {
+                configuration_.pinconfig.sspndmode = sspndmode;
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
 }
 
 void ConfigurationReader::readVID()

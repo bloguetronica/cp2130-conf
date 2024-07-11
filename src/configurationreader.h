@@ -46,8 +46,12 @@ private:
     void readTransfer();
     void readProduct();
     void readRelease();
+    void readResumeMask();
+    void readResumeMatch();
     void readSerial();
     void readSerialSubElements();
+    void readSuspendLevel();
+    void readSuspendMode();
     void readVID();
 
 public:
