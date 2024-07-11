@@ -42,8 +42,8 @@ private:
     void writeGPIO(int number, quint8 mode);
     void writePins();
     void writePower();
-    void writeTransfer();
     void writeRelease();
+    void writeTransfer();
     void writeWordGeneric(QString name, quint16 value);
 
 public:

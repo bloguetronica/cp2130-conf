@@ -104,20 +104,20 @@ void ConfigurationWriter::writePower()
     xmlWriter_.writeEndElement();
 }
 
-// Writes "transfer" element
-void ConfigurationWriter::writeTransfer()
-{
-    xmlWriter_.writeStartElement("transfer");
-    xmlWriter_.writeAttribute("priority", QString::number(configuration_.usbconfig.trfprio));
-    xmlWriter_.writeEndElement();
-}
-
 // Writes "release" element
 void ConfigurationWriter::writeRelease()
 {
     xmlWriter_.writeStartElement("release");
     xmlWriter_.writeAttribute("major", QString::number(configuration_.usbconfig.majrel));
     xmlWriter_.writeAttribute("minor", QString::number(configuration_.usbconfig.minrel));
+    xmlWriter_.writeEndElement();
+}
+
+// Writes "transfer" element
+void ConfigurationWriter::writeTransfer()
+{
+    xmlWriter_.writeStartElement("transfer");
+    xmlWriter_.writeAttribute("priority", QString::number(configuration_.usbconfig.trfprio));
     xmlWriter_.writeEndElement();
 }
 
