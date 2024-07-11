@@ -206,24 +206,6 @@ void ConfigurationReader::readPower()
     xmlReader_.skipCurrentElement();
 }
 
-void ConfigurationReader::readTransfer()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("transfer"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "priority") {
-            bool ok;
-            ushort trfprio = attr.value().toUShort(&ok);
-            if (!ok || trfprio > 1) {
-                xmlReader_.raiseError(QObject::tr("Invalid transfer priority."));
-            } else {
-                configuration_.usbconfig.trfprio = static_cast<quint8>(trfprio);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
 void ConfigurationReader::readProduct()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("product"));
@@ -366,6 +348,24 @@ void ConfigurationReader::readSuspendMode()
                 xmlReader_.raiseError(QObject::tr("Invalid suspend mode value."));
             } else {
                 configuration_.pinconfig.sspndmode = sspndmode;
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+void ConfigurationReader::readTransfer()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("transfer"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "priority") {
+            bool ok;
+            ushort trfprio = attr.value().toUShort(&ok);
+            if (!ok || trfprio > 1) {
+                xmlReader_.raiseError(QObject::tr("Invalid transfer priority."));
+            } else {
+                configuration_.usbconfig.trfprio = static_cast<quint8>(trfprio);
             }
         }
     }

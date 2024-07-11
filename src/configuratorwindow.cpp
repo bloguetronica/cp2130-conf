@@ -659,7 +659,7 @@ void ConfiguratorWindow::displayConfiguration(const Configuration &config, bool 
     if (fullUpdate) {
         setManufacturerEnabled((CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF);
         setProductEnabled((CP2130::LWPROD & lockWord_) == CP2130::LWPROD);
-        setSerialEnabled((CP2130::LWSER & lockWord_) == CP2130::LWSER);
+        setSerialEnabled((CP2130::LWSER & lockWord_) == CP2130::LWSER);  // Since version 3.0, this also enables or disables the related "Tools > Serial Number Generator > Enable" menu action
         setVIDEnabled((CP2130::LWVID & lockWord_) == CP2130::LWVID);
         setPIDEnabled((CP2130::LWPID & lockWord_) == CP2130::LWPID);
         setReleaseEnabled((CP2130::LWREL & lockWord_) == CP2130::LWREL);
@@ -667,7 +667,7 @@ void ConfiguratorWindow::displayConfiguration(const Configuration &config, bool 
         setPowerModeEnabled((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE);
         setTransferPrioEnabled((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO);
         setPinConfigEnabled((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG);
-        setWriteEnabled((CP2130::LWALL & lockWord_) != 0x0000);  // Since version 3.0, this also enables the "Load Configuration..." menu action
+        setWriteEnabled((CP2130::LWALL & lockWord_) != 0x0000);  // Since version 3.0, this also enables or disables the "Device > Load Configuration..." menu action
     }
 }
 
@@ -990,7 +990,7 @@ void ConfiguratorWindow::setReleaseEnabled(bool value)
     ui->spinBoxMinVersion->setReadOnly(!value);
 }
 
-// Enables or disables the serial descriptor field and the related "Serial Number Generator > Enable" action (expanded in version 3.0)
+// Enables or disables the serial descriptor field and the related "Tools > Serial Number Generator > Enable" menu action (expanded in version 3.0)
 void ConfiguratorWindow::setSerialEnabled(bool value)
 {
     if (!value) {  // Implemented in version 3.0

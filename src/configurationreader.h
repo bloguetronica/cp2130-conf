@@ -43,7 +43,6 @@ private:
     void readPID();
     void readPins();
     void readPower();
-    void readTransfer();
     void readProduct();
     void readRelease();
     void readResumeMask();
@@ -52,6 +51,7 @@ private:
     void readSerialSubElements();
     void readSuspendLevel();
     void readSuspendMode();
+    void readTransfer();
     void readVID();
 
 public:
