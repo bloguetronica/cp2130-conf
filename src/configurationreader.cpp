@@ -23,6 +23,7 @@
 #include "cp2130.h"
 #include "configurationreader.h"
 
+// Reads the sub-elements of "bitmap" element
 void ConfigurationReader::readBitmaps()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("bitmaps"));
@@ -42,6 +43,7 @@ void ConfigurationReader::readBitmaps()
     }
 }
 
+// Reads the sub-elements of "cp2130config" element, which is the root element
 void ConfigurationReader::readConfiguration()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("cp2130config"));
@@ -75,6 +77,7 @@ void ConfigurationReader::readConfiguration()
     }
 }
 
+// Reads "divider" element
 void ConfigurationReader::readDivider()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("divider"));
@@ -93,6 +96,7 @@ void ConfigurationReader::readDivider()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads "generator" element
 void ConfigurationReader::readGenerator()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("generator"));
@@ -132,6 +136,216 @@ void ConfigurationReader::readGenerator()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads "gpio0" element
+void ConfigurationReader::readGPIO0()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio0"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "mode") {
+            bool ok;
+            ushort gpio0 = attr.value().toUShort(&ok);
+            if (!ok || gpio0 > 3) {
+                xmlReader_.raiseError(QObject::tr("Invalid GPIO.0 mode."));
+            } else {
+                configuration_.pinconfig.gpio0 = static_cast<quint8>(gpio0);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+// Reads "gpio1" element
+void ConfigurationReader::readGPIO1()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio1"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "mode") {
+            bool ok;
+            ushort gpio1 = attr.value().toUShort(&ok);
+            if (!ok || gpio1 > 3) {
+                xmlReader_.raiseError(QObject::tr("Invalid GPIO.1 mode."));
+            } else {
+                configuration_.pinconfig.gpio1 = static_cast<quint8>(gpio1);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+// Reads "gpio2" element
+void ConfigurationReader::readGPIO2()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio2"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "mode") {
+            bool ok;
+            ushort gpio2 = attr.value().toUShort(&ok);
+            if (!ok || gpio2 > 3) {
+                xmlReader_.raiseError(QObject::tr("Invalid GPIO.2 mode."));
+            } else {
+                configuration_.pinconfig.gpio2 = static_cast<quint8>(gpio2);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+// Reads "gpio3" element
+void ConfigurationReader::readGPIO3()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio3"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "mode") {
+            bool ok;
+            ushort gpio3 = attr.value().toUShort(&ok);
+            if (!ok || gpio3 > 5) {
+                xmlReader_.raiseError(QObject::tr("Invalid GPIO.3 mode."));
+            } else {
+                configuration_.pinconfig.gpio3 = static_cast<quint8>(gpio3);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+// Reads "gpio4" element
+void ConfigurationReader::readGPIO4()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio4"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "mode") {
+            bool ok;
+            ushort gpio4 = attr.value().toUShort(&ok);
+            if (!ok || gpio4 > 7) {
+                xmlReader_.raiseError(QObject::tr("Invalid GPIO.4 mode."));
+            } else {
+                configuration_.pinconfig.gpio4 = static_cast<quint8>(gpio4);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+// Reads "gpio5" element
+void ConfigurationReader::readGPIO5()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio5"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "mode") {
+            bool ok;
+            ushort gpio5 = attr.value().toUShort(&ok);
+            if (!ok || gpio5 > 4) {
+                xmlReader_.raiseError(QObject::tr("Invalid GPIO.5 mode."));
+            } else {
+                configuration_.pinconfig.gpio5 = static_cast<quint8>(gpio5);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+// Reads "gpio6" element
+void ConfigurationReader::readGPIO6()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio6"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "mode") {
+            bool ok;
+            ushort gpio6 = attr.value().toUShort(&ok);
+            if (!ok || gpio6 > 3) {
+                xmlReader_.raiseError(QObject::tr("Invalid GPIO.6 mode."));
+            } else {
+                configuration_.pinconfig.gpio6 = static_cast<quint8>(gpio6);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+// Reads "gpio7" element
+void ConfigurationReader::readGPIO7()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio7"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "mode") {
+            bool ok;
+            ushort gpio7 = attr.value().toUShort(&ok);
+            if (!ok || gpio7 > 3) {
+                xmlReader_.raiseError(QObject::tr("Invalid GPIO.7 mode."));
+            } else {
+                configuration_.pinconfig.gpio7 = static_cast<quint8>(gpio7);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+// Reads "gpio8" element
+void ConfigurationReader::readGPIO8()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio8"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "mode") {
+            bool ok;
+            ushort gpio8 = attr.value().toUShort(&ok);
+            if (!ok || gpio8 > 4) {
+                xmlReader_.raiseError(QObject::tr("Invalid GPIO.8 mode."));
+            } else {
+                configuration_.pinconfig.gpio8 = static_cast<quint8>(gpio8);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+// Reads "gpio9" element
+void ConfigurationReader::readGPIO9()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio9"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "mode") {
+            bool ok;
+            ushort gpio9 = attr.value().toUShort(&ok);
+            if (!ok || gpio9 > 4) {
+                xmlReader_.raiseError(QObject::tr("Invalid GPIO.9 mode."));
+            } else {
+                configuration_.pinconfig.gpio9 = static_cast<quint8>(gpio9);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+// Reads "gpio10" element
+void ConfigurationReader::readGPIO10()
+{
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio10"));
+
+    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+        if (attr.name().toString() == "mode") {
+            bool ok;
+            ushort gpio10 = attr.value().toUShort(&ok);
+            if (!ok || gpio10 > 4) {
+                xmlReader_.raiseError(QObject::tr("Invalid GPIO.10 mode."));
+            } else {
+                configuration_.pinconfig.gpio10 = static_cast<quint8>(gpio10);
+            }
+        }
+    }
+    xmlReader_.skipCurrentElement();
+}
+
+// Reads "manufacturer" element
 void ConfigurationReader::readManufacturer()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("manufacturer"));
@@ -149,6 +363,7 @@ void ConfigurationReader::readManufacturer()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads "pid" element
 void ConfigurationReader::readPID()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("pid"));
@@ -167,19 +382,41 @@ void ConfigurationReader::readPID()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads the sub-elements of "pins" element
 void ConfigurationReader::readPins()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("pins"));
 
     while (xmlReader_.readNextStartElement()) {
-        if (xmlReader_.name() == QLatin1String("pins")) {
-            //
+        if (xmlReader_.name() == QLatin1String("gpio0")) {
+            readGPIO0();
+        } else if (xmlReader_.name() == QLatin1String("gpio1")) {
+            readGPIO1();
+        } else if (xmlReader_.name() == QLatin1String("gpio2")) {
+            readGPIO2();
+        } else if (xmlReader_.name() == QLatin1String("gpio3")) {
+            readGPIO3();
+        } else if (xmlReader_.name() == QLatin1String("gpio4")) {
+            readGPIO4();
+        } else if (xmlReader_.name() == QLatin1String("gpio5")) {
+            readGPIO5();
+        } else if (xmlReader_.name() == QLatin1String("gpio6")) {
+            readGPIO6();
+        } else if (xmlReader_.name() == QLatin1String("gpio7")) {
+            readGPIO7();
+        } else if (xmlReader_.name() == QLatin1String("gpio8")) {
+            readGPIO8();
+        } else if (xmlReader_.name() == QLatin1String("gpio9")) {
+            readGPIO9();
+        } else if (xmlReader_.name() == QLatin1String("gpio10")) {
+            readGPIO10();
         } else {
             xmlReader_.skipCurrentElement();
         }
     }
 }
 
+// Reads "power" element
 void ConfigurationReader::readPower()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("power"));
@@ -188,7 +425,7 @@ void ConfigurationReader::readPower()
         if (attr.name().toString() == "maximum") {
             bool ok;
             ushort maxpow = attr.value().toUShort(&ok, 16);
-            if (!ok || maxpow > 0xff) {
+            if (!ok || maxpow > 0xfa) {
                 xmlReader_.raiseError(QObject::tr("Invalid maximum power value."));
             } else {
                 configuration_.usbconfig.maxpow = static_cast<quint8>(maxpow);
@@ -206,6 +443,7 @@ void ConfigurationReader::readPower()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads "product" element
 void ConfigurationReader::readProduct()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("product"));
@@ -223,6 +461,7 @@ void ConfigurationReader::readProduct()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads "release" element
 void ConfigurationReader::readRelease()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("release"));
@@ -249,6 +488,7 @@ void ConfigurationReader::readRelease()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads "resumemask" element
 void ConfigurationReader::readResumeMask()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("resumemask"));
@@ -267,6 +507,7 @@ void ConfigurationReader::readResumeMask()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads "resumematch" element
 void ConfigurationReader::readResumeMatch()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("resumematch"));
@@ -285,6 +526,7 @@ void ConfigurationReader::readResumeMatch()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads "serial" element
 void ConfigurationReader::readSerial()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("serial"));
@@ -304,6 +546,7 @@ void ConfigurationReader::readSerial()
     readSerialSubElements();
 }
 
+// Reads the sub-elements of "serial" element
 void ConfigurationReader::readSerialSubElements()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("serial"));
@@ -318,6 +561,7 @@ void ConfigurationReader::readSerialSubElements()
     }
 }
 
+// Reads "suspendlevel" element
 void ConfigurationReader::readSuspendLevel()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("suspendlevel"));
@@ -336,6 +580,7 @@ void ConfigurationReader::readSuspendLevel()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads "suspendmode" element
 void ConfigurationReader::readSuspendMode()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("suspendmode"));
@@ -354,6 +599,7 @@ void ConfigurationReader::readSuspendMode()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads "transfer" element
 void ConfigurationReader::readTransfer()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("transfer"));
@@ -372,6 +618,7 @@ void ConfigurationReader::readTransfer()
     xmlReader_.skipCurrentElement();
 }
 
+// Reads "vid" element
 void ConfigurationReader::readVID()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("vid"));
@@ -396,12 +643,13 @@ ConfigurationReader::ConfigurationReader(Configuration &configuration, SerialGen
 {
 }
 
+// Returns an error string
 QString ConfigurationReader::errorString() const
 {
     return QObject::tr("Line %1, column %2: %3").arg(xmlReader_.lineNumber()).arg(xmlReader_.columnNumber()).arg(xmlReader_.errorString());
 }
 
-// Reads the configuration from a given file
+// Reads the configuration from a given file, returning false in case of error or true if it succeeds
 bool ConfigurationReader::readFrom(QIODevice *device)
 {
     serialGeneratorSettings_.doexport = false;  // Default settings if no "generator" element is found
