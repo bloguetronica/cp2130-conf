@@ -87,7 +87,7 @@ void ConfigurationReader::readDivider()
             bool ok;
             ushort divider = attr.value().toUShort(&ok);
             if (!ok || divider > 255) {
-                xmlReader_.raiseError(QObject::tr("Invalid divider value."));
+                xmlReader_.raiseError(QObject::tr("In \"divider\" element, the \"value\" attribute contains an invalid value. It should be an integer between 0 and 255."));
             } else {
                 configuration_.pinconfig.divider = static_cast<quint8>(divider);
             }
@@ -105,7 +105,7 @@ void ConfigurationReader::readGenerator()
         if (attr.name().toString() == "prototype") {
             QString prototype = attr.value().toString();
             if (!SerialGenerator::isValidPrototypeSerial(prototype)) {
-                xmlReader_.raiseError(QObject::tr("Invalid prototype string."));
+                xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"prototype\" attribute contains an invalid value. It should contain a valid prototype serial string, having at least one least one wildcard character (?) and no more than % characters.").arg(CP2130::DESCMXL_SERIAL));
             } else {
                 serialGeneratorSettings_.serialgen.setPrototypeSerial(prototype);
             }
@@ -113,21 +113,21 @@ void ConfigurationReader::readGenerator()
             bool ok;
             quint8 mode = static_cast<quint8>(attr.value().toUShort(&ok));
             if (!ok || !SerialGenerator::isValidReplaceMode(mode)) {
-                xmlReader_.raiseError(QObject::tr("Invalid mode."));
+                xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 1 and 7"));
             } else {
                 serialGeneratorSettings_.serialgen.setReplaceMode(mode);
             }
         } else if (attr.name().toString() == "enable") {
             QString genenable = attr.value().toString();
             if (genenable != "true" && genenable != "false" && genenable != "1" && genenable != "0") {
-                xmlReader_.raiseError(QObject::tr("Invalid enable flag."));
+                xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"enable\" attribute contains an invalid value. It should be \"true\", \"false\", \"1\" or \"0\"."));
             } else {
                 serialGeneratorSettings_.genenable = genenable == "true" || genenable == "1";
             }
         } else if (attr.name().toString() == "auto-generate") {
             QString autogen = attr.value().toString();
             if (autogen != "true" && autogen != "false" && autogen != "1" && autogen != "0") {
-                xmlReader_.raiseError(QObject::tr("Invalid auto-generate flag."));
+                xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"auto-generate\" attribute contains an invalid value. It should be \"true\", \"false\", \"1\" or \"0\"."));
             } else {
                 serialGeneratorSettings_.autogen = autogen == "true" || autogen == "1";
             }
@@ -146,7 +146,7 @@ void ConfigurationReader::readGPIO0()
             bool ok;
             ushort gpio0 = attr.value().toUShort(&ok);
             if (!ok || gpio0 > 3) {
-                xmlReader_.raiseError(QObject::tr("Invalid GPIO.0 mode."));
+                xmlReader_.raiseError(QObject::tr("In \"gpio0\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
             } else {
                 configuration_.pinconfig.gpio0 = static_cast<quint8>(gpio0);
             }
@@ -165,7 +165,7 @@ void ConfigurationReader::readGPIO1()
             bool ok;
             ushort gpio1 = attr.value().toUShort(&ok);
             if (!ok || gpio1 > 3) {
-                xmlReader_.raiseError(QObject::tr("Invalid GPIO.1 mode."));
+                xmlReader_.raiseError(QObject::tr("In \"gpio1\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
             } else {
                 configuration_.pinconfig.gpio1 = static_cast<quint8>(gpio1);
             }
@@ -184,7 +184,7 @@ void ConfigurationReader::readGPIO2()
             bool ok;
             ushort gpio2 = attr.value().toUShort(&ok);
             if (!ok || gpio2 > 3) {
-                xmlReader_.raiseError(QObject::tr("Invalid GPIO.2 mode."));
+                xmlReader_.raiseError(QObject::tr("In \"gpio2\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
             } else {
                 configuration_.pinconfig.gpio2 = static_cast<quint8>(gpio2);
             }
@@ -203,7 +203,7 @@ void ConfigurationReader::readGPIO3()
             bool ok;
             ushort gpio3 = attr.value().toUShort(&ok);
             if (!ok || gpio3 > 5) {
-                xmlReader_.raiseError(QObject::tr("Invalid GPIO.3 mode."));
+                xmlReader_.raiseError(QObject::tr("In \"gpio3\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 5."));
             } else {
                 configuration_.pinconfig.gpio3 = static_cast<quint8>(gpio3);
             }
@@ -222,7 +222,7 @@ void ConfigurationReader::readGPIO4()
             bool ok;
             ushort gpio4 = attr.value().toUShort(&ok);
             if (!ok || gpio4 > 7) {
-                xmlReader_.raiseError(QObject::tr("Invalid GPIO.4 mode."));
+                xmlReader_.raiseError(QObject::tr("In \"gpio4\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 7."));
             } else {
                 configuration_.pinconfig.gpio4 = static_cast<quint8>(gpio4);
             }
@@ -241,7 +241,7 @@ void ConfigurationReader::readGPIO5()
             bool ok;
             ushort gpio5 = attr.value().toUShort(&ok);
             if (!ok || gpio5 > 4) {
-                xmlReader_.raiseError(QObject::tr("Invalid GPIO.5 mode."));
+                xmlReader_.raiseError(QObject::tr("In \"gpio5\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
             } else {
                 configuration_.pinconfig.gpio5 = static_cast<quint8>(gpio5);
             }
@@ -260,7 +260,7 @@ void ConfigurationReader::readGPIO6()
             bool ok;
             ushort gpio6 = attr.value().toUShort(&ok);
             if (!ok || gpio6 > 3) {
-                xmlReader_.raiseError(QObject::tr("Invalid GPIO.6 mode."));
+                xmlReader_.raiseError(QObject::tr("In \"gpio6\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
             } else {
                 configuration_.pinconfig.gpio6 = static_cast<quint8>(gpio6);
             }
@@ -279,7 +279,7 @@ void ConfigurationReader::readGPIO7()
             bool ok;
             ushort gpio7 = attr.value().toUShort(&ok);
             if (!ok || gpio7 > 3) {
-                xmlReader_.raiseError(QObject::tr("Invalid GPIO.7 mode."));
+                xmlReader_.raiseError(QObject::tr("In \"gpio7\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
             } else {
                 configuration_.pinconfig.gpio7 = static_cast<quint8>(gpio7);
             }
@@ -298,7 +298,7 @@ void ConfigurationReader::readGPIO8()
             bool ok;
             ushort gpio8 = attr.value().toUShort(&ok);
             if (!ok || gpio8 > 4) {
-                xmlReader_.raiseError(QObject::tr("Invalid GPIO.8 mode."));
+                xmlReader_.raiseError(QObject::tr("In \"gpio8\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
             } else {
                 configuration_.pinconfig.gpio8 = static_cast<quint8>(gpio8);
             }
@@ -317,7 +317,7 @@ void ConfigurationReader::readGPIO9()
             bool ok;
             ushort gpio9 = attr.value().toUShort(&ok);
             if (!ok || gpio9 > 4) {
-                xmlReader_.raiseError(QObject::tr("Invalid GPIO.9 mode."));
+                xmlReader_.raiseError(QObject::tr("In \"gpio9\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
             } else {
                 configuration_.pinconfig.gpio9 = static_cast<quint8>(gpio9);
             }
@@ -336,7 +336,7 @@ void ConfigurationReader::readGPIO10()
             bool ok;
             ushort gpio10 = attr.value().toUShort(&ok);
             if (!ok || gpio10 > 4) {
-                xmlReader_.raiseError(QObject::tr("Invalid GPIO.10 mode."));
+                xmlReader_.raiseError(QObject::tr("In \"gpio10\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
             } else {
                 configuration_.pinconfig.gpio10 = static_cast<quint8>(gpio10);
             }
@@ -354,7 +354,7 @@ void ConfigurationReader::readManufacturer()
         if (attr.name().toString() == "string") {
             QString manufacturer = attr.value().toString();
             if (static_cast<size_t>(manufacturer.size()) > CP2130::DESCMXL_MANUFACTURER) {
-                xmlReader_.raiseError(QObject::tr("Manufacturer string cannot be longer than %1 characters.").arg(CP2130::DESCMXL_MANUFACTURER));
+                xmlReader_.raiseError(QObject::tr("In \"manufacturer\" element, the \"string\" attribute contains an invalid value. It should contain a valid manufacturer string, having no more than %1 characters.").arg(CP2130::DESCMXL_MANUFACTURER));
             } else {
                 configuration_.manufacturer = manufacturer;
             }
@@ -373,7 +373,7 @@ void ConfigurationReader::readPID()
             bool ok;
             quint16 pid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
             if (!ok || pid == 0x0000) {
-                xmlReader_.raiseError(QObject::tr("Invalid PID value."));
+                xmlReader_.raiseError(QObject::tr("In \"pid\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0001 and ffff."));
             } else {
                 configuration_.usbconfig.pid = pid;
             }
@@ -426,7 +426,7 @@ void ConfigurationReader::readPower()
             bool ok;
             ushort maxpow = attr.value().toUShort(&ok, 16);
             if (!ok || maxpow > 0xfa) {
-                xmlReader_.raiseError(QObject::tr("Invalid maximum power value."));
+                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"maximum\" attribute contains an invalid value. It should be an hexadecimal integer between 00 and fa."));
             } else {
                 configuration_.usbconfig.maxpow = static_cast<quint8>(maxpow);
             }
@@ -434,7 +434,7 @@ void ConfigurationReader::readPower()
             bool ok;
             ushort powmode = attr.value().toUShort(&ok);
             if (!ok || powmode > 2) {
-                xmlReader_.raiseError(QObject::tr("Invalid power mode."));
+                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 2."));
             } else {
                 configuration_.usbconfig.powmode = static_cast<quint8>(powmode);
             }
@@ -452,7 +452,7 @@ void ConfigurationReader::readProduct()
         if (attr.name().toString() == "string") {
             QString product = attr.value().toString();
             if (static_cast<size_t>(product.size()) > CP2130::DESCMXL_PRODUCT) {
-                xmlReader_.raiseError(QObject::tr("Product string cannot be longer than %1 characters.").arg(CP2130::DESCMXL_PRODUCT));
+                xmlReader_.raiseError(QObject::tr("In \"product\" element, the \"string\" attribute contains an invalid value. It should contain a valid product string, having no more than %1 characters.").arg(CP2130::DESCMXL_PRODUCT));
             } else {
                 configuration_.product = product;
             }
@@ -471,7 +471,7 @@ void ConfigurationReader::readRelease()
             bool ok;
             ushort major = attr.value().toUShort(&ok);
             if (!ok || major > 255) {
-                xmlReader_.raiseError(QObject::tr("Invalid major release number."));
+                xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"major\" attribute contains an invalid value. It should be an integer between 0 and 255."));
             } else {
                 configuration_.usbconfig.majrel = static_cast<quint8>(major);
             }
@@ -479,7 +479,7 @@ void ConfigurationReader::readRelease()
             bool ok;
             ushort minor = attr.value().toUShort(&ok);
             if (!ok || minor > 255) {
-                xmlReader_.raiseError(QObject::tr("Invalid minor release number."));
+                xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"minor\" attribute contains an invalid value. It should be an integer between 0 and 255."));
             } else {
                 configuration_.usbconfig.minrel = static_cast<quint8>(minor);
             }
@@ -498,7 +498,7 @@ void ConfigurationReader::readResumeMask()
             bool ok;
             ushort wkupmask = attr.value().toUShort(&ok, 16);
             if (!ok || wkupmask > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("Invalid resume mask value."));
+                xmlReader_.raiseError(QObject::tr("In \"resumemask\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0000 and 7fff."));
             } else {
                 configuration_.pinconfig.wkupmask = wkupmask;
             }
@@ -517,7 +517,7 @@ void ConfigurationReader::readResumeMatch()
             bool ok;
             ushort wkupmatch = attr.value().toUShort(&ok, 16);
             if (!ok || wkupmatch > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("Invalid resume match value."));
+                xmlReader_.raiseError(QObject::tr("In \"resumematch\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0000 and 7fff."));
             } else {
                 configuration_.pinconfig.wkupmatch = wkupmatch;
             }
@@ -534,10 +534,8 @@ void ConfigurationReader::readSerial()
     foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
         if (attr.name().toString() == "string") {
             QString serial = attr.value().toString();
-            if (serial.isEmpty()) {
-                xmlReader_.raiseError(QObject::tr("Serial string cannot be empty."));
-            } else if (static_cast<size_t>(serial.size()) > CP2130::DESCMXL_SERIAL) {
-                xmlReader_.raiseError(QObject::tr("Serial string cannot be longer than %1 characters.").arg(CP2130::DESCMXL_SERIAL));
+            if (serial.isEmpty() || static_cast<size_t>(serial.size()) > CP2130::DESCMXL_SERIAL) {
+                xmlReader_.raiseError(QObject::tr("In \"serial\" element, the \"string\" attribute contains an invalid value. It should contain a valid serial string, which cannot be empty and cannot be longer than %1 characters.").arg(CP2130::DESCMXL_SERIAL));
             } else {
                 configuration_.serial = serial;
             }
@@ -571,7 +569,7 @@ void ConfigurationReader::readSuspendLevel()
             bool ok;
             ushort sspndlvl = attr.value().toUShort(&ok, 16);
             if (!ok || sspndlvl > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("Invalid suspend level value."));
+                xmlReader_.raiseError(QObject::tr("In \"suspendlevel\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0000 and 7fff."));
             } else {
                 configuration_.pinconfig.sspndlvl = sspndlvl;
             }
@@ -590,7 +588,7 @@ void ConfigurationReader::readSuspendMode()
             bool ok;
             ushort sspndmode = attr.value().toUShort(&ok, 16);
             if (!ok) {
-                xmlReader_.raiseError(QObject::tr("Invalid suspend mode value."));
+                xmlReader_.raiseError(QObject::tr("In \"suspendmode\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0000 and ffff."));
             } else {
                 configuration_.pinconfig.sspndmode = sspndmode;
             }
@@ -609,7 +607,7 @@ void ConfigurationReader::readTransfer()
             bool ok;
             ushort trfprio = attr.value().toUShort(&ok);
             if (!ok || trfprio > 1) {
-                xmlReader_.raiseError(QObject::tr("Invalid transfer priority."));
+                xmlReader_.raiseError(QObject::tr("In \"transfer\" element, the \"priority\" attribute contains an invalid value. It should be an integer between 0 and 1."));
             } else {
                 configuration_.usbconfig.trfprio = static_cast<quint8>(trfprio);
             }
@@ -628,7 +626,7 @@ void ConfigurationReader::readVID()
             bool ok;
             quint16 vid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
             if (!ok || vid == 0x0000) {
-                xmlReader_.raiseError(QObject::tr("Invalid VID value."));
+                xmlReader_.raiseError(QObject::tr("In \"vid\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0001 and ffff."));
             } else {
                 configuration_.usbconfig.vid = vid;
             }
