@@ -107,7 +107,7 @@ void SerialGenerator::setReplaceMode(bool replaceWDigit, bool replaceWUpper, boo
 // Helper function to check if a given string constitutes a valid prototype serial string
 bool SerialGenerator::isValidPrototypeSerial(const QString &prototypeSerial)
 {
-    return prototypeSerial.size() <= CP2130::DESCMXL_SERIAL && prototypeSerial.contains('?');
+    return static_cast<size_t>(prototypeSerial.size()) <= CP2130::DESCMXL_SERIAL && prototypeSerial.contains('?');
 }
 
 // Helper function to check if a given value constitutes a valid replace mode

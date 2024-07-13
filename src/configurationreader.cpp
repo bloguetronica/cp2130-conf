@@ -373,7 +373,7 @@ void ConfigurationReader::readPID()
             bool ok;
             quint16 pid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
             if (!ok || pid == 0x0000) {
-                xmlReader_.raiseError(QObject::tr("In \"pid\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0001 and ffff."));
+                xmlReader_.raiseError(QObject::tr("In \"pid\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 1 and ffff."));
             } else {
                 configuration_.usbconfig.pid = pid;
             }
@@ -426,7 +426,7 @@ void ConfigurationReader::readPower()
             bool ok;
             ushort maxpow = attr.value().toUShort(&ok, 16);
             if (!ok || maxpow > 0xfa) {
-                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"maximum\" attribute contains an invalid value. It should be an hexadecimal integer between 00 and fa."));
+                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"maximum\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and fa."));
             } else {
                 configuration_.usbconfig.maxpow = static_cast<quint8>(maxpow);
             }
@@ -498,7 +498,7 @@ void ConfigurationReader::readResumeMask()
             bool ok;
             ushort wkupmask = attr.value().toUShort(&ok, 16);
             if (!ok || wkupmask > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("In \"resumemask\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0000 and 7fff."));
+                xmlReader_.raiseError(QObject::tr("In \"resumemask\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff."));
             } else {
                 configuration_.pinconfig.wkupmask = wkupmask;
             }
@@ -517,7 +517,7 @@ void ConfigurationReader::readResumeMatch()
             bool ok;
             ushort wkupmatch = attr.value().toUShort(&ok, 16);
             if (!ok || wkupmatch > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("In \"resumematch\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0000 and 7fff."));
+                xmlReader_.raiseError(QObject::tr("In \"resumematch\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff."));
             } else {
                 configuration_.pinconfig.wkupmatch = wkupmatch;
             }
@@ -569,7 +569,7 @@ void ConfigurationReader::readSuspendLevel()
             bool ok;
             ushort sspndlvl = attr.value().toUShort(&ok, 16);
             if (!ok || sspndlvl > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("In \"suspendlevel\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0000 and 7fff."));
+                xmlReader_.raiseError(QObject::tr("In \"suspendlevel\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff."));
             } else {
                 configuration_.pinconfig.sspndlvl = sspndlvl;
             }
@@ -588,7 +588,7 @@ void ConfigurationReader::readSuspendMode()
             bool ok;
             ushort sspndmode = attr.value().toUShort(&ok, 16);
             if (!ok) {
-                xmlReader_.raiseError(QObject::tr("In \"suspendmode\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0000 and ffff."));
+                xmlReader_.raiseError(QObject::tr("In \"suspendmode\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and ffff."));
             } else {
                 configuration_.pinconfig.sspndmode = sspndmode;
             }
@@ -626,7 +626,7 @@ void ConfigurationReader::readVID()
             bool ok;
             quint16 vid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
             if (!ok || vid == 0x0000) {
-                xmlReader_.raiseError(QObject::tr("In \"vid\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0001 and ffff."));
+                xmlReader_.raiseError(QObject::tr("In \"vid\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 1 and ffff."));
             } else {
                 configuration_.usbconfig.vid = vid;
             }
