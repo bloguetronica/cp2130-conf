@@ -7,6 +7,10 @@ Configurator. A list of relevant files follows:
 – common.h;
 – configuration.cpp;
 – configuration.h;
+– configurationreader.cpp;
+– configurationreader.h;
+– configurationwriter.cpp;
+– configurationwriter.h;
 – configuratorwindow.cpp;
 – configuratorwindow.h;
 – configuratorwindow.ui;
@@ -14,6 +18,8 @@ Configurator. A list of relevant files follows:
 – cp2130.cpp;
 – cp2130.h;
 – icons/active64.png;
+– icons/buttons/cycle.png;
+– icons/buttons/cycle.svg;
 – icons/cp2130-conf.png;
 – icons/greyed64.png;
 – icons/icon.svg;
@@ -32,7 +38,16 @@ Configurator. A list of relevant files follows:
 – misc/cp2130-conf.desktop;
 – nonblocking.cpp;
 – nonblocking.h;
+– otpromviewerdialog.cpp;
+– otpromviewerdialog.h;
+– otpromviewerdialog.ui;
 – resources.qrc;
+– serialgenerator.cpp;
+– serialgenerator.h;
+– serialgeneratordialog.cpp;
+– serialgeneratordialog.h;
+– serialgeneratordialog.ui;
+– serialgeneratorsettings.h;
 – translations/cp2130-conf_en.qm;
 – translations/cp2130-conf_en.ts;
 – translations/cp2130-conf_en_US.qm;
