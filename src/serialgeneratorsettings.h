@@ -18,26 +18,17 @@
    Please feel free to contact me via e-mail: samuel.fmlourenco@gmail.com */
 
 
-#ifndef ABOUTDIALOG_H
-#define ABOUTDIALOG_H
+#ifndef SERIALGENERATORSETTINGS_H
+#define SERIALGENERATORSETTINGS_H
 
 // Includes
-#include <QDialog>
+#include "serialgenerator.h"
 
-namespace Ui {
-class AboutDialog;
-}
-
-class AboutDialog : public QDialog
-{
-    Q_OBJECT
-
-public:
-    explicit AboutDialog(QWidget *parent = nullptr);
-    ~AboutDialog();
-
-private:
-    Ui::AboutDialog *ui;
+struct SerialGeneratorSettings {
+    SerialGenerator serialgen;
+    bool doexport;
+    bool genenable;
+    bool autogen;
 };
 
-#endif  // ABOUTDIALOG_H
+#endif  // SERIALGENERATORSETTINGS_H

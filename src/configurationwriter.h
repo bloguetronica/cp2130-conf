@@ -18,46 +18,38 @@
    Please feel free to contact me via e-mail: samuel.fmlourenco@gmail.com */
 
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef CONFIGURATIONWRITER_H
+#define CONFIGURATIONWRITER_H
 
 // Includes
-#include <QMainWindow>
-#include <QMap>
-#include <QPointer>
+#include <QIODevice>
 #include <QString>
-#include "configuratorwindow.h"
+#include <QXmlStreamWriter>
+#include "configuration.h"
+#include "serialgeneratorsettings.h"
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class ConfigurationWriter
 {
-    Q_OBJECT
+private:
+    const Configuration &configuration_;
+    const SerialGeneratorSettings &serialGeneratorSettings_;
+    QXmlStreamWriter xmlWriter_;
+
+    void writeBitmaps();
+    void writeDescriptor(QString name, QString value);
+    void writeDivider();
+    void writeGenerator();
+    void writeGPIO(int number, quint8 mode);
+    void writePins();
+    void writePower();
+    void writeRelease();
+    void writeTransfer();
+    void writeWordGeneric(QString name, quint16 value);
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ConfigurationWriter(const Configuration &configuration, const SerialGeneratorSettings &serialGeneratorSettings);
 
-protected:
-    void closeEvent(QCloseEvent *event);
-
-private slots:
-    void on_actionAbout_triggered();
-    void on_comboBoxDevices_currentIndexChanged(int index);
-    void on_lineEditPID_textEdited();
-    void on_lineEditVID_textEdited();
-    void on_pushButtonOpen_clicked();
-    void on_pushButtonRefresh_clicked();
-
-private:
-    Ui::MainWindow *ui;
-    QMap<QString, QPointer<ConfiguratorWindow>> confWindowMap_;
-    quint16 pid_, vid_;
-
-    void refresh();
-    void validateInput();
+    void writeTo(QIODevice *device);
 };
 
-#endif  // MAINWINDOW_H
+#endif  // CONFIGURATIONWRITER_H

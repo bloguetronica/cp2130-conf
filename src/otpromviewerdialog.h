@@ -18,26 +18,29 @@
    Please feel free to contact me via e-mail: samuel.fmlourenco@gmail.com */
 
 
-#ifndef ABOUTDIALOG_H
-#define ABOUTDIALOG_H
+#ifndef OTPROMVIEWERDIALOG_H
+#define OTPROMVIEWERDIALOG_H
 
 // Includes
 #include <QDialog>
+#include "cp2130.h"
 
 namespace Ui {
-class AboutDialog;
+class OTPROMViewerDialog;
 }
 
-class AboutDialog : public QDialog
+class OTPROMViewerDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit AboutDialog(QWidget *parent = nullptr);
-    ~AboutDialog();
+    explicit OTPROMViewerDialog(QWidget *parent = nullptr);
+    ~OTPROMViewerDialog();
+
+    void setOTPROMViewPlainText(const CP2130::PROMConfig &promConfig);
 
 private:
-    Ui::AboutDialog *ui;
+    Ui::OTPROMViewerDialog *ui;
 };
 
-#endif  // ABOUTDIALOG_H
+#endif  // OTPROMVIEWERDIALOG_H

@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 2.1 for Debian Linux
-   Copyright (c) 2021-2023 Samuel Lourenço
+/* CP2130 Configurator - Version 3.0 for Debian Linux
+   Copyright (c) 2021-2024 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -19,11 +19,15 @@
 
 
 // Includes
+#include <QDir>
 #include <QPointer>
 #include "aboutdialog.h"
 #include "common.h"
 
-// Definitions
+// Global definitions
+QString filePath = QDir::homePath();
+
+// Local definitions
 QPointer<AboutDialog> aboutDialog_;
 
 // Closes the about dialog

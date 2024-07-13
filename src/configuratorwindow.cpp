@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 2.1 for Debian Linux
-   Copyright (c) 2021-2023 Samuel Lourenço
+/* CP2130 Configurator - Version 3.0 for Debian Linux
+   Copyright (c) 2021-2024 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -20,13 +20,19 @@
 
 // Includes
 #include <cstring>
+#include <QDir>
+#include <QFileDialog>
+#include <QIODevice>
 #include <QMessageBox>
 #include <QMetaObject>
 #include <QProgressDialog>
 #include <QRegExp>
 #include <QRegExpValidator>
 #include "common.h"
+#include "configurationreader.h"
+#include "configurationwriter.h"
 #include "nonblocking.h"
+#include "serialgeneratordialog.h"
 #include "configuratorwindow.h"
 #include "ui_configuratorwindow.h"
 
@@ -70,7 +76,7 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
         serialstr_ = serialstr;  // and the serial number as well
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialstr_));
-        displayConfiguration(deviceConfig_);
+        displayConfiguration(deviceConfig_, true);  // Modified in version 3.0
         viewEnabled_ = true;
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
@@ -103,6 +109,7 @@ void ConfiguratorWindow::on_actionAbout_triggered()
 void ConfiguratorWindow::on_actionInformation_triggered()
 {
     if (informationDialog_.isNull()) {  // If the dialog is not open (implemented in version 2.0, because the device information dialog is now modeless)
+        err_ = false;  // Bug fix implemented in version 3.0
         int errcnt = 0;
         QString errstr;
         CP2130::SiliconVersion siversion = cp2130_.getSiliconVersion(errcnt, errstr);
@@ -119,6 +126,101 @@ void ConfiguratorWindow::on_actionInformation_triggered()
     } else {
         informationDialog_->showNormal();  // Required if the dialog is minimized
         informationDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
+    }
+}
+
+// Implemented in version 3.0
+void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), filePath, tr("XML files (*.xml);;All files (*)"));
+    if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
+        QFile file(fileName);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QMessageBox::critical(this, tr("Error"), tr("Could not read from %1.\n\nPlease verify that you have read access to this file.").arg(QDir::toNativeSeparators(fileName)));
+        } else {
+            loadConfigurationFromFile(file);
+            file.close();
+            filePath = fileName;
+        }
+    }
+}
+
+// Implemented in version 3.0
+void ConfiguratorWindow::on_actionOTPROMViewer_triggered()
+{
+    if (otpromViewerDialog_.isNull()) {  // If the dialog is not open
+        err_ = false;
+        int errcnt = 0;
+        QString errstr;
+        CP2130::PROMConfig promConfig = cp2130_.getPROMConfig(errcnt, errstr);
+        opCheck(tr("prom-configuration-retrieval-op"), errcnt, errstr);  // The string "prom-configuration-retrieval-op" should be translated to "PROM configuration retrieval"
+        if (err_) {
+            handleError();
+        } else {  // If error check passes
+            otpromViewerDialog_ = new OTPROMViewerDialog(this);
+            otpromViewerDialog_->setAttribute(Qt::WA_DeleteOnClose);  // It is important to delete the dialog in memory once closed, in order to force the application to retrieve the PROM configuration if the window is opened again
+            otpromViewerDialog_->setWindowTitle(tr("OTP ROM Viewer (S/N: %1)").arg(serialstr_));
+            otpromViewerDialog_->setOTPROMViewPlainText(promConfig);
+            otpromViewerDialog_->show();
+        }
+        CP2130::listDevices(vid_, pid_, errcnt, errstr);  // This is a workaround to prevent an issue where the device is mislisted after retrieving its PROM configuration
+    } else {
+        otpromViewerDialog_->showNormal();  // Required if the dialog is minimized
+        otpromViewerDialog_->activateWindow();  // Set focus on the previous dialog (dialog is raised and selected)
+    }
+}
+
+// Implemented in version 3.0
+void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
+{
+    if(showInvalidInput()) {
+        QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
+    } else {
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), filePath, tr("XML files (*.xml);;All files (*)"));
+        if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
+            QFile file(fileName);
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                QMessageBox::critical(this, tr("Error"), tr("Could not write to %1.\n\nPlease verify that you have write access to this file.").arg(QDir::toNativeSeparators(fileName)));
+            } else {
+                saveConfigurationToFile(file);
+                file.close();
+                filePath = fileName;
+            }
+        }
+    }
+}
+
+// Implemented in version 3.0
+void ConfiguratorWindow::on_actionSerialGeneratorEnable_toggled(bool checked)
+{
+    ui->pushButtonGenerateSerial->setEnabled(checked);
+}
+
+// Implemented in version 3.0
+void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
+{
+    SerialGeneratorDialog serialGeneratorDialog(this);
+    serialGeneratorDialog.setPrototypeSerialLineEditText(serialGenSettings_.serialgen.prototypeSerial());
+    serialGeneratorDialog.setDigitsCheckBox(serialGenSettings_.serialgen.replaceWithDigits());
+    serialGeneratorDialog.setUppercaseCheckBox(serialGenSettings_.serialgen.replaceWithUppercaseLetters());
+    serialGeneratorDialog.setLowercaseCheckBox(serialGenSettings_.serialgen.replaceWithLowercaseLetters());
+    serialGeneratorDialog.setExportToFileCheckBox(serialGenSettings_.doexport);
+    serialGeneratorDialog.setEnableCheckBox(serialGenSettings_.genenable);
+    serialGeneratorDialog.setAutoGenerateCheckBox(serialGenSettings_.autogen);
+    if (serialGeneratorDialog.exec() == QDialog::Accepted) {  // If the user clicks "OK"
+        QString prototype = serialGeneratorDialog.prototypeSerialLineEditText();
+        bool digit = serialGeneratorDialog.digitsCheckBoxIsChecked();
+        bool upper = serialGeneratorDialog.uppercaseCheckBoxIsChecked();
+        bool lower = serialGeneratorDialog.lowercaseCheckBoxIsChecked();
+        if (!SerialGenerator::isValidPrototypeSerial(prototype) || !SerialGenerator::isValidReplaceMode(digit, upper, lower)) {  // If the user entered invalid settings (i.e. the prototype serial number does not contain a wildcard character or no replacement option was selected)
+            QMessageBox::critical(this, tr("Error"), tr("The serial number generator settings are not valid and will not be applied.\n\nPlease verify that the prototype serial number contains at least one wildcard character (?) and that at least one replacement option is selected."));
+        } else {  // Valid settings
+            serialGenSettings_.serialgen.setPrototypeSerial(prototype);
+            serialGenSettings_.serialgen.setReplaceMode(digit, upper, lower);
+            serialGenSettings_.doexport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
+            serialGenSettings_.genenable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+            serialGenSettings_.autogen = serialGeneratorDialog.autoGenerateCheckBoxIsChecked();  // Same as above, because "checkBoxAutoGenerate" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+        }
     }
 }
 
@@ -241,6 +343,16 @@ void ConfiguratorWindow::on_lineEditResumeMatch_textEdited()
     ui->lineEditResumeMatch->setCursorPosition(curPosition);
 }
 
+// Implemented in version 3.0
+void ConfiguratorWindow::on_lineEditSerial_textChanged()
+{
+    if (ui->lineEditSerial->text().isEmpty()) {
+        ui->lineEditSerial->setStyleSheet("background: rgb(255, 204, 0);");
+    } else {
+        ui->lineEditSerial->setStyleSheet("");
+    }
+}
+
 // Implemented in version 1.6
 void ConfiguratorWindow::on_lineEditSerial_textEdited()
 {
@@ -297,9 +409,15 @@ void ConfiguratorWindow::on_lineEditVID_textEdited()
     ui->lineEditVID->setCursorPosition(curPosition);
 }
 
+// Implemented in version 3.0
+void ConfiguratorWindow::on_pushButtonGenerateSerial_clicked()
+{
+    ui->lineEditSerial->setText(serialGenSettings_.serialgen.generateSerial());
+}
+
 void ConfiguratorWindow::on_pushButtonRevert_clicked()
 {
-    displayConfiguration(deviceConfig_);
+    displayConfiguration(deviceConfig_, false);  // Since version 3.0 and for efficiency purposes, this action will only revert unlocked fields
 }
 
 void ConfiguratorWindow::on_pushButtonWrite_clicked()
@@ -492,40 +610,84 @@ void ConfiguratorWindow::configureDevice()
     }
 }
 
-// Partially disables configurator window (fixed in version 2.1)
+// Partially disables configurator window (fixed in version 2.1 and expanded in version 3.0)
 void ConfiguratorWindow::disableView()
 {
     ui->actionInformation->setEnabled(false);
+    ui->actionLoadConfiguration->setEnabled(false);  // Added in version 3.0
     ui->actionClose->setText(tr("&Close Window"));  // Implemented in version 2.0, to hint the user that the device is effectively closed and only its window remains open
+    ui->actionOTPROMViewer->setEnabled(false);  // Added in version 3.0
+    ui->actionSerialGeneratorEnable->setChecked(false);  // Added in version 3.0 (this also disables pushButtonGenerateSerial)
+    ui->actionSerialGeneratorEnable->setEnabled(false);  // Added in version 3.0
     ui->centralWidget->setEnabled(false);
     viewEnabled_ = false;
 }
 
-// This is the main display routine, used to display the given configuration, updating all fields accordingly
-void ConfiguratorWindow::displayConfiguration(const Configuration &config)
+// This is the main display routine, used to display the given configuration, updating some or all fields accordingly (expanded in version 3.0, in order to implement partial or full updates)
+void ConfiguratorWindow::displayConfiguration(const Configuration &config, bool fullUpdate)
 {
-    displayManufacturer(config.manufacturer);
-    setManufacturerEnabled((CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF);
-    displayProduct(config.product);
-    setProductEnabled((CP2130::LWPROD & lockWord_) == CP2130::LWPROD);
-    displaySerial(config.serial);
-    setSerialEnabled((CP2130::LWSER & lockWord_) == CP2130::LWSER);
-    displayUSBConfig(config.usbconfig);
-    setVIDEnabled((CP2130::LWVID & lockWord_) == CP2130::LWVID);
-    setPIDEnabled((CP2130::LWPID & lockWord_) == CP2130::LWPID);
-    setReleaseEnabled((CP2130::LWREL & lockWord_) == CP2130::LWREL);
-    setMaxPowerEnabled((CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW);
-    setPowerModeEnabled((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE);
-    setTransferPrioEnabled((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO);
-    displayPinConfig(config.pinconfig);
-    setPinConfigEnabled((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG);
-    setWriteEnabled((CP2130::LWALL & lockWord_) != 0x0000);
+    if (fullUpdate || (CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF) {
+        displayManufacturer(config.manufacturer);
+    }
+    if (fullUpdate || (CP2130::LWPROD & lockWord_) == CP2130::LWPROD) {
+        displayProduct(config.product);
+    }
+    if (fullUpdate || (CP2130::LWSER & lockWord_) == CP2130::LWSER) {
+        displaySerial(config.serial);
+    }
+    if (fullUpdate || (CP2130::LWVID & lockWord_) == CP2130::LWVID) {
+        displayVID(config.usbconfig.vid);
+    }
+    if (fullUpdate || (CP2130::LWPID & lockWord_) == CP2130::LWPID) {
+        displayPID(config.usbconfig.pid);
+    }
+    if (fullUpdate || (CP2130::LWREL & lockWord_) == CP2130::LWREL) {
+        displayReleaseVersion(config.usbconfig.majrel, config.usbconfig.minrel);
+    }
+    if (fullUpdate || (CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW) {
+        displayMaxPower(config.usbconfig.maxpow);
+    }
+    if (fullUpdate || (CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE) {
+        displayPowerMode(config.usbconfig.powmode);
+    }
+    if (fullUpdate || (CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
+        displayTransferPrio(config.usbconfig.trfprio);
+    }
+    if (fullUpdate || (CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG) {
+        displayPinConfig(config.pinconfig);
+    }
+    if (fullUpdate) {
+        setManufacturerEnabled((CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF);
+        setProductEnabled((CP2130::LWPROD & lockWord_) == CP2130::LWPROD);
+        setSerialEnabled((CP2130::LWSER & lockWord_) == CP2130::LWSER);  // Since version 3.0, this also enables or disables the related "Tools > Serial Number Generator > Enable" menu action
+        setVIDEnabled((CP2130::LWVID & lockWord_) == CP2130::LWVID);
+        setPIDEnabled((CP2130::LWPID & lockWord_) == CP2130::LWPID);
+        setReleaseEnabled((CP2130::LWREL & lockWord_) == CP2130::LWREL);
+        setMaxPowerEnabled((CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW);
+        setPowerModeEnabled((CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE);
+        setTransferPrioEnabled((CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO);
+        setPinConfigEnabled((CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG);
+        setWriteEnabled((CP2130::LWALL & lockWord_) != 0x0000);  // Since version 3.0, this also enables or disables the "Device > Load Configuration..." menu action
+    }
 }
 
 // Updates the manufacturer descriptor field
 void ConfiguratorWindow::displayManufacturer(const QString &manufacturer)
 {
     ui->lineEditManufacturer->setText(manufacturer);
+}
+
+// Updates the maximum power consumption field (implemented in version 3.0)
+void ConfiguratorWindow::displayMaxPower(quint8 maxpow)
+{
+    ui->lineEditMaxPower->setText(QString::number(2 * maxpow));
+    ui->lineEditMaxPowerHex->setText(QString("%1").arg(maxpow, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
+}
+
+// Updates the product ID field (implemented in version 3.0)
+void ConfiguratorWindow::displayPID(quint16 pid)
+{
+    ui->lineEditPID->setText(QString("%1").arg(pid, 4, 16, QChar('0')));  // This will autofill with up to four leading zeros
 }
 
 // Updates all fields pertaining to the CP2130 pin configuration
@@ -549,10 +711,23 @@ void ConfiguratorWindow::displayPinConfig(const CP2130::PinConfig &pinconfig)
     ui->lineEditResumeMatch->setText(QString("%1").arg(pinconfig.wkupmatch, 4, 16, QChar('0')));  // Same as above
 }
 
+// Updates the power mode combo box (implemented in version 3.0)
+void ConfiguratorWindow::displayPowerMode(quint8 powmode)
+{
+    ui->comboBoxPowerMode->setCurrentIndex(powmode);
+}
+
 // Updates the product descriptor field
 void ConfiguratorWindow::displayProduct(const QString &product)
 {
     ui->lineEditProduct->setText(product);
+}
+
+// Updates the release version fields (implemented in version 3.0)
+void ConfiguratorWindow::displayReleaseVersion(quint8 majrel, quint8 minrel)
+{
+    ui->spinBoxMajVersion->setValue(majrel);
+    ui->spinBoxMinVersion->setValue(minrel);
 }
 
 // Updates the serial descriptor field
@@ -561,17 +736,16 @@ void ConfiguratorWindow::displaySerial(const QString &serial)
     ui->lineEditSerial->setText(serial);
 }
 
-// Updates all fields pertaining to USB configuration
-void ConfiguratorWindow::displayUSBConfig(const CP2130::USBConfig &usbconfig)
+// Updates the transfer priority combo box (implemented in version 3.0)
+void ConfiguratorWindow::displayTransferPrio(quint8 trfprio)
 {
-    ui->lineEditVID->setText(QString("%1").arg(usbconfig.vid, 4, 16, QChar('0')));  // This will autofill with up to four leading zeros
-    ui->lineEditPID->setText(QString("%1").arg(usbconfig.pid, 4, 16, QChar('0')));  // Same as before
-    ui->spinBoxMajVersion->setValue(usbconfig.majrel);
-    ui->spinBoxMinVersion->setValue(usbconfig.minrel);
-    ui->lineEditMaxPower->setText(QString::number(2 * usbconfig.maxpow));
-    ui->lineEditMaxPowerHex->setText(QString("%1").arg(usbconfig.maxpow, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
-    ui->comboBoxPowerMode->setCurrentIndex(usbconfig.powmode);
-    ui->comboBoxTransferPrio->setCurrentIndex(usbconfig.trfprio);
+    ui->comboBoxTransferPrio->setCurrentIndex(trfprio);
+}
+
+// Updates the vendor ID field (implemented in version 3.0)
+void ConfiguratorWindow::displayVID(quint16 vid)
+{
+    ui->lineEditVID->setText(QString("%1").arg(vid, 4, 16, QChar('0')));  // This will autofill with up to four leading zeros
 }
 
 // Retrieves the user set configuration from the fields
@@ -584,7 +758,7 @@ void ConfiguratorWindow::getEditedConfiguration()
     editedConfig_.usbconfig.pid = static_cast<quint16>(ui->lineEditPID->text().toUInt(nullptr, 16));
     editedConfig_.usbconfig.majrel = static_cast<quint8>(ui->spinBoxMajVersion->value());
     editedConfig_.usbconfig.minrel = static_cast<quint8>(ui->spinBoxMinVersion->value());
-    editedConfig_.usbconfig.maxpow = static_cast<quint8>(ui->lineEditMaxPower->text().toUInt() / 2);
+    editedConfig_.usbconfig.maxpow = static_cast<quint8>(ui->lineEditMaxPowerHex->text().toUInt(nullptr, 16));  // Modified in version 3.0
     editedConfig_.usbconfig.powmode = static_cast<quint8>(ui->comboBoxPowerMode->currentIndex());
     editedConfig_.usbconfig.trfprio = static_cast<quint8>(ui->comboBoxTransferPrio->currentIndex());
     editedConfig_.pinconfig.gpio0 = static_cast<quint8>(ui->comboBoxGPIO0->currentIndex());
@@ -598,10 +772,10 @@ void ConfiguratorWindow::getEditedConfiguration()
     editedConfig_.pinconfig.gpio8 = static_cast<quint8>(ui->comboBoxGPIO8->currentIndex());
     editedConfig_.pinconfig.gpio9 = static_cast<quint8>(ui->comboBoxGPIO9->currentIndex());
     editedConfig_.pinconfig.gpio10 = static_cast<quint8>(ui->comboBoxGPIO10->currentIndex());
-    editedConfig_.pinconfig.sspndlvl = static_cast<quint16>(ui->lineEditSuspendLevel->text().toUInt());
-    editedConfig_.pinconfig.sspndmode = static_cast<quint16>(ui->lineEditSuspendMode->text().toUInt());
-    editedConfig_.pinconfig.wkupmask = static_cast<quint16>(ui->lineEditResumeMask->text().toUInt());
-    editedConfig_.pinconfig.wkupmatch = static_cast<quint16>(ui->lineEditResumeMatch->text().toUInt());
+    editedConfig_.pinconfig.sspndlvl = static_cast<quint16>(ui->lineEditSuspendLevel->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
+    editedConfig_.pinconfig.sspndmode = static_cast<quint16>(ui->lineEditSuspendMode->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
+    editedConfig_.pinconfig.wkupmask = static_cast<quint16>(ui->lineEditResumeMask->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
+    editedConfig_.pinconfig.wkupmatch = static_cast<quint16>(ui->lineEditResumeMatch->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
     editedConfig_.pinconfig.divider = static_cast<quint8>(ui->spinBoxDivider->value());
 }
 
@@ -613,6 +787,26 @@ void ConfiguratorWindow::handleError()
         cp2130_.close();  // If the device is already closed, this will have no effect
     }
     QMessageBox::critical(this, tr("Error"), errmsg_);
+}
+
+// Loads the configuration from a given file (implemented in version 3.0)
+void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
+{
+    getEditedConfiguration();
+    SerialGeneratorSettings serialGenSettings = serialGenSettings_;  // Local variable required to hold serial generator settings that may or may not be applied
+    ConfigurationReader configReader(editedConfig_, serialGenSettings);  // It is essential to work on the local variable set above!
+    if (!configReader.readFrom(&file)) {
+        QMessageBox::critical(this, tr("Error"), configReader.errorString());
+    } else {
+        displayConfiguration(editedConfig_, false);  // This partial update will not modify any fields that are locked
+        serialGenSettings_ = serialGenSettings;  // Apply serial generator settings
+        if ((CP2130::LWSER & lockWord_) == CP2130::LWSER) {
+            ui->actionSerialGeneratorEnable->setChecked(serialGenSettings_.genenable);  // This also enables or disables pushButtonGenerateSerial
+            if (serialGenSettings_.autogen) {
+                ui->lineEditSerial->setText(serialGenSettings_.serialgen.generateSerial());
+            }
+        }
+    }
 }
 
 // Checks for errors and validates device operations
@@ -716,7 +910,7 @@ void ConfiguratorWindow::resetDevice()
     if (err == CP2130::SUCCESS) {  // Device was successfully reopened
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
-        displayConfiguration(deviceConfig_);
+        displayConfiguration(deviceConfig_, true);  // Modified in version 3.0
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
         exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
@@ -727,6 +921,14 @@ void ConfiguratorWindow::resetDevice()
         err_ = true;
         errmsg_ = tr("Device ceased to be available. It could be in use by another application.");  // Same as above
     }
+}
+
+// Saves the current configuration to a given file (implemented in version 3.0)
+void ConfiguratorWindow::saveConfigurationToFile(QFile &file)
+{
+    getEditedConfiguration();
+    ConfigurationWriter configWriter(editedConfig_, serialGenSettings_);
+    configWriter.writeTo(&file);
 }
 
 // Enables or disables the manufacturer descriptor field
@@ -788,9 +990,13 @@ void ConfiguratorWindow::setReleaseEnabled(bool value)
     ui->spinBoxMinVersion->setReadOnly(!value);
 }
 
-// Enables or disables the serial descriptor field
+// Enables or disables the serial descriptor field and the related "Tools > Serial Number Generator > Enable" menu action (expanded in version 3.0)
 void ConfiguratorWindow::setSerialEnabled(bool value)
 {
+    if (!value) {  // Implemented in version 3.0
+        ui->actionSerialGeneratorEnable->setChecked(false);  // This also disables pushButtonGenerateSerial
+    }
+    ui->actionSerialGeneratorEnable->setEnabled(value);  // Added in version 3.0
     ui->lineEditSerial->setReadOnly(!value);
 }
 
@@ -806,19 +1012,24 @@ void ConfiguratorWindow::setVIDEnabled(bool value)
     ui->lineEditVID->setReadOnly(!value);
 }
 
-// Enables or disables editing related buttons and checkboxes
+// Enables or disables editing related actions, buttons and checkboxes (expanded in version 3.0)
 void ConfiguratorWindow::setWriteEnabled(bool value)
 {
+    ui->actionLoadConfiguration->setEnabled(value);  // Added in version 3.0
     ui->pushButtonRevert->setEnabled(value);
     ui->checkBoxVerify->setEnabled(value);
     ui->checkBoxLock->setEnabled(value);
     ui->pushButtonWrite->setEnabled(value);
 }
 
-// Checks user input, returning false if it is valid, or true otherwise, while also highlighting invalid fields
+// Checks user input, returning false if it is valid, or true otherwise, while also highlighting invalid fields (modified in version 3.0)
 bool ConfiguratorWindow::showInvalidInput()
 {
     bool retval = false;
+    if (ui->lineEditSerial->text().isEmpty()) {  // Condition added in version 3.0
+        ui->lineEditSerial->setStyleSheet("background: rgb(255, 102, 102);");
+        retval = true;
+    }
     if (ui->lineEditMaxPower->text().isEmpty()) {
         ui->lineEditMaxPower->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;

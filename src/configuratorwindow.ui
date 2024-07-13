@@ -46,7 +46,7 @@
       <x>6</x>
       <y>9</y>
       <width>459</width>
-      <height>526</height>
+      <height>528</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -61,7 +61,7 @@
        <rect>
         <x>120</x>
         <y>90</y>
-        <width>321</width>
+        <width>281</width>
         <height>31</height>
        </rect>
       </property>
@@ -436,6 +436,26 @@
       </property>
       <property name="clearButtonEnabled">
        <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonGenerateSerial">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>90</y>
+        <width>31</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/buttons/icons/buttons/cycle.png</normaloff>:/icons/buttons/icons/buttons/cycle.png</iconset>
       </property>
      </widget>
     </widget>
@@ -1303,6 +1323,9 @@
     </property>
     <addaction name="actionInformation"/>
     <addaction name="separator"/>
+    <addaction name="actionLoadConfiguration"/>
+    <addaction name="actionSaveConfiguration"/>
+    <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -1311,7 +1334,22 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <widget class="QMenu" name="menuSerialGenerator">
+     <property name="title">
+      <string>&amp;Serial Number Generator</string>
+     </property>
+     <addaction name="actionSerialGeneratorEnable"/>
+     <addaction name="actionSerialGeneratorSettings"/>
+    </widget>
+    <addaction name="actionOTPROMViewer"/>
+    <addaction name="menuSerialGenerator"/>
+   </widget>
    <addaction name="menuDevice"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionInformation">
@@ -1332,12 +1370,53 @@
     <string>&amp;About CP2130 Configurator</string>
    </property>
   </action>
+  <action name="actionLoadConfiguration">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Load Configuration...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSaveConfiguration">
+   <property name="text">
+    <string>&amp;Save Configuration...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionOTPROMViewer">
+   <property name="text">
+    <string>OTP &amp;ROM Viewer</string>
+   </property>
+  </action>
+  <action name="actionSerialGeneratorEnable">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Enable</string>
+   </property>
+  </action>
+  <action name="actionSerialGeneratorSettings">
+   <property name="text">
+    <string>&amp;Settings</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>tabWidget</tabstop>
   <tabstop>lineEditManufacturer</tabstop>
   <tabstop>lineEditProduct</tabstop>
   <tabstop>lineEditSerial</tabstop>
+  <tabstop>pushButtonGenerateSerial</tabstop>
   <tabstop>lineEditVID</tabstop>
   <tabstop>lineEditPID</tabstop>
   <tabstop>spinBoxMajVersion</tabstop>

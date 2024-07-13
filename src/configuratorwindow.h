@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 2.1 for Debian Linux
-   Copyright (c) 2021-2023 Samuel Lourenço
+/* CP2130 Configurator - Version 3.0 for Debian Linux
+   Copyright (c) 2021-2024 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -22,6 +22,7 @@
 #define CONFIGURATORWINDOW_H
 
 // Includes
+#include <QFile>
 #include <QMainWindow>
 #include <QPointer>
 #include <QString>
@@ -29,6 +30,8 @@
 #include "configuration.h"
 #include "cp2130.h"
 #include "informationdialog.h"
+#include "otpromviewerdialog.h"
+#include "serialgeneratorsettings.h"
 
 namespace Ui {
 class ConfiguratorWindow;
@@ -49,6 +52,11 @@ private slots:
     void lockOTP();
     void on_actionAbout_triggered();
     void on_actionInformation_triggered();
+    void on_actionLoadConfiguration_triggered();
+    void on_actionOTPROMViewer_triggered();
+    void on_actionSaveConfiguration_triggered();
+    void on_actionSerialGeneratorEnable_toggled(bool checked);
+    void on_actionSerialGeneratorSettings_triggered();
     void on_lineEditManufacturer_textEdited();
     void on_lineEditMaxPower_editingFinished();
     void on_lineEditMaxPower_textChanged();
@@ -63,6 +71,7 @@ private slots:
     void on_lineEditResumeMask_textEdited();
     void on_lineEditResumeMatch_textChanged();
     void on_lineEditResumeMatch_textEdited();
+    void on_lineEditSerial_textChanged();
     void on_lineEditSerial_textEdited();
     void on_lineEditSuspendLevel_textChanged();
     void on_lineEditSuspendLevel_textEdited();
@@ -70,6 +79,7 @@ private slots:
     void on_lineEditSuspendMode_textEdited();
     void on_lineEditVID_textChanged();
     void on_lineEditVID_textEdited();
+    void on_pushButtonGenerateSerial_clicked();
     void on_pushButtonRevert_clicked();
     void on_pushButtonWrite_clicked();
     void verifyConfiguration();
@@ -89,24 +99,33 @@ private:
     Configuration deviceConfig_, editedConfig_;
     CP2130 cp2130_;
     QPointer<InformationDialog> informationDialog_;
+    QPointer<OTPROMViewerDialog> otpromViewerDialog_;
     QString errmsg_, serialstr_;
+    SerialGeneratorSettings serialGenSettings_;
     quint16 lockWord_, pid_, vid_;
     bool err_, requiresReset_, viewEnabled_ = false;
 
     void configureDevice();
     void disableView();
-    void displayConfiguration(const Configuration &config);
+    void displayConfiguration(const Configuration &config, bool fullUpdate);
     void displayManufacturer(const QString &manufacturer);
+    void displayMaxPower(quint8 maxpow);
+    void displayPID(quint16 pid);
     void displayPinConfig(const CP2130::PinConfig &pinconfig);
+    void displayPowerMode(quint8 powmode);
     void displayProduct(const QString &product);
+    void displayReleaseVersion(quint8 majrel, quint8 minrel);
     void displaySerial(const QString &serial);
-    void displayUSBConfig(const CP2130::USBConfig &usbconfig);
+    void displayTransferPrio(quint8 trfprio);
+    void displayVID(quint16 vid);
     void getEditedConfiguration();
     void handleError();
+    void loadConfigurationFromFile(QFile &file);
     void opCheck(const QString &op, int errcnt, QString errstr);
     QStringList prepareTaskList();
     void readDeviceConfiguration();
     void resetDevice();
+    void saveConfigurationToFile(QFile &file);
     void setManufacturerEnabled(bool value);
     void setMaxPowerEnabled(bool value);
     void setPinConfigEnabled(bool value);

@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 2.1 for Debian Linux
-   Copyright (c) 2021-2023 Samuel Lourenço
+/* CP2130 Configurator - Version 3.0 for Debian Linux
+   Copyright (c) 2021-2024 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -20,7 +20,6 @@
 
 // Includes
 #include <QApplication>
-#include <QCoreApplication>
 #include <QLocale>
 #include <QTranslator>
 #include "mainwindow.h"
@@ -32,7 +31,7 @@ int main(int argc, char *argv[])
     if (!translator.load("cp2130-conf_" + QLocale::system().name(), ":/translations/translations")) {  // It the locale translation does not exist or cannot be loaded
         translator.load("cp2130-conf_en_US", ":/translations/translations");  // Fall back to the en-US translation
     }
-    QCoreApplication::installTranslator(&translator);
+    a.installTranslator(&translator);
     MainWindow w;
     w.show();
     return a.exec();
