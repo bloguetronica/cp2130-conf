@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 3.0 for Debian Linux
+/* CP2130 Configurator - Version 3.1 for Debian Linux
    Copyright (c) 2021-2024 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
