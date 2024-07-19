@@ -113,7 +113,7 @@ void ConfigurationReader::readGenerator()
             bool ok;
             quint8 mode = static_cast<quint8>(attr.value().toUShort(&ok));
             if (!ok || !SerialGenerator::isValidReplaceMode(mode)) {
-                xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 1 and 7"));
+                xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 1 and 7."));
             } else {
                 serialGeneratorSettings_.serialgen.setReplaceMode(mode);
             }
