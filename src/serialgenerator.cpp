@@ -45,7 +45,7 @@ QString SerialGenerator::generateSerial() const
     int bounds = replaceWith.size();
     QString serial(prototypeSerial_);
     while (serial.contains('?')) {
-        serial[serial.indexOf('?')] = replaceWith[QRandomGenerator::global()->bounded(bounds)];
+        serial[serial.indexOf('?')] = replaceWith.at(QRandomGenerator::global()->bounded(bounds));  // Optimized in version 3.1
     }
     return serial;
 }
