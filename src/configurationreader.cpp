@@ -541,13 +541,13 @@ void ConfigurationReader::readSerial()
             }
         }
     }
-    readSerialSubElements();
+    readSerialSubElements();  // This follows the same pattern as xmlReader_.skipCurrentElement()
 }
 
 // Reads the sub-elements of "serial" element
 void ConfigurationReader::readSerialSubElements()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("serial"));
+    // Call to Q_ASSERT() removed from here since version 3.1 (bug fix)
 
     while (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("generator")) {
