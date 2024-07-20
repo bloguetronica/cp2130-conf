@@ -82,7 +82,8 @@ void ConfigurationReader::readDivider()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("divider"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "value") {
             bool ok;
             ushort divider = attr.value().toUShort(&ok);
@@ -101,7 +102,8 @@ void ConfigurationReader::readGenerator()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("generator"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "prototype") {
             QString prototype = attr.value().toString();
             if (!SerialGenerator::isValidPrototypeSerial(prototype)) {
@@ -141,7 +143,8 @@ void ConfigurationReader::readGPIO0()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio0"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
             ushort gpio0 = attr.value().toUShort(&ok);
@@ -160,7 +163,8 @@ void ConfigurationReader::readGPIO1()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio1"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
             ushort gpio1 = attr.value().toUShort(&ok);
@@ -179,7 +183,8 @@ void ConfigurationReader::readGPIO2()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio2"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
             ushort gpio2 = attr.value().toUShort(&ok);
@@ -198,7 +203,8 @@ void ConfigurationReader::readGPIO3()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio3"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
             ushort gpio3 = attr.value().toUShort(&ok);
@@ -217,7 +223,8 @@ void ConfigurationReader::readGPIO4()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio4"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
             ushort gpio4 = attr.value().toUShort(&ok);
@@ -236,7 +243,8 @@ void ConfigurationReader::readGPIO5()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio5"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
             ushort gpio5 = attr.value().toUShort(&ok);
@@ -255,7 +263,8 @@ void ConfigurationReader::readGPIO6()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio6"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
             ushort gpio6 = attr.value().toUShort(&ok);
@@ -274,7 +283,8 @@ void ConfigurationReader::readGPIO7()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio7"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
             ushort gpio7 = attr.value().toUShort(&ok);
@@ -293,7 +303,8 @@ void ConfigurationReader::readGPIO8()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio8"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
             ushort gpio8 = attr.value().toUShort(&ok);
@@ -312,7 +323,8 @@ void ConfigurationReader::readGPIO9()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio9"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
             ushort gpio9 = attr.value().toUShort(&ok);
@@ -331,7 +343,8 @@ void ConfigurationReader::readGPIO10()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio10"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
             ushort gpio10 = attr.value().toUShort(&ok);
@@ -350,7 +363,8 @@ void ConfigurationReader::readManufacturer()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("manufacturer"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "string") {
             QString manufacturer = attr.value().toString();
             if (static_cast<size_t>(manufacturer.size()) > CP2130::DESCMXL_MANUFACTURER) {
@@ -368,7 +382,8 @@ void ConfigurationReader::readPID()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("pid"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "value") {
             bool ok;
             quint16 pid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
@@ -421,7 +436,8 @@ void ConfigurationReader::readPower()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("power"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "maximum") {
             bool ok;
             ushort maxpow = attr.value().toUShort(&ok, 16);
@@ -448,7 +464,8 @@ void ConfigurationReader::readProduct()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("product"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "string") {
             QString product = attr.value().toString();
             if (static_cast<size_t>(product.size()) > CP2130::DESCMXL_PRODUCT) {
@@ -466,7 +483,8 @@ void ConfigurationReader::readRelease()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("release"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "major") {
             bool ok;
             ushort major = attr.value().toUShort(&ok);
@@ -493,7 +511,8 @@ void ConfigurationReader::readResumeMask()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("resumemask"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "value") {
             bool ok;
             ushort wkupmask = attr.value().toUShort(&ok, 16);
@@ -512,7 +531,8 @@ void ConfigurationReader::readResumeMatch()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("resumematch"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "value") {
             bool ok;
             ushort wkupmatch = attr.value().toUShort(&ok, 16);
@@ -531,7 +551,8 @@ void ConfigurationReader::readSerial()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("serial"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "string") {
             QString serial = attr.value().toString();
             if (serial.isEmpty() || static_cast<size_t>(serial.size()) > CP2130::DESCMXL_SERIAL) {
@@ -564,7 +585,8 @@ void ConfigurationReader::readSuspendLevel()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("suspendlevel"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "value") {
             bool ok;
             ushort sspndlvl = attr.value().toUShort(&ok, 16);
@@ -583,7 +605,8 @@ void ConfigurationReader::readSuspendMode()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("suspendmode"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "value") {
             bool ok;
             ushort sspndmode = attr.value().toUShort(&ok, 16);
@@ -602,7 +625,8 @@ void ConfigurationReader::readTransfer()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("transfer"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "priority") {
             bool ok;
             ushort trfprio = attr.value().toUShort(&ok);
@@ -621,7 +645,8 @@ void ConfigurationReader::readVID()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("vid"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "value") {
             bool ok;
             quint16 vid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
