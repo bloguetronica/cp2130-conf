@@ -39,17 +39,7 @@ private:
     void readConfiguration();
     void readDivider();
     void readGenerator();
-    void readGPIO0();
-    void readGPIO1();
-    void readGPIO2();
-    void readGPIO3();
-    void readGPIO4();
-    void readGPIO5();
-    void readGPIO6();
-    void readGPIO7();
-    void readGPIO8();
-    void readGPIO9();
-    void readGPIO10();
+    void readGPIO(int number, quint8 &toVariable, quint8 max);
     void readManufacturer();
     void readPID();
     void readPins();

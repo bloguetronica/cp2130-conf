@@ -138,220 +138,20 @@ void ConfigurationReader::readGenerator()
     xmlReader_.skipCurrentElement();
 }
 
-// Reads "gpio0" element
-void ConfigurationReader::readGPIO0()
+// Reads GPIO element (implemented in version 3.1 to replace readGPIO0(), readGPIO1(), etc)
+void ConfigurationReader::readGPIO(int number, quint8 &toVariable, quint8 max)
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio0"));
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QString("gpio%1").arg(number));
 
     const QXmlStreamAttributes attrs = xmlReader_.attributes();
     for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
-            ushort gpio0 = attr.value().toUShort(&ok);
-            if (!ok || gpio0 > 3) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio0\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
+            ushort gpio = attr.value().toUShort(&ok);
+            if (!ok || gpio > max) {
+                xmlReader_.raiseError(QObject::tr("In \"gpio%1\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and %2.").arg(number).arg(max));
             } else {
-                configuration_.pinconfig.gpio0 = static_cast<quint8>(gpio0);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio1" element
-void ConfigurationReader::readGPIO1()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio1"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio1 = attr.value().toUShort(&ok);
-            if (!ok || gpio1 > 3) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio1\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
-            } else {
-                configuration_.pinconfig.gpio1 = static_cast<quint8>(gpio1);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio2" element
-void ConfigurationReader::readGPIO2()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio2"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio2 = attr.value().toUShort(&ok);
-            if (!ok || gpio2 > 3) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio2\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
-            } else {
-                configuration_.pinconfig.gpio2 = static_cast<quint8>(gpio2);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio3" element
-void ConfigurationReader::readGPIO3()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio3"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio3 = attr.value().toUShort(&ok);
-            if (!ok || gpio3 > 5) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio3\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 5."));
-            } else {
-                configuration_.pinconfig.gpio3 = static_cast<quint8>(gpio3);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio4" element
-void ConfigurationReader::readGPIO4()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio4"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio4 = attr.value().toUShort(&ok);
-            if (!ok || gpio4 > 7) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio4\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 7."));
-            } else {
-                configuration_.pinconfig.gpio4 = static_cast<quint8>(gpio4);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio5" element
-void ConfigurationReader::readGPIO5()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio5"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio5 = attr.value().toUShort(&ok);
-            if (!ok || gpio5 > 4) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio5\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
-            } else {
-                configuration_.pinconfig.gpio5 = static_cast<quint8>(gpio5);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio6" element
-void ConfigurationReader::readGPIO6()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio6"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio6 = attr.value().toUShort(&ok);
-            if (!ok || gpio6 > 3) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio6\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
-            } else {
-                configuration_.pinconfig.gpio6 = static_cast<quint8>(gpio6);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio7" element
-void ConfigurationReader::readGPIO7()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio7"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio7 = attr.value().toUShort(&ok);
-            if (!ok || gpio7 > 3) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio7\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
-            } else {
-                configuration_.pinconfig.gpio7 = static_cast<quint8>(gpio7);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio8" element
-void ConfigurationReader::readGPIO8()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio8"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio8 = attr.value().toUShort(&ok);
-            if (!ok || gpio8 > 4) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio8\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
-            } else {
-                configuration_.pinconfig.gpio8 = static_cast<quint8>(gpio8);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio9" element
-void ConfigurationReader::readGPIO9()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio9"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio9 = attr.value().toUShort(&ok);
-            if (!ok || gpio9 > 4) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio9\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
-            } else {
-                configuration_.pinconfig.gpio9 = static_cast<quint8>(gpio9);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio10" element
-void ConfigurationReader::readGPIO10()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio10"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio10 = attr.value().toUShort(&ok);
-            if (!ok || gpio10 > 4) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio10\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
-            } else {
-                configuration_.pinconfig.gpio10 = static_cast<quint8>(gpio10);
+                toVariable = static_cast<quint8>(gpio);
             }
         }
     }
@@ -404,27 +204,27 @@ void ConfigurationReader::readPins()
 
     while (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("gpio0")) {
-            readGPIO0();
+            readGPIO(0, configuration_.pinconfig.gpio0, 3);
         } else if (xmlReader_.name() == QLatin1String("gpio1")) {
-            readGPIO1();
+            readGPIO(1, configuration_.pinconfig.gpio1, 3);
         } else if (xmlReader_.name() == QLatin1String("gpio2")) {
-            readGPIO2();
+            readGPIO(2, configuration_.pinconfig.gpio2, 3);
         } else if (xmlReader_.name() == QLatin1String("gpio3")) {
-            readGPIO3();
+            readGPIO(3, configuration_.pinconfig.gpio3, 5);
         } else if (xmlReader_.name() == QLatin1String("gpio4")) {
-            readGPIO4();
+            readGPIO(4, configuration_.pinconfig.gpio4, 7);
         } else if (xmlReader_.name() == QLatin1String("gpio5")) {
-            readGPIO5();
+            readGPIO(5, configuration_.pinconfig.gpio5, 4);
         } else if (xmlReader_.name() == QLatin1String("gpio6")) {
-            readGPIO6();
+            readGPIO(6, configuration_.pinconfig.gpio6, 3);
         } else if (xmlReader_.name() == QLatin1String("gpio7")) {
-            readGPIO7();
+            readGPIO(7, configuration_.pinconfig.gpio7, 3);
         } else if (xmlReader_.name() == QLatin1String("gpio8")) {
-            readGPIO8();
+            readGPIO(8, configuration_.pinconfig.gpio8, 4);
         } else if (xmlReader_.name() == QLatin1String("gpio9")) {
-            readGPIO9();
+            readGPIO(9, configuration_.pinconfig.gpio9, 4);
         } else if (xmlReader_.name() == QLatin1String("gpio10")) {
-            readGPIO10();
+            readGPIO(10, configuration_.pinconfig.gpio10, 4);
         } else {
             xmlReader_.skipCurrentElement();
         }
