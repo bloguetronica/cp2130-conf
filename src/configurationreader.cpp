@@ -30,13 +30,13 @@ void ConfigurationReader::readBitmaps()
 
     while (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("suspendlevel")) {
-            readSuspendLevel();
+            readWordGeneric("suspendlevel", configuration_.pinconfig.sspndlvl, 0x0000, 0x7fff);
         } else if (xmlReader_.name() == QLatin1String("suspendmode")) {
-            readSuspendMode();
+            readWordGeneric("suspendmode", configuration_.pinconfig.sspndlvl, 0x0000, 0xffff);
         } else if (xmlReader_.name() == QLatin1String("resumemask")) {
-            readResumeMask();
+            readWordGeneric("resumemask", configuration_.pinconfig.sspndlvl, 0x0000, 0x7fff);
         } else if (xmlReader_.name() == QLatin1String("resumematch")) {
-            readResumeMatch();
+            readWordGeneric("resumematch", configuration_.pinconfig.sspndlvl, 0x0000, 0x7fff);
         } else {
             xmlReader_.skipCurrentElement();
         }
@@ -56,9 +56,9 @@ void ConfigurationReader::readConfiguration()
         } else if (xmlReader_.name() == QLatin1String("serial")) {
             readSerial();
         } else if (xmlReader_.name() == QLatin1String("vid")) {
-            readVID();
+            readWordGeneric("vid", configuration_.pinconfig.sspndlvl, 0x0001, 0xffff);
         } else if (xmlReader_.name() == QLatin1String("pid")) {
-            readPID();
+            readWordGeneric("pid", configuration_.pinconfig.sspndlvl, 0x0001, 0xffff);
         } else if (xmlReader_.name() == QLatin1String("release")) {
             readRelease();
         } else if (xmlReader_.name() == QLatin1String("power")) {
@@ -177,26 +177,6 @@ void ConfigurationReader::readManufacturer()
     xmlReader_.skipCurrentElement();
 }
 
-// Reads "pid" element
-void ConfigurationReader::readPID()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("pid"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "value") {
-            bool ok;
-            quint16 pid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
-            if (!ok || pid == 0x0000) {
-                xmlReader_.raiseError(QObject::tr("In \"pid\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 1 and ffff."));
-            } else {
-                configuration_.usbconfig.pid = pid;
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
 // Reads the sub-elements of "pins" element
 void ConfigurationReader::readPins()
 {
@@ -306,46 +286,6 @@ void ConfigurationReader::readRelease()
     xmlReader_.skipCurrentElement();
 }
 
-// Reads "resumemask" element
-void ConfigurationReader::readResumeMask()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("resumemask"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "value") {
-            bool ok;
-            ushort wkupmask = attr.value().toUShort(&ok, 16);
-            if (!ok || wkupmask > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("In \"resumemask\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff."));
-            } else {
-                configuration_.pinconfig.wkupmask = wkupmask;
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "resumematch" element
-void ConfigurationReader::readResumeMatch()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("resumematch"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "value") {
-            bool ok;
-            ushort wkupmatch = attr.value().toUShort(&ok, 16);
-            if (!ok || wkupmatch > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("In \"resumematch\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff."));
-            } else {
-                configuration_.pinconfig.wkupmatch = wkupmatch;
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
 // Reads "serial" element
 void ConfigurationReader::readSerial()
 {
@@ -380,46 +320,6 @@ void ConfigurationReader::readSerialSubElements()
     }
 }
 
-// Reads "suspendlevel" element
-void ConfigurationReader::readSuspendLevel()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("suspendlevel"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "value") {
-            bool ok;
-            ushort sspndlvl = attr.value().toUShort(&ok, 16);
-            if (!ok || sspndlvl > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("In \"suspendlevel\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff."));
-            } else {
-                configuration_.pinconfig.sspndlvl = sspndlvl;
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "suspendmode" element
-void ConfigurationReader::readSuspendMode()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("suspendmode"));
-
-    const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
-        if (attr.name().toString() == "value") {
-            bool ok;
-            ushort sspndmode = attr.value().toUShort(&ok, 16);
-            if (!ok) {
-                xmlReader_.raiseError(QObject::tr("In \"suspendmode\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and ffff."));
-            } else {
-                configuration_.pinconfig.sspndmode = sspndmode;
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
 // Reads "transfer" element
 void ConfigurationReader::readTransfer()
 {
@@ -440,20 +340,20 @@ void ConfigurationReader::readTransfer()
     xmlReader_.skipCurrentElement();
 }
 
-// Reads "vid" element
-void ConfigurationReader::readVID()
+// Generic procedure to read a named element with a word value in hexadecimal as it's attribute (implemented in version 3.1 to replace readPID(), readResumeMask(), readResumeMatch(), readSuspendLevel(), readSuspendMode() and readVID())
+void ConfigurationReader::readWordGeneric(QString name, quint16 &toVariable, quint16 min, quint16 max)
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("vid"));
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == name);
 
     const QXmlStreamAttributes attrs = xmlReader_.attributes();
     for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "value") {
             bool ok;
-            quint16 vid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
-            if (!ok || vid == 0x0000) {
-                xmlReader_.raiseError(QObject::tr("In \"vid\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 1 and ffff."));
+            quint16 word = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
+            if (!ok || word > max || word < min) {
+                xmlReader_.raiseError(QObject::tr("In \"%1\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between %2 and %3.").arg(name).arg(min, 0, 16).arg(max, 0, 16));
             } else {
-                configuration_.usbconfig.vid = vid;
+                toVariable = word;
             }
         }
     }

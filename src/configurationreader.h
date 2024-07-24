@@ -41,19 +41,14 @@ private:
     void readGenerator();
     void readGPIO(int number, quint8 &toVariable, quint8 max);
     void readManufacturer();
-    void readPID();
     void readPins();
     void readPower();
     void readProduct();
     void readRelease();
-    void readResumeMask();
-    void readResumeMatch();
     void readSerial();
     void readSerialSubElements();
-    void readSuspendLevel();
-    void readSuspendMode();
     void readTransfer();
-    void readVID();
+    void readWordGeneric(QString name, quint16 &toVariable, quint16 min, quint16 max);
 
 public:
     ConfigurationReader(Configuration &configuration, SerialGeneratorSettings &serialGeneratorSettings);
