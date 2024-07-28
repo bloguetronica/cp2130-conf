@@ -587,7 +587,7 @@ void ConfiguratorWindow::configureDevice()
         QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
     } else if (configProgress.wasCanceled()) {  // If the device configuration was aborted by the user
         QMessageBox::information(this, tr("Configuration Aborted"), tr("The device configuration was aborted."));
-    } else if (ui->checkBoxVerify->isChecked()) {  // Successul configuration with verification
+    } else if (tasks.contains("verifyConfiguration")) {  // Successul configuration with verification (condition modified in version 3.1)
         QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured and verified."));
     } else {  // Successul configuration without verification
         QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured."));
