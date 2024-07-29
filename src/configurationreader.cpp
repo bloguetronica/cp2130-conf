@@ -375,7 +375,7 @@ QString ConfigurationReader::errorString() const
 // Reads the configuration from a given file, returning false in case of error or true if it succeeds
 bool ConfigurationReader::readFrom(QIODevice *device)
 {
-    serialGeneratorSettings_.serialgen = SerialGenerator();  // Default settings if no "generator" element is found (this line was added in version 3.1, so the serial generator parameters are also set to their default values)
+    serialGeneratorSettings_.serialgen = SerialGenerator();  // Default settings if no "generator" element is found (this line was added in version 3.1, so that the serial generator parameters are also set to their default values)
     serialGeneratorSettings_.doexport = false;
     serialGeneratorSettings_.genenable = false;
     serialGeneratorSettings_.autogen = false;
