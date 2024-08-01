@@ -21,6 +21,7 @@
 // Include
 #include <QObject>
 #include "cp2130.h"
+#include "cp2130limits.h"
 #include "configurationreader.h"
 
 // Reads the sub-elements of "bitmap" element
@@ -177,52 +178,52 @@ void ConfigurationReader::readManufacturer()
     xmlReader_.skipCurrentElement();
 }
 
-// Reads the sub-elements of "pins" element
+// Reads the sub-elements of "pins" element (modified in version 3.1)
 void ConfigurationReader::readPins()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("pins"));
 
     while (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("gpio0")) {
-            readGPIO(0, configuration_.pinconfig.gpio0, 3);
+            readGPIO(0, configuration_.pinconfig.gpio0, CP2130Limits::GPIO0_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio1")) {
-            readGPIO(1, configuration_.pinconfig.gpio1, 3);
+            readGPIO(1, configuration_.pinconfig.gpio1, CP2130Limits::GPIO1_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio2")) {
-            readGPIO(2, configuration_.pinconfig.gpio2, 3);
+            readGPIO(2, configuration_.pinconfig.gpio2, CP2130Limits::GPIO2_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio3")) {
-            readGPIO(3, configuration_.pinconfig.gpio3, 5);
+            readGPIO(3, configuration_.pinconfig.gpio3, CP2130Limits::GPIO3_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio4")) {
-            readGPIO(4, configuration_.pinconfig.gpio4, 7);
+            readGPIO(4, configuration_.pinconfig.gpio4, CP2130Limits::GPIO4_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio5")) {
-            readGPIO(5, configuration_.pinconfig.gpio5, 4);
+            readGPIO(5, configuration_.pinconfig.gpio5, CP2130Limits::GPIO5_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio6")) {
-            readGPIO(6, configuration_.pinconfig.gpio6, 3);
+            readGPIO(6, configuration_.pinconfig.gpio6, CP2130Limits::GPIO6_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio7")) {
-            readGPIO(7, configuration_.pinconfig.gpio7, 3);
+            readGPIO(7, configuration_.pinconfig.gpio7, CP2130Limits::GPIO7_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio8")) {
-            readGPIO(8, configuration_.pinconfig.gpio8, 4);
+            readGPIO(8, configuration_.pinconfig.gpio8, CP2130Limits::GPIO8_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio9")) {
-            readGPIO(9, configuration_.pinconfig.gpio9, 4);
+            readGPIO(9, configuration_.pinconfig.gpio9, CP2130Limits::GPIO9_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio10")) {
-            readGPIO(10, configuration_.pinconfig.gpio10, 4);
+            readGPIO(10, configuration_.pinconfig.gpio10, CP2130Limits::GPIO10_MAX);
         } else {
             xmlReader_.skipCurrentElement();
         }
     }
 }
 
-// Reads "power" element
+// Reads "power" element (modified in version 3.1)
 void ConfigurationReader::readPower()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("power"));
 
     const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
+    for (const QXmlStreamAttribute &attr : attrs) {
         if (attr.name().toString() == "maximum") {
             bool ok;
             ushort maxpow = attr.value().toUShort(&ok, 16);
-            if (!ok || maxpow > 0xfa) {
-                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"maximum\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and fa."));
+            if (!ok || maxpow > CP2130Limits::MAXPOW_MAX) {
+                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"maximum\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and %1.").arg(CP2130Limits::MAXPOW_MAX, 0, 16));
             } else {
                 configuration_.usbconfig.maxpow = static_cast<quint8>(maxpow);
             }

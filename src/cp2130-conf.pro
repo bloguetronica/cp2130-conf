@@ -48,6 +48,7 @@ HEADERS += \
     configurationwriter.h \
     configuratorwindow.h \
     cp2130.h \
+    cp2130limits.h \
     informationdialog.h \
     libusb-extra.h \
     mainwindow.h \

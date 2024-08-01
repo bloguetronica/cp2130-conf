@@ -31,6 +31,7 @@
 #include "common.h"
 #include "configurationreader.h"
 #include "configurationwriter.h"
+#include "cp2130limits.h"
 #include "nonblocking.h"
 #include "serialgeneratordialog.h"
 #include "configuratorwindow.h"
@@ -38,7 +39,6 @@
 
 // Definitions
 const int ENUM_RETRIES = 10;  // Number of enumeration retries
-const int POWER_LIMIT = 500;  // Maximum current consumption limit, as per the USB 2.0 specification
 
 ConfiguratorWindow::ConfiguratorWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -250,7 +250,7 @@ void ConfiguratorWindow::on_lineEditMaxPower_textEdited()
 {
     QString maxPowerStr = ui->lineEditMaxPower->text();
     int maxPower = maxPowerStr.toInt();
-    if (maxPower > POWER_LIMIT) {
+    if (maxPower > 2 * CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
         maxPowerStr.chop(1);
         ui->lineEditMaxPower->setText(maxPowerStr);
         maxPower /= 10;
@@ -278,13 +278,13 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited()
 {
     int curPosition = ui->lineEditMaxPowerHex->cursorPosition();
     ui->lineEditMaxPowerHex->setText(ui->lineEditMaxPowerHex->text().toLower());
-    int maxPower = 2 * ui->lineEditMaxPowerHex->text().toInt(nullptr, 16);
-    if (maxPower > POWER_LIMIT) {
-        maxPower = POWER_LIMIT;
-        ui->lineEditMaxPowerHex->setText(QString("%1").arg(POWER_LIMIT / 2, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
+    int maxPowerHex = ui->lineEditMaxPowerHex->text().toInt(nullptr, 16);  // Modified in version 3.1
+    if (maxPowerHex > CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
+        maxPowerHex = CP2130Limits::MAXPOW_MAX;
+        ui->lineEditMaxPowerHex->setText(QString("%1").arg(CP2130Limits::MAXPOW_MAX, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
     }
     ui->lineEditMaxPowerHex->setCursorPosition(curPosition);
-    ui->lineEditMaxPower->setText(QString::number(maxPower));
+    ui->lineEditMaxPower->setText(QString::number(2 * maxPowerHex));
 }
 
 void ConfiguratorWindow::on_lineEditPID_textChanged()
