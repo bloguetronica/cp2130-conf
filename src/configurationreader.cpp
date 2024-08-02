@@ -24,7 +24,7 @@
 #include "cp2130limits.h"
 #include "configurationreader.h"
 
-// Reads the sub-elements of "bitmap" element
+// Reads the sub-elements of "bitmap" element (modified in version 3.1)
 void ConfigurationReader::readBitmaps()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("bitmaps"));
@@ -33,11 +33,11 @@ void ConfigurationReader::readBitmaps()
         if (xmlReader_.name() == QLatin1String("suspendlevel")) {
             readWordGeneric("suspendlevel", configuration_.pinconfig.sspndlvl, 0x0000, 0x7fff);
         } else if (xmlReader_.name() == QLatin1String("suspendmode")) {
-            readWordGeneric("suspendmode", configuration_.pinconfig.sspndlvl, 0x0000, 0xffff);
+            readWordGeneric("suspendmode", configuration_.pinconfig.sspndmode, 0x0000, 0xffff);
         } else if (xmlReader_.name() == QLatin1String("resumemask")) {
-            readWordGeneric("resumemask", configuration_.pinconfig.sspndlvl, 0x0000, 0x7fff);
+            readWordGeneric("resumemask", configuration_.pinconfig.wkupmask, 0x0000, 0x7fff);
         } else if (xmlReader_.name() == QLatin1String("resumematch")) {
-            readWordGeneric("resumematch", configuration_.pinconfig.sspndlvl, 0x0000, 0x7fff);
+            readWordGeneric("resumematch", configuration_.pinconfig.wkupmatch, 0x0000, 0x7fff);
         } else {
             xmlReader_.skipCurrentElement();
         }
@@ -57,9 +57,9 @@ void ConfigurationReader::readConfiguration()
         } else if (xmlReader_.name() == QLatin1String("serial")) {
             readSerial();
         } else if (xmlReader_.name() == QLatin1String("vid")) {
-            readWordGeneric("vid", configuration_.pinconfig.sspndlvl, 0x0001, 0xffff);
+            readWordGeneric("vid", configuration_.usbconfig.vid, CP2130Limits::VID_MIN, CP2130Limits::VID_MAX);  // Modified in version 3.1
         } else if (xmlReader_.name() == QLatin1String("pid")) {
-            readWordGeneric("pid", configuration_.pinconfig.sspndlvl, 0x0001, 0xffff);
+            readWordGeneric("pid", configuration_.usbconfig.pid, CP2130Limits::PID_MIN, CP2130Limits::PID_MAX);  // Modified in version 3.1
         } else if (xmlReader_.name() == QLatin1String("release")) {
             readRelease();
         } else if (xmlReader_.name() == QLatin1String("power")) {

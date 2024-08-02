@@ -1022,12 +1022,20 @@ void ConfiguratorWindow::setWriteEnabled(bool value)
     ui->pushButtonWrite->setEnabled(value);
 }
 
-// Checks user input, returning false if it is valid, or true otherwise, while also highlighting invalid fields (modified in version 3.0)
+// Checks user input, returning false if it is valid, or true otherwise, while also highlighting invalid fields (modified in version 3.1)
 bool ConfiguratorWindow::showInvalidInput()
 {
     bool retval = false;
     if (ui->lineEditSerial->text().isEmpty()) {  // Condition added in version 3.0
         ui->lineEditSerial->setStyleSheet("background: rgb(255, 102, 102);");
+        retval = true;
+    }
+    if (ui->lineEditVID->text().size() < 4 || ui->lineEditVID->text() == "0000") {
+        ui->lineEditVID->setStyleSheet("background: rgb(255, 102, 102);");
+        retval = true;
+    }
+    if (ui->lineEditPID->text().size() < 4 || ui->lineEditPID->text() == "0000") {
+        ui->lineEditPID->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
     if (ui->lineEditMaxPower->text().isEmpty()) {
@@ -1036,14 +1044,6 @@ bool ConfiguratorWindow::showInvalidInput()
     }
     if (ui->lineEditMaxPowerHex->text().isEmpty()) {
         ui->lineEditMaxPowerHex->setStyleSheet("background: rgb(255, 102, 102);");
-        retval = true;
-    }
-    if (ui->lineEditPID->text().size() < 4 || ui->lineEditPID->text() == "0000") {
-        ui->lineEditPID->setStyleSheet("background: rgb(255, 102, 102);");
-        retval = true;
-    }
-    if (ui->lineEditVID->text().size() < 4 || ui->lineEditVID->text() == "0000") {
-        ui->lineEditVID->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
     if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7fff) {  // Extra check condition added in version 1.1

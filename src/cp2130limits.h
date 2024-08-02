@@ -39,6 +39,10 @@ namespace CP2130Limits
     const quint8 GPIO9_MAX = CP2130::PCSSPND;
     const quint8 GPIO10_MAX = CP2130::PCNSSPND;
     const quint8 MAXPOW_MAX = 0xfa;
+    const quint16 PID_MAX = 0xffff;
+    const quint16 PID_MIN = 0x0001;
+    const quint16 VID_MAX = 0xffff;
+    const quint16 VID_MIN = 0x0001;
 }
 
 #endif  // CP2130LIMITS_H
