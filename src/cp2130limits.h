@@ -27,22 +27,24 @@
 
 namespace CP2130Limits
 {
-    const quint8 GPIO0_MAX = CP2130::PCCS;
-    const quint8 GPIO1_MAX = CP2130::PCCS;
-    const quint8 GPIO2_MAX = CP2130::PCCS;
-    const quint8 GPIO3_MAX = CP2130::PCRTR;
-    const quint8 GPIO4_MAX = CP2130::PCEVTCNTRPP;
-    const quint8 GPIO5_MAX = CP2130::PCCLKOUT;
-    const quint8 GPIO6_MAX = CP2130::PCCS;
-    const quint8 GPIO7_MAX = CP2130::PCCS;
-    const quint8 GPIO8_MAX = CP2130::PCSPIACT;
-    const quint8 GPIO9_MAX = CP2130::PCSSPND;
-    const quint8 GPIO10_MAX = CP2130::PCNSSPND;
-    const quint8 MAXPOW_MAX = 0xfa;
-    const quint16 PID_MAX = 0xffff;
-    const quint16 PID_MIN = 0x0001;
-    const quint16 VID_MAX = 0xffff;
-    const quint16 VID_MIN = 0x0001;
+const quint8 GPIO0_MAX = CP2130::PCCS;
+const quint8 GPIO1_MAX = CP2130::PCCS;
+const quint8 GPIO2_MAX = CP2130::PCCS;
+const quint8 GPIO3_MAX = CP2130::PCRTR;
+const quint8 GPIO4_MAX = CP2130::PCEVTCNTRPP;
+const quint8 GPIO5_MAX = CP2130::PCCLKOUT;
+const quint8 GPIO6_MAX = CP2130::PCCS;
+const quint8 GPIO7_MAX = CP2130::PCCS;
+const quint8 GPIO8_MAX = CP2130::PCSPIACT;
+const quint8 GPIO9_MAX = CP2130::PCSSPND;
+const quint8 GPIO10_MAX = CP2130::PCNSSPND;
+const quint8 MAXPOW_MAX = 0xfa;
+const quint16 PID_MAX = 0xffff;
+const quint16 PID_MIN = 0x0001;
+const quint8 POWMODE_MAX = CP2130::PMSELFREGEN;
+const quint8 TRFPRIO_MAX = CP2130::PRIOWRITE;
+const quint16 VID_MAX = 0xffff;
+const quint16 VID_MIN = 0x0001;
 }
 
 #endif  // CP2130LIMITS_H

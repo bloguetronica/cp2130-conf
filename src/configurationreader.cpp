@@ -230,8 +230,8 @@ void ConfigurationReader::readPower()
         } else if (attr.name().toString() == "mode") {
             bool ok;
             ushort powmode = attr.value().toUShort(&ok);
-            if (!ok || powmode > 2) {
-                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 2."));
+            if (!ok || powmode > CP2130Limits::POWMODE_MAX) {
+                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::POWMODE_MAX));
             } else {
                 configuration_.usbconfig.powmode = static_cast<quint8>(powmode);
             }
@@ -321,18 +321,18 @@ void ConfigurationReader::readSerialSubElements()
     }
 }
 
-// Reads "transfer" element
+// Reads "transfer" element (modified in version 3.1)
 void ConfigurationReader::readTransfer()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("transfer"));
 
     const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
+    for (const QXmlStreamAttribute &attr : attrs) {
         if (attr.name().toString() == "priority") {
             bool ok;
             ushort trfprio = attr.value().toUShort(&ok);
-            if (!ok || trfprio > 1) {
-                xmlReader_.raiseError(QObject::tr("In \"transfer\" element, the \"priority\" attribute contains an invalid value. It should be an integer between 0 and 1."));
+            if (!ok || trfprio > CP2130Limits::TRFPRIO_MAX) {
+                xmlReader_.raiseError(QObject::tr("In \"transfer\" element, the \"priority\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::TRFPRIO_MAX));
             } else {
                 configuration_.usbconfig.trfprio = static_cast<quint8>(trfprio);
             }
