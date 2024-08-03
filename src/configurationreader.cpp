@@ -259,28 +259,28 @@ void ConfigurationReader::readProduct()
     xmlReader_.skipCurrentElement();
 }
 
-// Reads "release" element
+// Reads "release" element (modified in version 3.1)
 void ConfigurationReader::readRelease()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("release"));
 
     const QXmlStreamAttributes attrs = xmlReader_.attributes();
-    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
+    for (const QXmlStreamAttribute &attr : attrs) {
         if (attr.name().toString() == "major") {
             bool ok;
-            ushort major = attr.value().toUShort(&ok);
-            if (!ok || major > 255) {
-                xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"major\" attribute contains an invalid value. It should be an integer between 0 and 255."));
+            ushort majrel = attr.value().toUShort(&ok);
+            if (!ok || majrel > CP2130Limits::MAJREL_MAX) {
+                xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"major\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::MAJREL_MAX));
             } else {
-                configuration_.usbconfig.majrel = static_cast<quint8>(major);
+                configuration_.usbconfig.majrel = static_cast<quint8>(majrel);
             }
         } else if (attr.name().toString() == "minor") {
             bool ok;
-            ushort minor = attr.value().toUShort(&ok);
-            if (!ok || minor > 255) {
-                xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"minor\" attribute contains an invalid value. It should be an integer between 0 and 255."));
+            ushort minrel = attr.value().toUShort(&ok);
+            if (!ok || minrel > CP2130Limits::MINREL_MAX) {
+                xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"minor\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::MINREL_MAX));
             } else {
-                configuration_.usbconfig.minrel = static_cast<quint8>(minor);
+                configuration_.usbconfig.minrel = static_cast<quint8>(minrel);
             }
         }
     }
