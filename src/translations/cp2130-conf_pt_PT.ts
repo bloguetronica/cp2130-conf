@@ -1097,7 +1097,7 @@ O ficheiro seleccionado não é um ficheiro de configuração do CP2130 válido.
     <message>
         <location filename="../serialgeneratordialog.ui" line="68"/>
         <source>Prototype serial number:</source>
-        <translation>N.º de série protótipo</translation>
+        <translation>N.º de série protótipo:</translation>
     </message>
     <message>
         <location filename="../serialgeneratordialog.ui" line="100"/>
