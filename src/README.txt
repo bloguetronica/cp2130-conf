@@ -17,6 +17,7 @@ Configurator. A list of relevant files follows:
 – cp2130-conf.pro;
 – cp2130.cpp;
 – cp2130.h;
+– cp2130limits.h;
 – icons/active64.png;
 – icons/buttons/cycle.png;
 – icons/buttons/cycle.svg;
