@@ -313,7 +313,7 @@ void ConfiguratorWindow::on_lineEditProduct_textEdited()
 
 void ConfiguratorWindow::on_lineEditResumeMask_textChanged()
 {
-    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
+    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > CP2130Limits::WKUPMASK) {  // Extra condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMask->setStyleSheet("");
@@ -329,7 +329,7 @@ void ConfiguratorWindow::on_lineEditResumeMask_textEdited()
 
 void ConfiguratorWindow::on_lineEditResumeMatch_textChanged()
 {
-    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
+    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > CP2130Limits::WKUPMATCH) {  // Extra condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMatch->setStyleSheet("");
@@ -363,7 +363,7 @@ void ConfiguratorWindow::on_lineEditSerial_textEdited()
 
 void ConfiguratorWindow::on_lineEditSuspendLevel_textChanged()
 {
-    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
+    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > CP2130Limits::SSPNDLVL_MAX) {  // Extra condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditSuspendLevel->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditSuspendLevel->setStyleSheet("");
@@ -1046,7 +1046,7 @@ bool ConfiguratorWindow::showInvalidInput()
         ui->lineEditMaxPowerHex->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7fff) {  // Extra check condition added in version 1.1
+    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > CP2130Limits::SSPNDLVL_MAX) {  // Extra check condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditSuspendLevel->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
@@ -1054,11 +1054,11 @@ bool ConfiguratorWindow::showInvalidInput()
         ui->lineEditSuspendMode->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7fff) {  // Extra check condition added in version 1.1
+    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > CP2130Limits::WKUPMASK) {  // Extra check condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7fff) {  // Extra check condition added in version 1.1
+    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > CP2130Limits::WKUPMATCH) {  // Extra check condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }

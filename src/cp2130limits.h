@@ -44,9 +44,13 @@ const quint8 MINREL_MAX = 0xff;
 const quint16 PID_MAX = 0xffff;
 const quint16 PID_MIN = 0x0001;
 const quint8 POWMODE_MAX = CP2130::PMSELFREGEN;
+const quint16 SSPNDLVL_MAX = 0x7fff;
+const quint16 SSPNDMODE_MAX = 0xffff;
 const quint8 TRFPRIO_MAX = CP2130::PRIOWRITE;
 const quint16 VID_MAX = 0xffff;
 const quint16 VID_MIN = 0x0001;
+const quint16 WKUPMASK = 0x7fff;
+const quint16 WKUPMATCH = 0x7fff;
 }
 
 #endif  // CP2130LIMITS_H

@@ -31,13 +31,13 @@ void ConfigurationReader::readBitmaps()
 
     while (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("suspendlevel")) {
-            readWordGeneric("suspendlevel", configuration_.pinconfig.sspndlvl, 0x0000, 0x7fff);
+            readWordGeneric("suspendlevel", configuration_.pinconfig.sspndlvl, 0x0000, CP2130Limits::SSPNDLVL_MAX);
         } else if (xmlReader_.name() == QLatin1String("suspendmode")) {
-            readWordGeneric("suspendmode", configuration_.pinconfig.sspndmode, 0x0000, 0xffff);
+            readWordGeneric("suspendmode", configuration_.pinconfig.sspndmode, 0x0000, CP2130Limits::SSPNDMODE_MAX);
         } else if (xmlReader_.name() == QLatin1String("resumemask")) {
-            readWordGeneric("resumemask", configuration_.pinconfig.wkupmask, 0x0000, 0x7fff);
+            readWordGeneric("resumemask", configuration_.pinconfig.wkupmask, 0x0000, CP2130Limits::WKUPMASK);
         } else if (xmlReader_.name() == QLatin1String("resumematch")) {
-            readWordGeneric("resumematch", configuration_.pinconfig.wkupmatch, 0x0000, 0x7fff);
+            readWordGeneric("resumematch", configuration_.pinconfig.wkupmatch, 0x0000, CP2130Limits::WKUPMATCH);
         } else {
             xmlReader_.skipCurrentElement();
         }
