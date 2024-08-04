@@ -10,7 +10,7 @@
     </message>
     <message>
         <location filename="../aboutdialog.ui" line="68"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Version 3.0&lt;br/&gt;© 2021-2024 Samuel Lourenço&lt;/p&gt;&lt;p&gt;This program is distributed under the terms of the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Version 3.1&lt;br/&gt;© 2021-2024 Samuel Lourenço&lt;/p&gt;&lt;p&gt;This program is distributed under the terms of the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
@@ -958,162 +958,87 @@ This is a critical error and execution will be aborted.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configurationreader.cpp" line="90"/>
+        <location filename="../configurationreader.cpp" line="92"/>
         <source>In &quot;divider&quot; element, the &quot;value&quot; attribute contains an invalid value. It should be an integer between 0 and 255.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configurationreader.cpp" line="108"/>
+        <location filename="../configurationreader.cpp" line="111"/>
         <source>In &quot;generator&quot; element, the &quot;prototype&quot; attribute contains an invalid value. It should contain a valid prototype serial string, having at least one least one wildcard character (?) and no more than % characters.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configurationreader.cpp" line="116"/>
-        <source>In &quot;generator&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 1 and 7</source>
+        <location filename="../configurationreader.cpp" line="119"/>
+        <source>In &quot;generator&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 1 and 7.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configurationreader.cpp" line="123"/>
+        <location filename="../configurationreader.cpp" line="153"/>
+        <source>In &quot;gpio%1&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and %2.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../configurationreader.cpp" line="226"/>
+        <source>In &quot;power&quot; element, the &quot;maximum&quot; attribute contains an invalid value. It should be an hexadecimal integer between 0 and %1.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../configurationreader.cpp" line="234"/>
+        <source>In &quot;power&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and %1.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../configurationreader.cpp" line="273"/>
+        <source>In &quot;release&quot; element, the &quot;major&quot; attribute contains an invalid value. It should be an integer between 0 and %1.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../configurationreader.cpp" line="281"/>
+        <source>In &quot;release&quot; element, the &quot;minor&quot; attribute contains an invalid value. It should be an integer between 0 and %1.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../configurationreader.cpp" line="335"/>
+        <source>In &quot;transfer&quot; element, the &quot;priority&quot; attribute contains an invalid value. It should be an integer between 0 and %1.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../configurationreader.cpp" line="355"/>
+        <source>In &quot;%1&quot; element, the &quot;value&quot; attribute contains an invalid value. It should be an hexadecimal integer between %2 and %3.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../configurationreader.cpp" line="126"/>
         <source>In &quot;generator&quot; element, the &quot;enable&quot; attribute contains an invalid value. It should be &quot;true&quot;, &quot;false&quot;, &quot;1&quot; or &quot;0&quot;.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configurationreader.cpp" line="130"/>
+        <location filename="../configurationreader.cpp" line="133"/>
         <source>In &quot;generator&quot; element, the &quot;auto-generate&quot; attribute contains an invalid value. It should be &quot;true&quot;, &quot;false&quot;, &quot;1&quot; or &quot;0&quot;.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configurationreader.cpp" line="149"/>
-        <source>In &quot;gpio0&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 3.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="168"/>
-        <source>In &quot;gpio1&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 3.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="187"/>
-        <source>In &quot;gpio2&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 3.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="206"/>
-        <source>In &quot;gpio3&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 5.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="225"/>
-        <source>In &quot;gpio4&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 7.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="244"/>
-        <source>In &quot;gpio5&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 4.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="263"/>
-        <source>In &quot;gpio6&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 3.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="282"/>
-        <source>In &quot;gpio7&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 3.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="301"/>
-        <source>In &quot;gpio8&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 4.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="320"/>
-        <source>In &quot;gpio9&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 4.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="339"/>
-        <source>In &quot;gpio10&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 4.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="357"/>
+        <location filename="../configurationreader.cpp" line="172"/>
         <source>In &quot;manufacturer&quot; element, the &quot;string&quot; attribute contains an invalid value. It should contain a valid manufacturer string, having no more than %1 characters.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configurationreader.cpp" line="376"/>
-        <source>In &quot;pid&quot; element, the &quot;value&quot; attribute contains an invalid value. It should be an hexadecimal integer between 1 and ffff.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="429"/>
-        <source>In &quot;power&quot; element, the &quot;maximum&quot; attribute contains an invalid value. It should be an hexadecimal integer between 0 and fa.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="437"/>
-        <source>In &quot;power&quot; element, the &quot;mode&quot; attribute contains an invalid value. It should be an integer between 0 and 2.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="455"/>
+        <location filename="../configurationreader.cpp" line="253"/>
         <source>In &quot;product&quot; element, the &quot;string&quot; attribute contains an invalid value. It should contain a valid product string, having no more than %1 characters.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configurationreader.cpp" line="474"/>
-        <source>In &quot;release&quot; element, the &quot;major&quot; attribute contains an invalid value. It should be an integer between 0 and 255.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="482"/>
-        <source>In &quot;release&quot; element, the &quot;minor&quot; attribute contains an invalid value. It should be an integer between 0 and 255.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="501"/>
-        <source>In &quot;resumemask&quot; element, the &quot;value&quot; attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="520"/>
-        <source>In &quot;resumematch&quot; element, the &quot;value&quot; attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="538"/>
+        <location filename="../configurationreader.cpp" line="300"/>
         <source>In &quot;serial&quot; element, the &quot;string&quot; attribute contains an invalid value. It should contain a valid serial string, which cannot be empty and cannot be longer than %1 characters.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configurationreader.cpp" line="572"/>
-        <source>In &quot;suspendlevel&quot; element, the &quot;value&quot; attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="591"/>
-        <source>In &quot;suspendmode&quot; element, the &quot;value&quot; attribute contains an invalid value. It should be an hexadecimal integer between 0 and ffff.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="610"/>
-        <source>In &quot;transfer&quot; element, the &quot;priority&quot; attribute contains an invalid value. It should be an integer between 0 and 1.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="629"/>
-        <source>In &quot;vid&quot; element, the &quot;value&quot; attribute contains an invalid value. It should be an hexadecimal integer between 1 and ffff.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../configurationreader.cpp" line="647"/>
+        <location filename="../configurationreader.cpp" line="373"/>
         <source>Line %1, column %2: %3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../configurationreader.cpp" line="661"/>
+        <location filename="../configurationreader.cpp" line="388"/>
         <source>Unknown root element.
 
 The selected file is not a valid CP2130 configuration file.</source>

@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 3.0 for Debian Linux
+/* CP2130 Configurator - Version 3.1 for Debian Linux
    Copyright (c) 2021-2024 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -31,6 +31,7 @@
 #include "common.h"
 #include "configurationreader.h"
 #include "configurationwriter.h"
+#include "cp2130limits.h"
 #include "nonblocking.h"
 #include "serialgeneratordialog.h"
 #include "configuratorwindow.h"
@@ -38,7 +39,6 @@
 
 // Definitions
 const int ENUM_RETRIES = 10;  // Number of enumeration retries
-const int POWER_LIMIT = 500;  // Maximum current consumption limit, as per the USB 2.0 specification
 
 ConfiguratorWindow::ConfiguratorWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -250,7 +250,7 @@ void ConfiguratorWindow::on_lineEditMaxPower_textEdited()
 {
     QString maxPowerStr = ui->lineEditMaxPower->text();
     int maxPower = maxPowerStr.toInt();
-    if (maxPower > POWER_LIMIT) {
+    if (maxPower > 2 * CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
         maxPowerStr.chop(1);
         ui->lineEditMaxPower->setText(maxPowerStr);
         maxPower /= 10;
@@ -278,13 +278,13 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited()
 {
     int curPosition = ui->lineEditMaxPowerHex->cursorPosition();
     ui->lineEditMaxPowerHex->setText(ui->lineEditMaxPowerHex->text().toLower());
-    int maxPower = 2 * ui->lineEditMaxPowerHex->text().toInt(nullptr, 16);
-    if (maxPower > POWER_LIMIT) {
-        maxPower = POWER_LIMIT;
-        ui->lineEditMaxPowerHex->setText(QString("%1").arg(POWER_LIMIT / 2, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
+    int maxPowerHex = ui->lineEditMaxPowerHex->text().toInt(nullptr, 16);  // Modified in version 3.1
+    if (maxPowerHex > CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
+        maxPowerHex = CP2130Limits::MAXPOW_MAX;
+        ui->lineEditMaxPowerHex->setText(QString("%1").arg(CP2130Limits::MAXPOW_MAX, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
     }
     ui->lineEditMaxPowerHex->setCursorPosition(curPosition);
-    ui->lineEditMaxPower->setText(QString::number(maxPower));
+    ui->lineEditMaxPower->setText(QString::number(2 * maxPowerHex));
 }
 
 void ConfiguratorWindow::on_lineEditPID_textChanged()
@@ -313,7 +313,7 @@ void ConfiguratorWindow::on_lineEditProduct_textEdited()
 
 void ConfiguratorWindow::on_lineEditResumeMask_textChanged()
 {
-    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
+    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > CP2130Limits::WKUPMASK) {  // Extra condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMask->setStyleSheet("");
@@ -329,7 +329,7 @@ void ConfiguratorWindow::on_lineEditResumeMask_textEdited()
 
 void ConfiguratorWindow::on_lineEditResumeMatch_textChanged()
 {
-    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
+    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > CP2130Limits::WKUPMATCH) {  // Extra condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMatch->setStyleSheet("");
@@ -363,7 +363,7 @@ void ConfiguratorWindow::on_lineEditSerial_textEdited()
 
 void ConfiguratorWindow::on_lineEditSuspendLevel_textChanged()
 {
-    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7fff) {  // Extra condition added in version 1.1
+    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > CP2130Limits::SSPNDLVL_MAX) {  // Extra condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditSuspendLevel->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditSuspendLevel->setStyleSheet("");
@@ -587,7 +587,7 @@ void ConfiguratorWindow::configureDevice()
         QMessageBox::critical(this, tr("Error"), tr("The device configuration could not be completed."));
     } else if (configProgress.wasCanceled()) {  // If the device configuration was aborted by the user
         QMessageBox::information(this, tr("Configuration Aborted"), tr("The device configuration was aborted."));
-    } else if (ui->checkBoxVerify->isChecked()) {  // Successul configuration with verification
+    } else if (tasks.contains("verifyConfiguration")) {  // Successul configuration with verification (condition modified in version 3.1)
         QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured and verified."));
     } else {  // Successul configuration without verification
         QMessageBox::information(this, tr("Device Configured"), tr("Device was successfully configured."));
@@ -754,11 +754,11 @@ void ConfiguratorWindow::getEditedConfiguration()
     editedConfig_.manufacturer = ui->lineEditManufacturer->text();
     editedConfig_.product = ui->lineEditProduct->text();
     editedConfig_.serial = ui->lineEditSerial->text();
-    editedConfig_.usbconfig.vid = static_cast<quint16>(ui->lineEditVID->text().toUInt(nullptr, 16));
-    editedConfig_.usbconfig.pid = static_cast<quint16>(ui->lineEditPID->text().toUInt(nullptr, 16));
+    editedConfig_.usbconfig.vid = static_cast<quint16>(ui->lineEditVID->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
+    editedConfig_.usbconfig.pid = static_cast<quint16>(ui->lineEditPID->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
     editedConfig_.usbconfig.majrel = static_cast<quint8>(ui->spinBoxMajVersion->value());
     editedConfig_.usbconfig.minrel = static_cast<quint8>(ui->spinBoxMinVersion->value());
-    editedConfig_.usbconfig.maxpow = static_cast<quint8>(ui->lineEditMaxPowerHex->text().toUInt(nullptr, 16));  // Modified in version 3.0
+    editedConfig_.usbconfig.maxpow = static_cast<quint8>(ui->lineEditMaxPowerHex->text().toUShort(nullptr, 16));  // Optimized in version 3.1
     editedConfig_.usbconfig.powmode = static_cast<quint8>(ui->comboBoxPowerMode->currentIndex());
     editedConfig_.usbconfig.trfprio = static_cast<quint8>(ui->comboBoxTransferPrio->currentIndex());
     editedConfig_.pinconfig.gpio0 = static_cast<quint8>(ui->comboBoxGPIO0->currentIndex());
@@ -772,10 +772,10 @@ void ConfiguratorWindow::getEditedConfiguration()
     editedConfig_.pinconfig.gpio8 = static_cast<quint8>(ui->comboBoxGPIO8->currentIndex());
     editedConfig_.pinconfig.gpio9 = static_cast<quint8>(ui->comboBoxGPIO9->currentIndex());
     editedConfig_.pinconfig.gpio10 = static_cast<quint8>(ui->comboBoxGPIO10->currentIndex());
-    editedConfig_.pinconfig.sspndlvl = static_cast<quint16>(ui->lineEditSuspendLevel->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
-    editedConfig_.pinconfig.sspndmode = static_cast<quint16>(ui->lineEditSuspendMode->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
-    editedConfig_.pinconfig.wkupmask = static_cast<quint16>(ui->lineEditResumeMask->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
-    editedConfig_.pinconfig.wkupmatch = static_cast<quint16>(ui->lineEditResumeMatch->text().toUInt(nullptr, 16));  // Conversion bug fixed in version 3.0
+    editedConfig_.pinconfig.sspndlvl = static_cast<quint16>(ui->lineEditSuspendLevel->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
+    editedConfig_.pinconfig.sspndmode = static_cast<quint16>(ui->lineEditSuspendMode->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
+    editedConfig_.pinconfig.wkupmask = static_cast<quint16>(ui->lineEditResumeMask->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
+    editedConfig_.pinconfig.wkupmatch = static_cast<quint16>(ui->lineEditResumeMatch->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
     editedConfig_.pinconfig.divider = static_cast<quint8>(ui->spinBoxDivider->value());
 }
 
@@ -1022,12 +1022,20 @@ void ConfiguratorWindow::setWriteEnabled(bool value)
     ui->pushButtonWrite->setEnabled(value);
 }
 
-// Checks user input, returning false if it is valid, or true otherwise, while also highlighting invalid fields (modified in version 3.0)
+// Checks user input, returning false if it is valid, or true otherwise, while also highlighting invalid fields (modified in version 3.1)
 bool ConfiguratorWindow::showInvalidInput()
 {
     bool retval = false;
     if (ui->lineEditSerial->text().isEmpty()) {  // Condition added in version 3.0
         ui->lineEditSerial->setStyleSheet("background: rgb(255, 102, 102);");
+        retval = true;
+    }
+    if (ui->lineEditVID->text().size() < 4 || ui->lineEditVID->text() == "0000") {
+        ui->lineEditVID->setStyleSheet("background: rgb(255, 102, 102);");
+        retval = true;
+    }
+    if (ui->lineEditPID->text().size() < 4 || ui->lineEditPID->text() == "0000") {
+        ui->lineEditPID->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
     if (ui->lineEditMaxPower->text().isEmpty()) {
@@ -1038,15 +1046,7 @@ bool ConfiguratorWindow::showInvalidInput()
         ui->lineEditMaxPowerHex->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditPID->text().size() < 4 || ui->lineEditPID->text() == "0000") {
-        ui->lineEditPID->setStyleSheet("background: rgb(255, 102, 102);");
-        retval = true;
-    }
-    if (ui->lineEditVID->text().size() < 4 || ui->lineEditVID->text() == "0000") {
-        ui->lineEditVID->setStyleSheet("background: rgb(255, 102, 102);");
-        retval = true;
-    }
-    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > 0x7fff) {  // Extra check condition added in version 1.1
+    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > CP2130Limits::SSPNDLVL_MAX) {  // Extra check condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditSuspendLevel->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
@@ -1054,11 +1054,11 @@ bool ConfiguratorWindow::showInvalidInput()
         ui->lineEditSuspendMode->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > 0x7fff) {  // Extra check condition added in version 1.1
+    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > CP2130Limits::WKUPMASK) {  // Extra check condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }
-    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > 0x7fff) {  // Extra check condition added in version 1.1
+    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > CP2130Limits::WKUPMATCH) {  // Extra check condition added in version 1.1 (and modified in version 3.1)
         ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 102, 102);");
         retval = true;
     }

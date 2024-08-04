@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 3.0 for Debian Linux
+/* CP2130 Configurator - Version 3.1 for Debian Linux
    Copyright (c) 2021-2024 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -39,31 +39,16 @@ private:
     void readConfiguration();
     void readDivider();
     void readGenerator();
-    void readGPIO0();
-    void readGPIO1();
-    void readGPIO2();
-    void readGPIO3();
-    void readGPIO4();
-    void readGPIO5();
-    void readGPIO6();
-    void readGPIO7();
-    void readGPIO8();
-    void readGPIO9();
-    void readGPIO10();
+    void readGPIO(int number, quint8 &toVariable, quint8 max);
     void readManufacturer();
-    void readPID();
     void readPins();
     void readPower();
     void readProduct();
     void readRelease();
-    void readResumeMask();
-    void readResumeMatch();
     void readSerial();
     void readSerialSubElements();
-    void readSuspendLevel();
-    void readSuspendMode();
     void readTransfer();
-    void readVID();
+    void readWordGeneric(QString name, quint16 &toVariable, quint16 min, quint16 max);
 
 public:
     ConfigurationReader(Configuration &configuration, SerialGeneratorSettings &serialGeneratorSettings);

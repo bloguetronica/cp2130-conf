@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 3.0 for Debian Linux
+/* CP2130 Configurator - Version 3.1 for Debian Linux
    Copyright (c) 2021-2024 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -21,22 +21,23 @@
 // Include
 #include <QObject>
 #include "cp2130.h"
+#include "cp2130limits.h"
 #include "configurationreader.h"
 
-// Reads the sub-elements of "bitmap" element
+// Reads the sub-elements of "bitmap" element (modified in version 3.1)
 void ConfigurationReader::readBitmaps()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("bitmaps"));
 
     while (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("suspendlevel")) {
-            readSuspendLevel();
+            readWordGeneric("suspendlevel", configuration_.pinconfig.sspndlvl, 0x0000, CP2130Limits::SSPNDLVL_MAX);
         } else if (xmlReader_.name() == QLatin1String("suspendmode")) {
-            readSuspendMode();
+            readWordGeneric("suspendmode", configuration_.pinconfig.sspndmode, 0x0000, CP2130Limits::SSPNDMODE_MAX);
         } else if (xmlReader_.name() == QLatin1String("resumemask")) {
-            readResumeMask();
+            readWordGeneric("resumemask", configuration_.pinconfig.wkupmask, 0x0000, CP2130Limits::WKUPMASK);
         } else if (xmlReader_.name() == QLatin1String("resumematch")) {
-            readResumeMatch();
+            readWordGeneric("resumematch", configuration_.pinconfig.wkupmatch, 0x0000, CP2130Limits::WKUPMATCH);
         } else {
             xmlReader_.skipCurrentElement();
         }
@@ -56,9 +57,9 @@ void ConfigurationReader::readConfiguration()
         } else if (xmlReader_.name() == QLatin1String("serial")) {
             readSerial();
         } else if (xmlReader_.name() == QLatin1String("vid")) {
-            readVID();
+            readWordGeneric("vid", configuration_.usbconfig.vid, CP2130Limits::VID_MIN, CP2130Limits::VID_MAX);  // Modified in version 3.1
         } else if (xmlReader_.name() == QLatin1String("pid")) {
-            readPID();
+            readWordGeneric("pid", configuration_.usbconfig.pid, CP2130Limits::PID_MIN, CP2130Limits::PID_MAX);  // Modified in version 3.1
         } else if (xmlReader_.name() == QLatin1String("release")) {
             readRelease();
         } else if (xmlReader_.name() == QLatin1String("power")) {
@@ -82,7 +83,8 @@ void ConfigurationReader::readDivider()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("divider"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "value") {
             bool ok;
             ushort divider = attr.value().toUShort(&ok);
@@ -101,7 +103,8 @@ void ConfigurationReader::readGenerator()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("generator"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "prototype") {
             QString prototype = attr.value().toString();
             if (!SerialGenerator::isValidPrototypeSerial(prototype)) {
@@ -113,7 +116,7 @@ void ConfigurationReader::readGenerator()
             bool ok;
             quint8 mode = static_cast<quint8>(attr.value().toUShort(&ok));
             if (!ok || !SerialGenerator::isValidReplaceMode(mode)) {
-                xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 1 and 7"));
+                xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 1 and 7."));  // Corrected in version 3.1
             } else {
                 serialGeneratorSettings_.serialgen.setReplaceMode(mode);
             }
@@ -136,209 +139,20 @@ void ConfigurationReader::readGenerator()
     xmlReader_.skipCurrentElement();
 }
 
-// Reads "gpio0" element
-void ConfigurationReader::readGPIO0()
+// Reads GPIO element (implemented in version 3.1 to replace readGPIO0(), readGPIO1(), etc)
+void ConfigurationReader::readGPIO(int number, quint8 &toVariable, quint8 max)
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio0"));
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QString("gpio%1").arg(number));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "mode") {
             bool ok;
-            ushort gpio0 = attr.value().toUShort(&ok);
-            if (!ok || gpio0 > 3) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio0\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
+            ushort gpio = attr.value().toUShort(&ok);
+            if (!ok || gpio > max) {
+                xmlReader_.raiseError(QObject::tr("In \"gpio%1\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and %2.").arg(number).arg(max));
             } else {
-                configuration_.pinconfig.gpio0 = static_cast<quint8>(gpio0);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio1" element
-void ConfigurationReader::readGPIO1()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio1"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio1 = attr.value().toUShort(&ok);
-            if (!ok || gpio1 > 3) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio1\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
-            } else {
-                configuration_.pinconfig.gpio1 = static_cast<quint8>(gpio1);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio2" element
-void ConfigurationReader::readGPIO2()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio2"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio2 = attr.value().toUShort(&ok);
-            if (!ok || gpio2 > 3) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio2\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
-            } else {
-                configuration_.pinconfig.gpio2 = static_cast<quint8>(gpio2);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio3" element
-void ConfigurationReader::readGPIO3()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio3"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio3 = attr.value().toUShort(&ok);
-            if (!ok || gpio3 > 5) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio3\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 5."));
-            } else {
-                configuration_.pinconfig.gpio3 = static_cast<quint8>(gpio3);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio4" element
-void ConfigurationReader::readGPIO4()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio4"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio4 = attr.value().toUShort(&ok);
-            if (!ok || gpio4 > 7) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio4\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 7."));
-            } else {
-                configuration_.pinconfig.gpio4 = static_cast<quint8>(gpio4);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio5" element
-void ConfigurationReader::readGPIO5()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio5"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio5 = attr.value().toUShort(&ok);
-            if (!ok || gpio5 > 4) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio5\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
-            } else {
-                configuration_.pinconfig.gpio5 = static_cast<quint8>(gpio5);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio6" element
-void ConfigurationReader::readGPIO6()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio6"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio6 = attr.value().toUShort(&ok);
-            if (!ok || gpio6 > 3) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio6\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
-            } else {
-                configuration_.pinconfig.gpio6 = static_cast<quint8>(gpio6);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio7" element
-void ConfigurationReader::readGPIO7()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio7"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio7 = attr.value().toUShort(&ok);
-            if (!ok || gpio7 > 3) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio7\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 3."));
-            } else {
-                configuration_.pinconfig.gpio7 = static_cast<quint8>(gpio7);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio8" element
-void ConfigurationReader::readGPIO8()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio8"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio8 = attr.value().toUShort(&ok);
-            if (!ok || gpio8 > 4) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio8\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
-            } else {
-                configuration_.pinconfig.gpio8 = static_cast<quint8>(gpio8);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio9" element
-void ConfigurationReader::readGPIO9()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio9"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio9 = attr.value().toUShort(&ok);
-            if (!ok || gpio9 > 4) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio9\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
-            } else {
-                configuration_.pinconfig.gpio9 = static_cast<quint8>(gpio9);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "gpio10" element
-void ConfigurationReader::readGPIO10()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("gpio10"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "mode") {
-            bool ok;
-            ushort gpio10 = attr.value().toUShort(&ok);
-            if (!ok || gpio10 > 4) {
-                xmlReader_.raiseError(QObject::tr("In \"gpio10\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 4."));
-            } else {
-                configuration_.pinconfig.gpio10 = static_cast<quint8>(gpio10);
+                toVariable = static_cast<quint8>(gpio);
             }
         }
     }
@@ -350,7 +164,8 @@ void ConfigurationReader::readManufacturer()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("manufacturer"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "string") {
             QString manufacturer = attr.value().toString();
             if (static_cast<size_t>(manufacturer.size()) > CP2130::DESCMXL_MANUFACTURER) {
@@ -363,78 +178,60 @@ void ConfigurationReader::readManufacturer()
     xmlReader_.skipCurrentElement();
 }
 
-// Reads "pid" element
-void ConfigurationReader::readPID()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("pid"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "value") {
-            bool ok;
-            quint16 pid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
-            if (!ok || pid == 0x0000) {
-                xmlReader_.raiseError(QObject::tr("In \"pid\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 1 and ffff."));
-            } else {
-                configuration_.usbconfig.pid = pid;
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads the sub-elements of "pins" element
+// Reads the sub-elements of "pins" element (modified in version 3.1)
 void ConfigurationReader::readPins()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("pins"));
 
     while (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("gpio0")) {
-            readGPIO0();
+            readGPIO(0, configuration_.pinconfig.gpio0, CP2130Limits::GPIO0_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio1")) {
-            readGPIO1();
+            readGPIO(1, configuration_.pinconfig.gpio1, CP2130Limits::GPIO1_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio2")) {
-            readGPIO2();
+            readGPIO(2, configuration_.pinconfig.gpio2, CP2130Limits::GPIO2_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio3")) {
-            readGPIO3();
+            readGPIO(3, configuration_.pinconfig.gpio3, CP2130Limits::GPIO3_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio4")) {
-            readGPIO4();
+            readGPIO(4, configuration_.pinconfig.gpio4, CP2130Limits::GPIO4_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio5")) {
-            readGPIO5();
+            readGPIO(5, configuration_.pinconfig.gpio5, CP2130Limits::GPIO5_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio6")) {
-            readGPIO6();
+            readGPIO(6, configuration_.pinconfig.gpio6, CP2130Limits::GPIO6_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio7")) {
-            readGPIO7();
+            readGPIO(7, configuration_.pinconfig.gpio7, CP2130Limits::GPIO7_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio8")) {
-            readGPIO8();
+            readGPIO(8, configuration_.pinconfig.gpio8, CP2130Limits::GPIO8_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio9")) {
-            readGPIO9();
+            readGPIO(9, configuration_.pinconfig.gpio9, CP2130Limits::GPIO9_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio10")) {
-            readGPIO10();
+            readGPIO(10, configuration_.pinconfig.gpio10, CP2130Limits::GPIO10_MAX);
         } else {
             xmlReader_.skipCurrentElement();
         }
     }
 }
 
-// Reads "power" element
+// Reads "power" element (modified in version 3.1)
 void ConfigurationReader::readPower()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("power"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {
         if (attr.name().toString() == "maximum") {
             bool ok;
             ushort maxpow = attr.value().toUShort(&ok, 16);
-            if (!ok || maxpow > 0xfa) {
-                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"maximum\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and fa."));
+            if (!ok || maxpow > CP2130Limits::MAXPOW_MAX) {
+                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"maximum\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and %1.").arg(CP2130Limits::MAXPOW_MAX, 0, 16));
             } else {
                 configuration_.usbconfig.maxpow = static_cast<quint8>(maxpow);
             }
         } else if (attr.name().toString() == "mode") {
             bool ok;
             ushort powmode = attr.value().toUShort(&ok);
-            if (!ok || powmode > 2) {
-                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and 2."));
+            if (!ok || powmode > CP2130Limits::POWMODE_MAX) {
+                xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::POWMODE_MAX));
             } else {
                 configuration_.usbconfig.powmode = static_cast<quint8>(powmode);
             }
@@ -448,7 +245,8 @@ void ConfigurationReader::readProduct()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("product"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "string") {
             QString product = attr.value().toString();
             if (static_cast<size_t>(product.size()) > CP2130::DESCMXL_PRODUCT) {
@@ -461,65 +259,28 @@ void ConfigurationReader::readProduct()
     xmlReader_.skipCurrentElement();
 }
 
-// Reads "release" element
+// Reads "release" element (modified in version 3.1)
 void ConfigurationReader::readRelease()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("release"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {
         if (attr.name().toString() == "major") {
             bool ok;
-            ushort major = attr.value().toUShort(&ok);
-            if (!ok || major > 255) {
-                xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"major\" attribute contains an invalid value. It should be an integer between 0 and 255."));
+            ushort majrel = attr.value().toUShort(&ok);
+            if (!ok || majrel > CP2130Limits::MAJREL_MAX) {
+                xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"major\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::MAJREL_MAX));
             } else {
-                configuration_.usbconfig.majrel = static_cast<quint8>(major);
+                configuration_.usbconfig.majrel = static_cast<quint8>(majrel);
             }
         } else if (attr.name().toString() == "minor") {
             bool ok;
-            ushort minor = attr.value().toUShort(&ok);
-            if (!ok || minor > 255) {
-                xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"minor\" attribute contains an invalid value. It should be an integer between 0 and 255."));
+            ushort minrel = attr.value().toUShort(&ok);
+            if (!ok || minrel > CP2130Limits::MINREL_MAX) {
+                xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"minor\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::MINREL_MAX));
             } else {
-                configuration_.usbconfig.minrel = static_cast<quint8>(minor);
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "resumemask" element
-void ConfigurationReader::readResumeMask()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("resumemask"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "value") {
-            bool ok;
-            ushort wkupmask = attr.value().toUShort(&ok, 16);
-            if (!ok || wkupmask > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("In \"resumemask\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff."));
-            } else {
-                configuration_.pinconfig.wkupmask = wkupmask;
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "resumematch" element
-void ConfigurationReader::readResumeMatch()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("resumematch"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "value") {
-            bool ok;
-            ushort wkupmatch = attr.value().toUShort(&ok, 16);
-            if (!ok || wkupmatch > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("In \"resumematch\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff."));
-            } else {
-                configuration_.pinconfig.wkupmatch = wkupmatch;
+                configuration_.usbconfig.minrel = static_cast<quint8>(minrel);
             }
         }
     }
@@ -531,7 +292,8 @@ void ConfigurationReader::readSerial()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("serial"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "string") {
             QString serial = attr.value().toString();
             if (serial.isEmpty() || static_cast<size_t>(serial.size()) > CP2130::DESCMXL_SERIAL) {
@@ -541,13 +303,13 @@ void ConfigurationReader::readSerial()
             }
         }
     }
-    readSerialSubElements();
+    readSerialSubElements();  // This follows the same pattern as xmlReader_.skipCurrentElement()
 }
 
 // Reads the sub-elements of "serial" element
 void ConfigurationReader::readSerialSubElements()
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("serial"));
+    // Call to Q_ASSERT() removed from here since version 3.1 (bug fix)
 
     while (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("generator")) {
@@ -559,55 +321,18 @@ void ConfigurationReader::readSerialSubElements()
     }
 }
 
-// Reads "suspendlevel" element
-void ConfigurationReader::readSuspendLevel()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("suspendlevel"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "value") {
-            bool ok;
-            ushort sspndlvl = attr.value().toUShort(&ok, 16);
-            if (!ok || sspndlvl > 0x7fff) {
-                xmlReader_.raiseError(QObject::tr("In \"suspendlevel\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and 7fff."));
-            } else {
-                configuration_.pinconfig.sspndlvl = sspndlvl;
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "suspendmode" element
-void ConfigurationReader::readSuspendMode()
-{
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("suspendmode"));
-
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
-        if (attr.name().toString() == "value") {
-            bool ok;
-            ushort sspndmode = attr.value().toUShort(&ok, 16);
-            if (!ok) {
-                xmlReader_.raiseError(QObject::tr("In \"suspendmode\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and ffff."));
-            } else {
-                configuration_.pinconfig.sspndmode = sspndmode;
-            }
-        }
-    }
-    xmlReader_.skipCurrentElement();
-}
-
-// Reads "transfer" element
+// Reads "transfer" element (modified in version 3.1)
 void ConfigurationReader::readTransfer()
 {
     Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("transfer"));
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {
         if (attr.name().toString() == "priority") {
             bool ok;
             ushort trfprio = attr.value().toUShort(&ok);
-            if (!ok || trfprio > 1) {
-                xmlReader_.raiseError(QObject::tr("In \"transfer\" element, the \"priority\" attribute contains an invalid value. It should be an integer between 0 and 1."));
+            if (!ok || trfprio > CP2130Limits::TRFPRIO_MAX) {
+                xmlReader_.raiseError(QObject::tr("In \"transfer\" element, the \"priority\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::TRFPRIO_MAX));
             } else {
                 configuration_.usbconfig.trfprio = static_cast<quint8>(trfprio);
             }
@@ -616,19 +341,20 @@ void ConfigurationReader::readTransfer()
     xmlReader_.skipCurrentElement();
 }
 
-// Reads "vid" element
-void ConfigurationReader::readVID()
+// Generic procedure to read a named element with a word value in hexadecimal as it's attribute (implemented in version 3.1 to replace readPID(), readResumeMask(), readResumeMatch(), readSuspendLevel(), readSuspendMode() and readVID())
+void ConfigurationReader::readWordGeneric(QString name, quint16 &toVariable, quint16 min, quint16 max)
 {
-    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == QLatin1String("vid"));
+    Q_ASSERT(xmlReader_.isStartElement() && xmlReader_.name() == name);
 
-    foreach (const QXmlStreamAttribute &attr, xmlReader_.attributes()) {
+    const QXmlStreamAttributes attrs = xmlReader_.attributes();
+    for (const QXmlStreamAttribute &attr : attrs) {  // Refactored in version 3.1
         if (attr.name().toString() == "value") {
             bool ok;
-            quint16 vid = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
-            if (!ok || vid == 0x0000) {
-                xmlReader_.raiseError(QObject::tr("In \"vid\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between 1 and ffff."));
+            quint16 word = static_cast<quint16>(attr.value().toUShort(&ok, 16));  // Conversion done for sanity purposes
+            if (!ok || word > max || word < min) {
+                xmlReader_.raiseError(QObject::tr("In \"%1\" element, the \"value\" attribute contains an invalid value. It should be an hexadecimal integer between %2 and %3.").arg(name).arg(min, 0, 16).arg(max, 0, 16));
             } else {
-                configuration_.usbconfig.vid = vid;
+                toVariable = word;
             }
         }
     }
@@ -650,7 +376,8 @@ QString ConfigurationReader::errorString() const
 // Reads the configuration from a given file, returning false in case of error or true if it succeeds
 bool ConfigurationReader::readFrom(QIODevice *device)
 {
-    serialGeneratorSettings_.doexport = false;  // Default settings if no "generator" element is found
+    serialGeneratorSettings_.serialgen = SerialGenerator();  // Default settings if no "generator" element is found (this line was added in version 3.1, so that the serial generator parameters are also set to their default values)
+    serialGeneratorSettings_.doexport = false;
     serialGeneratorSettings_.genenable = false;
     serialGeneratorSettings_.autogen = false;
     xmlReader_.setDevice(device);

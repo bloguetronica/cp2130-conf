@@ -28,6 +28,7 @@ cp -f src/configuratorwindow.ui /usr/local/src/cp2130-conf/.
 cp -f src/cp2130-conf.pro /usr/local/src/cp2130-conf/.
 cp -f src/cp2130.cpp /usr/local/src/cp2130-conf/.
 cp -f src/cp2130.h /usr/local/src/cp2130-conf/.
+cp -f src/cp2130limits.h /usr/local/src/cp2130-conf/.
 cp -f src/GPL.txt /usr/local/src/cp2130-conf/.
 cp -f src/icons/active64.png /usr/local/src/cp2130-conf/icons/.
 cp -f src/icons/buttons/cycle.png /usr/local/src/cp2130-conf/icons/buttons/.
