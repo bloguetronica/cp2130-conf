@@ -132,7 +132,7 @@ void ConfiguratorWindow::on_actionInformation_triggered()
 // Implemented in version 3.0
 void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), filePath, tr("XML files (*.xml);;All files (*)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), xmFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.2
     if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -140,7 +140,7 @@ void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
         } else {
             loadConfigurationFromFile(file);
             file.close();
-            filePath = fileName;
+            xmFilePath = fileName;
         }
     }
 }
@@ -176,7 +176,7 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
     if(showInvalidInput()) {
         QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
     } else {
-        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), filePath, tr("XML files (*.xml);;All files (*)"));
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), xmFilePath, tr("XML files (*.xml);;All files (*)"));
         if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
             QFile file(fileName);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -184,7 +184,7 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
             } else {
                 saveConfigurationToFile(file);
                 file.close();
-                filePath = fileName;
+                xmFilePath = fileName;
             }
         }
     }

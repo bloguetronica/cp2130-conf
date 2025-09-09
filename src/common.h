@@ -25,7 +25,7 @@
 #include <QString>
 
 // Global variables
-extern QString filePath;
+extern QString xmFilePath;  // Renamed in version 1.3.2
 
 // Function prototypes
 void closeAboutDialog();
