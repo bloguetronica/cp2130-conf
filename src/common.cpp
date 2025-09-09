@@ -25,7 +25,7 @@
 #include "common.h"
 
 // Global definitions
-QString xmFilePath = QDir::homePath();  // Renamed in version 1.3.2
+QString xmlFilePath = QDir::homePath();  // Renamed in version 1.3.2
 
 // Local definitions
 QPointer<AboutDialog> aboutDialog_;
