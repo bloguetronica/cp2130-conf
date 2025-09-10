@@ -121,7 +121,6 @@ private:
     void getEditedConfiguration();
     void handleError();
     void loadConfigurationFromFile(QFile &file);
-    void opCheck(const QString &op, int errcnt, QString errstr);
     QStringList prepareTaskList();
     void readDeviceConfiguration();
     void resetDevice();
@@ -138,6 +137,7 @@ private:
     void setVIDEnabled(bool value);
     void setWriteEnabled(bool value);
     bool showInvalidInput();
+    void validateOperation(const QString &op, int errcnt, QString errstr);
 };
 
 #endif  // CONFIGURATORWINDOW_H
