@@ -137,7 +137,7 @@ private:
     void setVIDEnabled(bool value);
     void setWriteEnabled(bool value);
     bool showInvalidInput();
-    void validateOperation(const QString &op, int errcnt, QString errstr);
+    void validateOperation(const QString &operation, int errcnt, QString errstr);
 };
 
 #endif  // CONFIGURATORWINDOW_H

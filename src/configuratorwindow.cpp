@@ -97,7 +97,7 @@ void ConfiguratorWindow::lockOTP()
     int errcnt = 0;
     QString errstr;
     cp2130_.lockOTP(errcnt, errstr);
-    validateOperation(tr("lock-otp-op"), errcnt, errstr);  // The string "lock-otp-op" should be translated to "Lock OTP ROM"
+    validateOperation(tr("lock OTP ROM"), errcnt, errstr);
     requiresReset_ = true;
 }
 
@@ -113,7 +113,7 @@ void ConfiguratorWindow::on_actionInformation_triggered()
         int errcnt = 0;
         QString errstr;
         CP2130::SiliconVersion siversion = cp2130_.getSiliconVersion(errcnt, errstr);
-        validateOperation(tr("device-information-retrieval-op"), errcnt, errstr);  // The string "device-information-retrieval-op" should be translated to "Device information retrieval"
+        validateOperation(tr("retrieve device information"), errcnt, errstr);
         if (err_) {  // Fix implemented in version 1.2
             handleError();
         } else {  // If error check passes
@@ -153,7 +153,7 @@ void ConfiguratorWindow::on_actionOTPROMViewer_triggered()
         int errcnt = 0;
         QString errstr;
         CP2130::PROMConfig promConfig = cp2130_.getPROMConfig(errcnt, errstr);
-        validateOperation(tr("prom-configuration-retrieval-op"), errcnt, errstr);  // The string "prom-configuration-retrieval-op" should be translated to "PROM configuration retrieval"
+        validateOperation(tr("retrieve PROM configuration"), errcnt, errstr);
         if (err_) {
             handleError();
         } else {  // If error check passes
@@ -456,7 +456,7 @@ void ConfiguratorWindow::writeManufacturerDesc()
     int errcnt = 0;
     QString errstr;
     cp2130_.writeManufacturerDesc(editedConfig_.manufacturer, errcnt, errstr);
-    validateOperation(tr("write-manufacturer-desc-op"), errcnt, errstr);  // The string "write-manufacturer-desc-op" should be translated to "Write manufacturer descriptor"
+    validateOperation(tr("write manufacturer descriptor"), errcnt, errstr);
     requiresReset_ = true;
 }
 
@@ -466,7 +466,7 @@ void ConfiguratorWindow::writeMaxPower()
     int errcnt = 0;
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWMAXPOW), errcnt, errstr);
-    validateOperation(tr("write-max-power-op"), errcnt, errstr);  // The string "write-max-power-op" should be translated to "Write maximum power"
+    validateOperation(tr("write maximum power"), errcnt, errstr);
     requiresReset_ = true;
 }
 
@@ -476,7 +476,7 @@ void ConfiguratorWindow::writePID()
     int errcnt = 0;
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWPID), errcnt, errstr);
-    validateOperation(tr("write-pid-op"), errcnt, errstr);  // The string "write-pid-op" should be translated to "Write PID"
+    validateOperation(tr("write PID"), errcnt, errstr);
     if (!err_) {
         pid_ = editedConfig_.usbconfig.pid;  // If the previous operation was successful, it is safe to assume that the PID changed to the new value
     }
@@ -489,7 +489,7 @@ void ConfiguratorWindow::writePinConfig()
     int errcnt = 0;
     QString errstr;
     cp2130_.writePinConfig(editedConfig_.pinconfig, errcnt, errstr);
-    validateOperation(tr("write-pin-config-op"), errcnt, errstr);  // The string "write-pin-config-op" should be translated to "Write pin configuration"
+    validateOperation(tr("write pin configuration"), errcnt, errstr);
     requiresReset_ = true;
 }
 
@@ -499,7 +499,7 @@ void ConfiguratorWindow::writePowerMode()
     int errcnt = 0;
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWPOWMODE), errcnt, errstr);
-    validateOperation(tr("write-power-mode-op"), errcnt, errstr);  // The string "write-power-mode-op" should be translated to "Write power mode"
+    validateOperation(tr("write power mode"), errcnt, errstr);
     requiresReset_ = true;
 }
 
@@ -509,7 +509,7 @@ void ConfiguratorWindow::writeProductDesc()
     int errcnt = 0;
     QString errstr;
     cp2130_.writeProductDesc(editedConfig_.product, errcnt, errstr);
-    validateOperation(tr("write-product-desc-op"), errcnt, errstr);  // The string "write-product-desc-op" should be translated to "Write product descriptor"
+    validateOperation(tr("write product descriptor"), errcnt, errstr);
     requiresReset_ = true;
 }
 
@@ -519,7 +519,7 @@ void ConfiguratorWindow::writeReleaseVersion()
     int errcnt = 0;
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWREL), errcnt, errstr);
-    validateOperation(tr("write-release-version-op"), errcnt, errstr);  // The string "write-release-version-op" should be translated to "Write release version"
+    validateOperation(tr("write release version"), errcnt, errstr);
     requiresReset_ = true;
 }
 
@@ -529,7 +529,7 @@ void ConfiguratorWindow::writeSerialDesc()
     int errcnt = 0;
     QString errstr;
     cp2130_.writeSerialDesc(editedConfig_.serial, errcnt, errstr);
-    validateOperation(tr("write-serial-desc-op"), errcnt, errstr);  // The string "write-serial-desc-op" should be translated to "Write serial descriptor"
+    validateOperation(tr("write serial descriptor"), errcnt, errstr);
     if (!err_) {
         serialstr_ = editedConfig_.serial.toLatin1();  // If the previous operation was successful, it is safe to assume that the serial string changed to the new value (the conversion to ASCII was implemented in version 1.1 as a patch)
     }
@@ -542,7 +542,7 @@ void ConfiguratorWindow::writeTransferPrio()
     int errcnt = 0;
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWTRFPRIO), errcnt, errstr);
-    validateOperation(tr("write-transfer-prio-op"), errcnt, errstr);  // The string "write-transfer-prio-op" should be translated to "Write transfer priority"
+    validateOperation(tr("write transfer priority"), errcnt, errstr);
     requiresReset_ = true;
 }
 
@@ -552,7 +552,7 @@ void ConfiguratorWindow::writeVID()
     int errcnt = 0;
     QString errstr;
     cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWVID), errcnt, errstr);
-    validateOperation(tr("write-vid-op"), errcnt, errstr);  // The string "write-vid-op" should be translated to "Write VID"
+    validateOperation(tr("write VID"), errcnt, errstr);
     if (!err_) {
         vid_ = editedConfig_.usbconfig.vid;  // If the previous operation was successful, it is safe to assume that the VID changed to the new value
     }
@@ -1051,8 +1051,8 @@ bool ConfiguratorWindow::showInvalidInput()
 }
 
 // Checks for errors and validates device operations
-// Void since version 1.2, since the return value was found to be redundant
-void ConfiguratorWindow::validateOperation(const QString &op, int errcnt, QString errstr)
+// Renamed and modified in version 1.3.2 (previous name was opCheck())
+void ConfiguratorWindow::validateOperation(const QString &operation, int errcnt, QString errstr)
 {
     if (errcnt > 0) {
         err_ = true;
@@ -1060,7 +1060,7 @@ void ConfiguratorWindow::validateOperation(const QString &op, int errcnt, QStrin
             errmsg_ = tr("Device disconnected.\n\nPlease reconnect it and try again.");
         } else {
             errstr.chop(1);  // Remove the last character, which is always a newline
-            errmsg_ = tr("%1 operation returned the following error(s):\n– %2", "", errcnt).arg(op, errstr.replace("\n", "\n– "));
+            errmsg_ = tr("Failed to %1. The operation returned the following error(s):\n– %2", "", errcnt).arg(operation, errstr.replace("\n", "\n– "));
         }
     }
 }
