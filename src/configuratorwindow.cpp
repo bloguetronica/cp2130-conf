@@ -80,7 +80,7 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
         serialString_ = serialstr;  // and the serial number as well
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialString_));
-        displayConfiguration(deviceConfiguration_, FULL_UPDATE);  // Modified in version 3.0
+        displayConfiguration(deviceConfiguration_, FULL_UPDATE);  // Modified in versions 3.0 and 1.3.2
         viewEnabled_ = true;
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
@@ -899,7 +899,7 @@ void ConfiguratorWindow::resetDevice()
     if (err == CP2130::SUCCESS) {  // Device was successfully reopened
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialString_));
-        displayConfiguration(deviceConfiguration_, FULL_UPDATE);  // Modified in version 3.0
+        displayConfiguration(deviceConfiguration_, FULL_UPDATE);  // Modified in version 3.0 and 1.3.2
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
         exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
