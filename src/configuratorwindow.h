@@ -96,22 +96,22 @@ private slots:
 
 private:
     Ui::ConfiguratorWindow *ui;
-    Configuration deviceConfig_, editedConfig_;
+    Configuration deviceConfiguration_, editedConfiguration_;
     CP2130 cp2130_;
     QPointer<InformationDialog> informationDialog_;
     QPointer<OTPROMViewerDialog> otpromViewerDialog_;
-    QString errmsg_, serialstr_;
-    SerialGeneratorSettings serialGenSettings_;
+    QString errmsg_, serialString_;
+    SerialGeneratorSettings serialGeneratorSettings_;
     quint16 lockWord_, pid_, vid_;
     bool err_, requiresReset_, viewEnabled_ = false;
 
     void configureDevice();
     void disableView();
-    void displayConfiguration(const Configuration &config, bool fullUpdate);
+    void displayConfiguration(const Configuration &configuration, bool fullUpdate);
     void displayManufacturer(const QString &manufacturer);
     void displayMaxPower(quint8 maxpow);
     void displayPID(quint16 pid);
-    void displayPinConfig(const CP2130::PinConfig &pinconfig);
+    void displayPinConfig(const CP2130::PinConfig &pinConfig);
     void displayPowerMode(quint8 powmode);
     void displayProduct(const QString &product);
     void displayReleaseVersion(quint8 majrel, quint8 minrel);

@@ -73,10 +73,10 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
     if (err == CP2130::SUCCESS) {  // Device was successfully opened
         vid_ = vid;  // Pass VID
         pid_ = pid;  // and PID
-        serialstr_ = serialstr;  // and the serial number as well
+        serialString_ = serialstr;  // and the serial number as well
         readDeviceConfiguration();
-        this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialstr_));
-        displayConfiguration(deviceConfig_, true);  // Modified in version 3.0
+        this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialString_));
+        displayConfiguration(deviceConfiguration_, true);  // Modified in version 3.0
         viewEnabled_ = true;
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
@@ -119,7 +119,7 @@ void ConfiguratorWindow::on_actionInformation_triggered()
         } else {  // If error check passes
             informationDialog_ = new InformationDialog(this);  // The dialog is no longer modal (version 2.0 feature);
             informationDialog_->setAttribute(Qt::WA_DeleteOnClose);  // It is important to delete the dialog in memory once closed, in order to force the application to retrieve information about the device if the window is opened again
-            informationDialog_->setWindowTitle(tr("Device Information (S/N: %1)").arg(serialstr_));
+            informationDialog_->setWindowTitle(tr("Device Information (S/N: %1)").arg(serialString_));
             informationDialog_->setSiliconVersionValueLabelText(siversion.maj, siversion.min);
             informationDialog_->show();
         }
@@ -159,7 +159,7 @@ void ConfiguratorWindow::on_actionOTPROMViewer_triggered()
         } else {  // If error check passes
             otpromViewerDialog_ = new OTPROMViewerDialog(this);
             otpromViewerDialog_->setAttribute(Qt::WA_DeleteOnClose);  // It is important to delete the dialog in memory once closed, in order to force the application to retrieve the PROM configuration if the window is opened again
-            otpromViewerDialog_->setWindowTitle(tr("OTP ROM Viewer (S/N: %1)").arg(serialstr_));
+            otpromViewerDialog_->setWindowTitle(tr("OTP ROM Viewer (S/N: %1)").arg(serialString_));
             otpromViewerDialog_->setOTPROMViewPlainText(promConfig);
             otpromViewerDialog_->show();
         }
@@ -200,13 +200,13 @@ void ConfiguratorWindow::on_actionSerialGeneratorEnable_toggled(bool checked)
 void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
 {
     SerialGeneratorDialog serialGeneratorDialog(this);
-    serialGeneratorDialog.setPrototypeSerialLineEditText(serialGenSettings_.serialgen.prototypeSerial());
-    serialGeneratorDialog.setDigitsCheckBox(serialGenSettings_.serialgen.replaceWithDigits());
-    serialGeneratorDialog.setUppercaseCheckBox(serialGenSettings_.serialgen.replaceWithUppercaseLetters());
-    serialGeneratorDialog.setLowercaseCheckBox(serialGenSettings_.serialgen.replaceWithLowercaseLetters());
-    serialGeneratorDialog.setExportToFileCheckBox(serialGenSettings_.doexport);
-    serialGeneratorDialog.setEnableCheckBox(serialGenSettings_.genenable);
-    serialGeneratorDialog.setAutoGenerateCheckBox(serialGenSettings_.autogen);
+    serialGeneratorDialog.setPrototypeSerialLineEditText(serialGeneratorSettings_.serialgen.prototypeSerial());
+    serialGeneratorDialog.setDigitsCheckBox(serialGeneratorSettings_.serialgen.replaceWithDigits());
+    serialGeneratorDialog.setUppercaseCheckBox(serialGeneratorSettings_.serialgen.replaceWithUppercaseLetters());
+    serialGeneratorDialog.setLowercaseCheckBox(serialGeneratorSettings_.serialgen.replaceWithLowercaseLetters());
+    serialGeneratorDialog.setExportToFileCheckBox(serialGeneratorSettings_.doexport);
+    serialGeneratorDialog.setEnableCheckBox(serialGeneratorSettings_.genenable);
+    serialGeneratorDialog.setAutoGenerateCheckBox(serialGeneratorSettings_.autogen);
     if (serialGeneratorDialog.exec() == QDialog::Accepted) {  // If the user clicks "OK"
         QString prototype = serialGeneratorDialog.prototypeSerialLineEditText();
         bool digit = serialGeneratorDialog.digitsCheckBoxIsChecked();
@@ -215,11 +215,11 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
         if (!SerialGenerator::isValidPrototypeSerial(prototype) || !SerialGenerator::isValidReplaceMode(digit, upper, lower)) {  // If the user entered invalid settings (i.e. the prototype serial number does not contain a wildcard character or no replacement option was selected)
             QMessageBox::critical(this, tr("Error"), tr("The serial number generator settings are not valid and will not be applied.\n\nPlease verify that the prototype serial number contains at least one wildcard character (?) and that at least one replacement option is selected."));
         } else {  // Valid settings
-            serialGenSettings_.serialgen.setPrototypeSerial(prototype);
-            serialGenSettings_.serialgen.setReplaceMode(digit, upper, lower);
-            serialGenSettings_.doexport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
-            serialGenSettings_.genenable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
-            serialGenSettings_.autogen = serialGeneratorDialog.autoGenerateCheckBoxIsChecked();  // Same as above, because "checkBoxAutoGenerate" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+            serialGeneratorSettings_.serialgen.setPrototypeSerial(prototype);
+            serialGeneratorSettings_.serialgen.setReplaceMode(digit, upper, lower);
+            serialGeneratorSettings_.doexport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
+            serialGeneratorSettings_.genenable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+            serialGeneratorSettings_.autogen = serialGeneratorDialog.autoGenerateCheckBoxIsChecked();  // Same as above, because "checkBoxAutoGenerate" is automatically unchecked if "checkBoxExportToFile" gets unchecked
         }
     }
 }
@@ -412,12 +412,12 @@ void ConfiguratorWindow::on_lineEditVID_textEdited()
 // Implemented in version 3.0
 void ConfiguratorWindow::on_pushButtonGenerateSerial_clicked()
 {
-    ui->lineEditSerial->setText(serialGenSettings_.serialgen.generateSerial());
+    ui->lineEditSerial->setText(serialGeneratorSettings_.serialgen.generateSerial());
 }
 
 void ConfiguratorWindow::on_pushButtonRevert_clicked()
 {
-    displayConfiguration(deviceConfig_, false);  // Since version 3.0 and for efficiency purposes, this action will only revert unlocked fields
+    displayConfiguration(deviceConfiguration_, false);  // Since version 3.0 and for efficiency purposes, this action will only revert unlocked fields
 }
 
 void ConfiguratorWindow::on_pushButtonWrite_clicked()
@@ -427,7 +427,7 @@ void ConfiguratorWindow::on_pushButtonWrite_clicked()
             QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
         } else {
             getEditedConfiguration();
-            if (editedConfig_ == deviceConfig_ && !ui->checkBoxLock->isChecked()) {
+            if (editedConfiguration_ == deviceConfiguration_ && !ui->checkBoxLock->isChecked()) {
                 QMessageBox::information(this, tr("No Changes Done"), tr("No changes were effected, because no values were modified."));
             } else {
                 int qmret = QMessageBox::question(this, tr("Write Configuration?"), tr("This will write the changes to the OTP ROM of your device. These changes will be permanent.\n\nDo you wish to proceed?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
@@ -443,7 +443,7 @@ void ConfiguratorWindow::on_pushButtonWrite_clicked()
 void ConfiguratorWindow::verifyConfiguration()
 {
     resetDevice();  // Since version 1.2, resetDevice() uses err_ and errmsg_ to signal out non-critical errors and pass the corresponding messages (see function implementation below)
-    if (!err_ && deviceConfig_ != editedConfig_) {  // Condition added to prevent the message to be overwritten, which is applicable to a situation when resetDevice() fails
+    if (!err_ && deviceConfiguration_ != editedConfiguration_) {  // Condition added to prevent the message to be overwritten, which is applicable to a situation when resetDevice() fails
         err_ = true;
         errmsg_ = tr("Failed verification.");
     }
@@ -455,7 +455,7 @@ void ConfiguratorWindow::writeManufacturerDesc()
 {
     int errcnt = 0;
     QString errstr;
-    cp2130_.writeManufacturerDesc(editedConfig_.manufacturer, errcnt, errstr);
+    cp2130_.writeManufacturerDesc(editedConfiguration_.manufacturer, errcnt, errstr);
     validateOperation(tr("write manufacturer descriptor"), errcnt, errstr);
     requiresReset_ = true;
 }
@@ -465,7 +465,7 @@ void ConfiguratorWindow::writeMaxPower()
 {
     int errcnt = 0;
     QString errstr;
-    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWMAXPOW), errcnt, errstr);
+    cp2130_.writeUSBConfig(editedConfiguration_.usbConfig, static_cast<quint8>(CP2130::LWMAXPOW), errcnt, errstr);
     validateOperation(tr("write maximum power"), errcnt, errstr);
     requiresReset_ = true;
 }
@@ -475,10 +475,10 @@ void ConfiguratorWindow::writePID()
 {
     int errcnt = 0;
     QString errstr;
-    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWPID), errcnt, errstr);
+    cp2130_.writeUSBConfig(editedConfiguration_.usbConfig, static_cast<quint8>(CP2130::LWPID), errcnt, errstr);
     validateOperation(tr("write PID"), errcnt, errstr);
     if (!err_) {
-        pid_ = editedConfig_.usbconfig.pid;  // If the previous operation was successful, it is safe to assume that the PID changed to the new value
+        pid_ = editedConfiguration_.usbConfig.pid;  // If the previous operation was successful, it is safe to assume that the PID changed to the new value
     }
     requiresReset_ = true;
 }
@@ -488,7 +488,7 @@ void ConfiguratorWindow::writePinConfig()
 {
     int errcnt = 0;
     QString errstr;
-    cp2130_.writePinConfig(editedConfig_.pinconfig, errcnt, errstr);
+    cp2130_.writePinConfig(editedConfiguration_.pinConfig, errcnt, errstr);
     validateOperation(tr("write pin configuration"), errcnt, errstr);
     requiresReset_ = true;
 }
@@ -498,7 +498,7 @@ void ConfiguratorWindow::writePowerMode()
 {
     int errcnt = 0;
     QString errstr;
-    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWPOWMODE), errcnt, errstr);
+    cp2130_.writeUSBConfig(editedConfiguration_.usbConfig, static_cast<quint8>(CP2130::LWPOWMODE), errcnt, errstr);
     validateOperation(tr("write power mode"), errcnt, errstr);
     requiresReset_ = true;
 }
@@ -508,7 +508,7 @@ void ConfiguratorWindow::writeProductDesc()
 {
     int errcnt = 0;
     QString errstr;
-    cp2130_.writeProductDesc(editedConfig_.product, errcnt, errstr);
+    cp2130_.writeProductDesc(editedConfiguration_.product, errcnt, errstr);
     validateOperation(tr("write product descriptor"), errcnt, errstr);
     requiresReset_ = true;
 }
@@ -518,7 +518,7 @@ void ConfiguratorWindow::writeReleaseVersion()
 {
     int errcnt = 0;
     QString errstr;
-    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWREL), errcnt, errstr);
+    cp2130_.writeUSBConfig(editedConfiguration_.usbConfig, static_cast<quint8>(CP2130::LWREL), errcnt, errstr);
     validateOperation(tr("write release version"), errcnt, errstr);
     requiresReset_ = true;
 }
@@ -528,10 +528,10 @@ void ConfiguratorWindow::writeSerialDesc()
 {
     int errcnt = 0;
     QString errstr;
-    cp2130_.writeSerialDesc(editedConfig_.serial, errcnt, errstr);
+    cp2130_.writeSerialDesc(editedConfiguration_.serial, errcnt, errstr);
     validateOperation(tr("write serial descriptor"), errcnt, errstr);
     if (!err_) {
-        serialstr_ = editedConfig_.serial.toLatin1();  // If the previous operation was successful, it is safe to assume that the serial string changed to the new value (the conversion to ASCII was implemented in version 1.1 as a patch)
+        serialString_ = editedConfiguration_.serial.toLatin1();  // If the previous operation was successful, it is safe to assume that the serial string changed to the new value (the conversion to ASCII was implemented in version 1.1 as a patch)
     }
     requiresReset_ = true;
 }
@@ -541,7 +541,7 @@ void ConfiguratorWindow::writeTransferPrio()
 {
     int errcnt = 0;
     QString errstr;
-    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWTRFPRIO), errcnt, errstr);
+    cp2130_.writeUSBConfig(editedConfiguration_.usbConfig, static_cast<quint8>(CP2130::LWTRFPRIO), errcnt, errstr);
     validateOperation(tr("write transfer priority"), errcnt, errstr);
     requiresReset_ = true;
 }
@@ -551,10 +551,10 @@ void ConfiguratorWindow::writeVID()
 {
     int errcnt = 0;
     QString errstr;
-    cp2130_.writeUSBConfig(editedConfig_.usbconfig, static_cast<quint8>(CP2130::LWVID), errcnt, errstr);
+    cp2130_.writeUSBConfig(editedConfiguration_.usbConfig, static_cast<quint8>(CP2130::LWVID), errcnt, errstr);
     validateOperation(tr("write VID"), errcnt, errstr);
     if (!err_) {
-        vid_ = editedConfig_.usbconfig.vid;  // If the previous operation was successful, it is safe to assume that the VID changed to the new value
+        vid_ = editedConfiguration_.usbConfig.vid;  // If the previous operation was successful, it is safe to assume that the VID changed to the new value
     }
     requiresReset_ = true;
 }
@@ -624,37 +624,37 @@ void ConfiguratorWindow::disableView()
 }
 
 // This is the main display routine, used to display the given configuration, updating some or all fields accordingly (expanded in version 3.0, in order to implement partial or full updates)
-void ConfiguratorWindow::displayConfiguration(const Configuration &config, bool fullUpdate)
+void ConfiguratorWindow::displayConfiguration(const Configuration &configuration, bool fullUpdate)
 {
     if (fullUpdate || (CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF) {
-        displayManufacturer(config.manufacturer);
+        displayManufacturer(configuration.manufacturer);
     }
     if (fullUpdate || (CP2130::LWPROD & lockWord_) == CP2130::LWPROD) {
-        displayProduct(config.product);
+        displayProduct(configuration.product);
     }
     if (fullUpdate || (CP2130::LWSER & lockWord_) == CP2130::LWSER) {
-        displaySerial(config.serial);
+        displaySerial(configuration.serial);
     }
     if (fullUpdate || (CP2130::LWVID & lockWord_) == CP2130::LWVID) {
-        displayVID(config.usbconfig.vid);
+        displayVID(configuration.usbConfig.vid);
     }
     if (fullUpdate || (CP2130::LWPID & lockWord_) == CP2130::LWPID) {
-        displayPID(config.usbconfig.pid);
+        displayPID(configuration.usbConfig.pid);
     }
     if (fullUpdate || (CP2130::LWREL & lockWord_) == CP2130::LWREL) {
-        displayReleaseVersion(config.usbconfig.majrel, config.usbconfig.minrel);
+        displayReleaseVersion(configuration.usbConfig.majrel, configuration.usbConfig.minrel);
     }
     if (fullUpdate || (CP2130::LWMAXPOW & lockWord_) == CP2130::LWMAXPOW) {
-        displayMaxPower(config.usbconfig.maxpow);
+        displayMaxPower(configuration.usbConfig.maxpow);
     }
     if (fullUpdate || (CP2130::LWPOWMODE & lockWord_) == CP2130::LWPOWMODE) {
-        displayPowerMode(config.usbconfig.powmode);
+        displayPowerMode(configuration.usbConfig.powmode);
     }
     if (fullUpdate || (CP2130::LWTRFPRIO & lockWord_) == CP2130::LWTRFPRIO) {
-        displayTransferPrio(config.usbconfig.trfprio);
+        displayTransferPrio(configuration.usbConfig.trfprio);
     }
     if (fullUpdate || (CP2130::LWPINCFG & lockWord_) == CP2130::LWPINCFG) {
-        displayPinConfig(config.pinconfig);
+        displayPinConfig(configuration.pinConfig);
     }
     if (fullUpdate) {
         setManufacturerEnabled((CP2130::LWMANUF & lockWord_) == CP2130::LWMANUF);
@@ -691,24 +691,24 @@ void ConfiguratorWindow::displayPID(quint16 pid)
 }
 
 // Updates all fields pertaining to the CP2130 pin configuration
-void ConfiguratorWindow::displayPinConfig(const CP2130::PinConfig &pinconfig)
+void ConfiguratorWindow::displayPinConfig(const CP2130::PinConfig &pinConfig)
 {
-    ui->comboBoxGPIO0->setCurrentIndex(pinconfig.gpio0);
-    ui->comboBoxGPIO1->setCurrentIndex(pinconfig.gpio1);
-    ui->comboBoxGPIO2->setCurrentIndex(pinconfig.gpio2);
-    ui->comboBoxGPIO3->setCurrentIndex(pinconfig.gpio3);
-    ui->comboBoxGPIO4->setCurrentIndex(pinconfig.gpio4);
-    ui->comboBoxGPIO5->setCurrentIndex(pinconfig.gpio5);
-    ui->comboBoxGPIO6->setCurrentIndex(pinconfig.gpio6);
-    ui->comboBoxGPIO7->setCurrentIndex(pinconfig.gpio7);
-    ui->comboBoxGPIO8->setCurrentIndex(pinconfig.gpio8);
-    ui->comboBoxGPIO9->setCurrentIndex(pinconfig.gpio9);
-    ui->comboBoxGPIO10->setCurrentIndex(pinconfig.gpio10);
-    ui->spinBoxDivider->setValue(pinconfig.divider);
-    ui->lineEditSuspendLevel->setText(QString("%1").arg(pinconfig.sspndlvl, 4, 16, QChar('0')));  // This will autofill with up to four leading zeros
-    ui->lineEditSuspendMode->setText(QString("%1").arg(pinconfig.sspndmode, 4, 16, QChar('0')));  // Same as above
-    ui->lineEditResumeMask->setText(QString("%1").arg(pinconfig.wkupmask, 4, 16, QChar('0')));  // Same as above
-    ui->lineEditResumeMatch->setText(QString("%1").arg(pinconfig.wkupmatch, 4, 16, QChar('0')));  // Same as above
+    ui->comboBoxGPIO0->setCurrentIndex(pinConfig.gpio0);
+    ui->comboBoxGPIO1->setCurrentIndex(pinConfig.gpio1);
+    ui->comboBoxGPIO2->setCurrentIndex(pinConfig.gpio2);
+    ui->comboBoxGPIO3->setCurrentIndex(pinConfig.gpio3);
+    ui->comboBoxGPIO4->setCurrentIndex(pinConfig.gpio4);
+    ui->comboBoxGPIO5->setCurrentIndex(pinConfig.gpio5);
+    ui->comboBoxGPIO6->setCurrentIndex(pinConfig.gpio6);
+    ui->comboBoxGPIO7->setCurrentIndex(pinConfig.gpio7);
+    ui->comboBoxGPIO8->setCurrentIndex(pinConfig.gpio8);
+    ui->comboBoxGPIO9->setCurrentIndex(pinConfig.gpio9);
+    ui->comboBoxGPIO10->setCurrentIndex(pinConfig.gpio10);
+    ui->spinBoxDivider->setValue(pinConfig.divider);
+    ui->lineEditSuspendLevel->setText(QString("%1").arg(pinConfig.sspndlvl, 4, 16, QChar('0')));  // This will autofill with up to four leading zeros
+    ui->lineEditSuspendMode->setText(QString("%1").arg(pinConfig.sspndmode, 4, 16, QChar('0')));  // Same as above
+    ui->lineEditResumeMask->setText(QString("%1").arg(pinConfig.wkupmask, 4, 16, QChar('0')));  // Same as above
+    ui->lineEditResumeMatch->setText(QString("%1").arg(pinConfig.wkupmatch, 4, 16, QChar('0')));  // Same as above
 }
 
 // Updates the power mode combo box (implemented in version 3.0)
@@ -751,32 +751,32 @@ void ConfiguratorWindow::displayVID(quint16 vid)
 // Retrieves the user set configuration from the fields
 void ConfiguratorWindow::getEditedConfiguration()
 {
-    editedConfig_.manufacturer = ui->lineEditManufacturer->text();
-    editedConfig_.product = ui->lineEditProduct->text();
-    editedConfig_.serial = ui->lineEditSerial->text();
-    editedConfig_.usbconfig.vid = static_cast<quint16>(ui->lineEditVID->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
-    editedConfig_.usbconfig.pid = static_cast<quint16>(ui->lineEditPID->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
-    editedConfig_.usbconfig.majrel = static_cast<quint8>(ui->spinBoxMajVersion->value());
-    editedConfig_.usbconfig.minrel = static_cast<quint8>(ui->spinBoxMinVersion->value());
-    editedConfig_.usbconfig.maxpow = static_cast<quint8>(ui->lineEditMaxPowerHex->text().toUShort(nullptr, 16));  // Optimized in version 3.1
-    editedConfig_.usbconfig.powmode = static_cast<quint8>(ui->comboBoxPowerMode->currentIndex());
-    editedConfig_.usbconfig.trfprio = static_cast<quint8>(ui->comboBoxTransferPrio->currentIndex());
-    editedConfig_.pinconfig.gpio0 = static_cast<quint8>(ui->comboBoxGPIO0->currentIndex());
-    editedConfig_.pinconfig.gpio1 = static_cast<quint8>(ui->comboBoxGPIO1->currentIndex());
-    editedConfig_.pinconfig.gpio2 = static_cast<quint8>(ui->comboBoxGPIO2->currentIndex());
-    editedConfig_.pinconfig.gpio3 = static_cast<quint8>(ui->comboBoxGPIO3->currentIndex());
-    editedConfig_.pinconfig.gpio4 = static_cast<quint8>(ui->comboBoxGPIO4->currentIndex());
-    editedConfig_.pinconfig.gpio5 = static_cast<quint8>(ui->comboBoxGPIO5->currentIndex());
-    editedConfig_.pinconfig.gpio6 = static_cast<quint8>(ui->comboBoxGPIO6->currentIndex());
-    editedConfig_.pinconfig.gpio7 = static_cast<quint8>(ui->comboBoxGPIO7->currentIndex());
-    editedConfig_.pinconfig.gpio8 = static_cast<quint8>(ui->comboBoxGPIO8->currentIndex());
-    editedConfig_.pinconfig.gpio9 = static_cast<quint8>(ui->comboBoxGPIO9->currentIndex());
-    editedConfig_.pinconfig.gpio10 = static_cast<quint8>(ui->comboBoxGPIO10->currentIndex());
-    editedConfig_.pinconfig.sspndlvl = static_cast<quint16>(ui->lineEditSuspendLevel->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
-    editedConfig_.pinconfig.sspndmode = static_cast<quint16>(ui->lineEditSuspendMode->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
-    editedConfig_.pinconfig.wkupmask = static_cast<quint16>(ui->lineEditResumeMask->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
-    editedConfig_.pinconfig.wkupmatch = static_cast<quint16>(ui->lineEditResumeMatch->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
-    editedConfig_.pinconfig.divider = static_cast<quint8>(ui->spinBoxDivider->value());
+    editedConfiguration_.manufacturer = ui->lineEditManufacturer->text();
+    editedConfiguration_.product = ui->lineEditProduct->text();
+    editedConfiguration_.serial = ui->lineEditSerial->text();
+    editedConfiguration_.usbConfig.vid = static_cast<quint16>(ui->lineEditVID->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
+    editedConfiguration_.usbConfig.pid = static_cast<quint16>(ui->lineEditPID->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
+    editedConfiguration_.usbConfig.majrel = static_cast<quint8>(ui->spinBoxMajVersion->value());
+    editedConfiguration_.usbConfig.minrel = static_cast<quint8>(ui->spinBoxMinVersion->value());
+    editedConfiguration_.usbConfig.maxpow = static_cast<quint8>(ui->lineEditMaxPowerHex->text().toUShort(nullptr, 16));  // Optimized in version 3.1
+    editedConfiguration_.usbConfig.powmode = static_cast<quint8>(ui->comboBoxPowerMode->currentIndex());
+    editedConfiguration_.usbConfig.trfprio = static_cast<quint8>(ui->comboBoxTransferPrio->currentIndex());
+    editedConfiguration_.pinConfig.gpio0 = static_cast<quint8>(ui->comboBoxGPIO0->currentIndex());
+    editedConfiguration_.pinConfig.gpio1 = static_cast<quint8>(ui->comboBoxGPIO1->currentIndex());
+    editedConfiguration_.pinConfig.gpio2 = static_cast<quint8>(ui->comboBoxGPIO2->currentIndex());
+    editedConfiguration_.pinConfig.gpio3 = static_cast<quint8>(ui->comboBoxGPIO3->currentIndex());
+    editedConfiguration_.pinConfig.gpio4 = static_cast<quint8>(ui->comboBoxGPIO4->currentIndex());
+    editedConfiguration_.pinConfig.gpio5 = static_cast<quint8>(ui->comboBoxGPIO5->currentIndex());
+    editedConfiguration_.pinConfig.gpio6 = static_cast<quint8>(ui->comboBoxGPIO6->currentIndex());
+    editedConfiguration_.pinConfig.gpio7 = static_cast<quint8>(ui->comboBoxGPIO7->currentIndex());
+    editedConfiguration_.pinConfig.gpio8 = static_cast<quint8>(ui->comboBoxGPIO8->currentIndex());
+    editedConfiguration_.pinConfig.gpio9 = static_cast<quint8>(ui->comboBoxGPIO9->currentIndex());
+    editedConfiguration_.pinConfig.gpio10 = static_cast<quint8>(ui->comboBoxGPIO10->currentIndex());
+    editedConfiguration_.pinConfig.sspndlvl = static_cast<quint16>(ui->lineEditSuspendLevel->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
+    editedConfiguration_.pinConfig.sspndmode = static_cast<quint16>(ui->lineEditSuspendMode->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
+    editedConfiguration_.pinConfig.wkupmask = static_cast<quint16>(ui->lineEditResumeMask->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
+    editedConfiguration_.pinConfig.wkupmatch = static_cast<quint16>(ui->lineEditResumeMatch->text().toUShort(nullptr, 16));  // Conversion done for sanity purposes since version 3.1
+    editedConfiguration_.pinConfig.divider = static_cast<quint8>(ui->spinBoxDivider->value());
 }
 
 // Determines the type of error and acts accordingly, always showing a message
@@ -793,17 +793,17 @@ void ConfiguratorWindow::handleError()
 void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
 {
     getEditedConfiguration();
-    SerialGeneratorSettings serialGenSettings = serialGenSettings_;  // Local variable required to hold serial generator settings that may or may not be applied
-    ConfigurationReader configReader(editedConfig_, serialGenSettings);  // It is essential to work on the local variable set above!
+    SerialGeneratorSettings serialGenSettings = serialGeneratorSettings_;  // Local variable required to hold serial generator settings that may or may not be applied
+    ConfigurationReader configReader(editedConfiguration_, serialGenSettings);  // It is essential to work on the local variable set above!
     if (!configReader.readFrom(&file)) {
         QMessageBox::critical(this, tr("Error"), configReader.errorString());
     } else {
-        displayConfiguration(editedConfig_, false);  // This partial update will not modify any fields that are locked
-        serialGenSettings_ = serialGenSettings;  // Apply serial generator settings
+        displayConfiguration(editedConfiguration_, false);  // This partial update will not modify any fields that are locked
+        serialGeneratorSettings_ = serialGenSettings;  // Apply serial generator settings
         if ((CP2130::LWSER & lockWord_) == CP2130::LWSER) {
-            ui->actionSerialGeneratorEnable->setChecked(serialGenSettings_.genenable);  // This also enables or disables pushButtonGenerateSerial
-            if (serialGenSettings_.autogen) {
-                ui->lineEditSerial->setText(serialGenSettings_.serialgen.generateSerial());
+            ui->actionSerialGeneratorEnable->setChecked(serialGeneratorSettings_.genenable);  // This also enables or disables pushButtonGenerateSerial
+            if (serialGeneratorSettings_.autogen) {
+                ui->lineEditSerial->setText(serialGeneratorSettings_.serialgen.generateSerial());
             }
         }
     }
@@ -813,34 +813,34 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
 QStringList ConfiguratorWindow::prepareTaskList()
 {
     QStringList tasks;
-    if (editedConfig_.manufacturer != deviceConfig_.manufacturer) {
+    if (editedConfiguration_.manufacturer != deviceConfiguration_.manufacturer) {
         tasks += "writeManufacturerDesc";
     }
-    if (editedConfig_.product != deviceConfig_.product) {
+    if (editedConfiguration_.product != deviceConfiguration_.product) {
         tasks += "writeProductDesc";
     }
-    if (editedConfig_.serial != deviceConfig_.serial) {
+    if (editedConfiguration_.serial != deviceConfiguration_.serial) {
         tasks += "writeSerialDesc";
     }
-    if (editedConfig_.usbconfig.vid != deviceConfig_.usbconfig.vid) {
+    if (editedConfiguration_.usbConfig.vid != deviceConfiguration_.usbConfig.vid) {
         tasks += "writeVID";
     }
-    if (editedConfig_.usbconfig.pid != deviceConfig_.usbconfig.pid) {
+    if (editedConfiguration_.usbConfig.pid != deviceConfiguration_.usbConfig.pid) {
         tasks += "writePID";
     }
-    if (editedConfig_.usbconfig.majrel != deviceConfig_.usbconfig.majrel || editedConfig_.usbconfig.minrel != deviceConfig_.usbconfig.minrel) {
+    if (editedConfiguration_.usbConfig.majrel != deviceConfiguration_.usbConfig.majrel || editedConfiguration_.usbConfig.minrel != deviceConfiguration_.usbConfig.minrel) {
         tasks += "writeReleaseVersion";
     }
-    if (editedConfig_.usbconfig.maxpow != deviceConfig_.usbconfig.maxpow) {
+    if (editedConfiguration_.usbConfig.maxpow != deviceConfiguration_.usbConfig.maxpow) {
         tasks += "writeMaxPower";
     }
-    if (editedConfig_.usbconfig.powmode != deviceConfig_.usbconfig.powmode) {
+    if (editedConfiguration_.usbConfig.powmode != deviceConfiguration_.usbConfig.powmode) {
         tasks += "writePowerMode";
     }
-    if (editedConfig_.usbconfig.trfprio != deviceConfig_.usbconfig.trfprio) {
+    if (editedConfiguration_.usbConfig.trfprio != deviceConfiguration_.usbConfig.trfprio) {
         tasks += "writeTransferPrio";
     }
-    if (editedConfig_.pinconfig != deviceConfig_.pinconfig) {
+    if (editedConfiguration_.pinConfig != deviceConfiguration_.pinConfig) {
         tasks += "writePinConfig";
     }
     if (ui->checkBoxVerify->isChecked()) {
@@ -857,11 +857,11 @@ void ConfiguratorWindow::readDeviceConfiguration()
 {
     int errcnt = 0;
     QString errstr;
-    deviceConfig_.manufacturer = cp2130_.getManufacturerDesc(errcnt, errstr);
-    deviceConfig_.product = cp2130_.getProductDesc(errcnt, errstr);
-    deviceConfig_.serial = cp2130_.getSerialDesc(errcnt, errstr);
-    deviceConfig_.usbconfig = cp2130_.getUSBConfig(errcnt, errstr);
-    deviceConfig_.pinconfig = cp2130_.getPinConfig(errcnt, errstr);
+    deviceConfiguration_.manufacturer = cp2130_.getManufacturerDesc(errcnt, errstr);
+    deviceConfiguration_.product = cp2130_.getProductDesc(errcnt, errstr);
+    deviceConfiguration_.serial = cp2130_.getSerialDesc(errcnt, errstr);
+    deviceConfiguration_.usbConfig = cp2130_.getUSBConfig(errcnt, errstr);
+    deviceConfiguration_.pinConfig = cp2130_.getPinConfig(errcnt, errstr);
     lockWord_ = cp2130_.getLockWord(errcnt, errstr);
     if (errcnt > 0) {
         if (cp2130_.disconnected()) {
@@ -887,15 +887,15 @@ void ConfiguratorWindow::resetDevice()
     int err;
     for (int i = 0; i < ENUM_RETRIES; ++i) {  // Verify enumeration according to the number of times set by "ENUM_RETRIES" [10]
         NonBlocking::msleep(500);  // Wait 500ms each time
-        err = cp2130_.open(vid_, pid_, serialstr_);
+        err = cp2130_.open(vid_, pid_, serialString_);
         if (err != CP2130::ERROR_NOT_FOUND) {  // Retry only if the device was not found yet (as it may take some time to enumerate)
             break;
         }
     }
     if (err == CP2130::SUCCESS) {  // Device was successfully reopened
         readDeviceConfiguration();
-        this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialstr_));
-        displayConfiguration(deviceConfig_, true);  // Modified in version 3.0
+        this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialString_));
+        displayConfiguration(deviceConfiguration_, true);  // Modified in version 3.0
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
         exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
@@ -912,7 +912,7 @@ void ConfiguratorWindow::resetDevice()
 void ConfiguratorWindow::saveConfigurationToFile(QFile &file)
 {
     getEditedConfiguration();
-    ConfigurationWriter configWriter(editedConfig_, serialGenSettings_);
+    ConfigurationWriter configWriter(editedConfiguration_, serialGeneratorSettings_);
     configWriter.writeTo(&file);
 }
 

@@ -31,13 +31,13 @@ void ConfigurationReader::readBitmaps()
 
     while (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("suspendlevel")) {
-            readWordGeneric("suspendlevel", configuration_.pinconfig.sspndlvl, 0x0000, CP2130Limits::SSPNDLVL_MAX);
+            readWordGeneric("suspendlevel", configuration_.pinConfig.sspndlvl, 0x0000, CP2130Limits::SSPNDLVL_MAX);
         } else if (xmlReader_.name() == QLatin1String("suspendmode")) {
-            readWordGeneric("suspendmode", configuration_.pinconfig.sspndmode, 0x0000, CP2130Limits::SSPNDMODE_MAX);
+            readWordGeneric("suspendmode", configuration_.pinConfig.sspndmode, 0x0000, CP2130Limits::SSPNDMODE_MAX);
         } else if (xmlReader_.name() == QLatin1String("resumemask")) {
-            readWordGeneric("resumemask", configuration_.pinconfig.wkupmask, 0x0000, CP2130Limits::WKUPMASK);
+            readWordGeneric("resumemask", configuration_.pinConfig.wkupmask, 0x0000, CP2130Limits::WKUPMASK);
         } else if (xmlReader_.name() == QLatin1String("resumematch")) {
-            readWordGeneric("resumematch", configuration_.pinconfig.wkupmatch, 0x0000, CP2130Limits::WKUPMATCH);
+            readWordGeneric("resumematch", configuration_.pinConfig.wkupmatch, 0x0000, CP2130Limits::WKUPMATCH);
         } else {
             xmlReader_.skipCurrentElement();
         }
@@ -57,9 +57,9 @@ void ConfigurationReader::readConfiguration()
         } else if (xmlReader_.name() == QLatin1String("serial")) {
             readSerial();
         } else if (xmlReader_.name() == QLatin1String("vid")) {
-            readWordGeneric("vid", configuration_.usbconfig.vid, CP2130Limits::VID_MIN, CP2130Limits::VID_MAX);  // Modified in version 3.1
+            readWordGeneric("vid", configuration_.usbConfig.vid, CP2130Limits::VID_MIN, CP2130Limits::VID_MAX);  // Modified in version 3.1
         } else if (xmlReader_.name() == QLatin1String("pid")) {
-            readWordGeneric("pid", configuration_.usbconfig.pid, CP2130Limits::PID_MIN, CP2130Limits::PID_MAX);  // Modified in version 3.1
+            readWordGeneric("pid", configuration_.usbConfig.pid, CP2130Limits::PID_MIN, CP2130Limits::PID_MAX);  // Modified in version 3.1
         } else if (xmlReader_.name() == QLatin1String("release")) {
             readRelease();
         } else if (xmlReader_.name() == QLatin1String("power")) {
@@ -91,7 +91,7 @@ void ConfigurationReader::readDivider()
             if (!ok || divider > 255) {
                 xmlReader_.raiseError(QObject::tr("In \"divider\" element, the \"value\" attribute contains an invalid value. It should be an integer between 0 and 255."));
             } else {
-                configuration_.pinconfig.divider = static_cast<quint8>(divider);
+                configuration_.pinConfig.divider = static_cast<quint8>(divider);
             }
         }
     }
@@ -185,27 +185,27 @@ void ConfigurationReader::readPins()
 
     while (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("gpio0")) {
-            readGPIO(0, configuration_.pinconfig.gpio0, CP2130Limits::GPIO0_MAX);
+            readGPIO(0, configuration_.pinConfig.gpio0, CP2130Limits::GPIO0_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio1")) {
-            readGPIO(1, configuration_.pinconfig.gpio1, CP2130Limits::GPIO1_MAX);
+            readGPIO(1, configuration_.pinConfig.gpio1, CP2130Limits::GPIO1_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio2")) {
-            readGPIO(2, configuration_.pinconfig.gpio2, CP2130Limits::GPIO2_MAX);
+            readGPIO(2, configuration_.pinConfig.gpio2, CP2130Limits::GPIO2_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio3")) {
-            readGPIO(3, configuration_.pinconfig.gpio3, CP2130Limits::GPIO3_MAX);
+            readGPIO(3, configuration_.pinConfig.gpio3, CP2130Limits::GPIO3_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio4")) {
-            readGPIO(4, configuration_.pinconfig.gpio4, CP2130Limits::GPIO4_MAX);
+            readGPIO(4, configuration_.pinConfig.gpio4, CP2130Limits::GPIO4_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio5")) {
-            readGPIO(5, configuration_.pinconfig.gpio5, CP2130Limits::GPIO5_MAX);
+            readGPIO(5, configuration_.pinConfig.gpio5, CP2130Limits::GPIO5_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio6")) {
-            readGPIO(6, configuration_.pinconfig.gpio6, CP2130Limits::GPIO6_MAX);
+            readGPIO(6, configuration_.pinConfig.gpio6, CP2130Limits::GPIO6_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio7")) {
-            readGPIO(7, configuration_.pinconfig.gpio7, CP2130Limits::GPIO7_MAX);
+            readGPIO(7, configuration_.pinConfig.gpio7, CP2130Limits::GPIO7_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio8")) {
-            readGPIO(8, configuration_.pinconfig.gpio8, CP2130Limits::GPIO8_MAX);
+            readGPIO(8, configuration_.pinConfig.gpio8, CP2130Limits::GPIO8_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio9")) {
-            readGPIO(9, configuration_.pinconfig.gpio9, CP2130Limits::GPIO9_MAX);
+            readGPIO(9, configuration_.pinConfig.gpio9, CP2130Limits::GPIO9_MAX);
         } else if (xmlReader_.name() == QLatin1String("gpio10")) {
-            readGPIO(10, configuration_.pinconfig.gpio10, CP2130Limits::GPIO10_MAX);
+            readGPIO(10, configuration_.pinConfig.gpio10, CP2130Limits::GPIO10_MAX);
         } else {
             xmlReader_.skipCurrentElement();
         }
@@ -225,7 +225,7 @@ void ConfigurationReader::readPower()
             if (!ok || maxpow > CP2130Limits::MAXPOW_MAX) {
                 xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"maximum\" attribute contains an invalid value. It should be an hexadecimal integer between 0 and %1.").arg(CP2130Limits::MAXPOW_MAX, 0, 16));
             } else {
-                configuration_.usbconfig.maxpow = static_cast<quint8>(maxpow);
+                configuration_.usbConfig.maxpow = static_cast<quint8>(maxpow);
             }
         } else if (attr.name().toString() == "mode") {
             bool ok;
@@ -233,7 +233,7 @@ void ConfigurationReader::readPower()
             if (!ok || powmode > CP2130Limits::POWMODE_MAX) {
                 xmlReader_.raiseError(QObject::tr("In \"power\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::POWMODE_MAX));
             } else {
-                configuration_.usbconfig.powmode = static_cast<quint8>(powmode);
+                configuration_.usbConfig.powmode = static_cast<quint8>(powmode);
             }
         }
     }
@@ -272,7 +272,7 @@ void ConfigurationReader::readRelease()
             if (!ok || majrel > CP2130Limits::MAJREL_MAX) {
                 xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"major\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::MAJREL_MAX));
             } else {
-                configuration_.usbconfig.majrel = static_cast<quint8>(majrel);
+                configuration_.usbConfig.majrel = static_cast<quint8>(majrel);
             }
         } else if (attr.name().toString() == "minor") {
             bool ok;
@@ -280,7 +280,7 @@ void ConfigurationReader::readRelease()
             if (!ok || minrel > CP2130Limits::MINREL_MAX) {
                 xmlReader_.raiseError(QObject::tr("In \"release\" element, the \"minor\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::MINREL_MAX));
             } else {
-                configuration_.usbconfig.minrel = static_cast<quint8>(minrel);
+                configuration_.usbConfig.minrel = static_cast<quint8>(minrel);
             }
         }
     }
@@ -334,7 +334,7 @@ void ConfigurationReader::readTransfer()
             if (!ok || trfprio > CP2130Limits::TRFPRIO_MAX) {
                 xmlReader_.raiseError(QObject::tr("In \"transfer\" element, the \"priority\" attribute contains an invalid value. It should be an integer between 0 and %1.").arg(CP2130Limits::TRFPRIO_MAX));
             } else {
-                configuration_.usbconfig.trfprio = static_cast<quint8>(trfprio);
+                configuration_.usbConfig.trfprio = static_cast<quint8>(trfprio);
             }
         }
     }

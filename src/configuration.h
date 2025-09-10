@@ -30,8 +30,8 @@ struct Configuration
     QString manufacturer;
     QString product;
     QString serial;
-    CP2130::USBConfig usbconfig;
-    CP2130::PinConfig pinconfig;
+    CP2130::USBConfig usbConfig;
+    CP2130::PinConfig pinConfig;
 
     bool operator ==(const Configuration &other) const;
     bool operator !=(const Configuration &other) const;
