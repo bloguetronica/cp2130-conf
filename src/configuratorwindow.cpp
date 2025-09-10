@@ -204,26 +204,26 @@ void ConfiguratorWindow::on_actionSerialGeneratorEnable_toggled(bool checked)
 void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
 {
     SerialGeneratorDialog serialGeneratorDialog(this);
-    serialGeneratorDialog.setPrototypeSerialLineEditText(serialGeneratorSettings_.serialgen.prototypeSerial());
-    serialGeneratorDialog.setDigitsCheckBox(serialGeneratorSettings_.serialgen.replaceWithDigits());
-    serialGeneratorDialog.setUppercaseCheckBox(serialGeneratorSettings_.serialgen.replaceWithUppercaseLetters());
-    serialGeneratorDialog.setLowercaseCheckBox(serialGeneratorSettings_.serialgen.replaceWithLowercaseLetters());
-    serialGeneratorDialog.setExportToFileCheckBox(serialGeneratorSettings_.doexport);
-    serialGeneratorDialog.setEnableCheckBox(serialGeneratorSettings_.genenable);
-    serialGeneratorDialog.setAutoGenerateCheckBox(serialGeneratorSettings_.autogen);
+    serialGeneratorDialog.setPrototypeSerialLineEditText(serialGeneratorSettings_.serialGenerator.prototypeSerial());
+    serialGeneratorDialog.setDigitsCheckBox(serialGeneratorSettings_.serialGenerator.replaceWithDigits());
+    serialGeneratorDialog.setUppercaseCheckBox(serialGeneratorSettings_.serialGenerator.replaceWithUppercaseLetters());
+    serialGeneratorDialog.setLowercaseCheckBox(serialGeneratorSettings_.serialGenerator.replaceWithLowercaseLetters());
+    serialGeneratorDialog.setExportToFileCheckBox(serialGeneratorSettings_.doExport);
+    serialGeneratorDialog.setEnableCheckBox(serialGeneratorSettings_.enable);
+    serialGeneratorDialog.setAutogenerateCheckBox(serialGeneratorSettings_.autogenerate);
     if (serialGeneratorDialog.exec() == QDialog::Accepted) {  // If the user clicks "OK"
-        QString prototype = serialGeneratorDialog.prototypeSerialLineEditText();
+        QString prototypeSerial = serialGeneratorDialog.prototypeSerialLineEditText();
         bool digit = serialGeneratorDialog.digitsCheckBoxIsChecked();
         bool upper = serialGeneratorDialog.uppercaseCheckBoxIsChecked();
         bool lower = serialGeneratorDialog.lowercaseCheckBoxIsChecked();
-        if (!SerialGenerator::isValidPrototypeSerial(prototype) || !SerialGenerator::isValidReplaceMode(digit, upper, lower)) {  // If the user entered invalid settings (i.e. the prototype serial number does not contain a wildcard character or no replacement option was selected)
+        if (!SerialGenerator::isValidPrototypeSerial(prototypeSerial) || !SerialGenerator::isValidReplaceMode(digit, upper, lower)) {  // If the user entered invalid settings (i.e. the prototype serial number does not contain a wildcard character or no replacement option was selected)
             QMessageBox::critical(this, tr("Error"), tr("The serial number generator settings are not valid and will not be applied.\n\nPlease verify that the prototype serial number contains at least one wildcard character (?) and that at least one replacement option is selected."));
         } else {  // Valid settings
-            serialGeneratorSettings_.serialgen.setPrototypeSerial(prototype);
-            serialGeneratorSettings_.serialgen.setReplaceMode(digit, upper, lower);
-            serialGeneratorSettings_.doexport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
-            serialGeneratorSettings_.genenable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
-            serialGeneratorSettings_.autogen = serialGeneratorDialog.autoGenerateCheckBoxIsChecked();  // Same as above, because "checkBoxAutoGenerate" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+            serialGeneratorSettings_.serialGenerator.setPrototypeSerial(prototypeSerial);
+            serialGeneratorSettings_.serialGenerator.setReplaceMode(digit, upper, lower);
+            serialGeneratorSettings_.doExport = serialGeneratorDialog.exportToFileCheckBoxIsChecked();
+            serialGeneratorSettings_.enable = serialGeneratorDialog.enableCheckBoxIsChecked();  // No further verification required, because "checkBoxEnable" is automatically unchecked if "checkBoxExportToFile" gets unchecked
+            serialGeneratorSettings_.autogenerate = serialGeneratorDialog.autogenerateCheckBoxIsChecked();  // Same as above, because "checkBoxAutogenerate" is automatically unchecked if "checkBoxExportToFile" gets unchecked
         }
     }
 }
@@ -416,7 +416,7 @@ void ConfiguratorWindow::on_lineEditVID_textEdited()
 // Implemented in version 3.0
 void ConfiguratorWindow::on_pushButtonGenerateSerial_clicked()
 {
-    ui->lineEditSerial->setText(serialGeneratorSettings_.serialgen.generateSerial());
+    ui->lineEditSerial->setText(serialGeneratorSettings_.serialGenerator.generateSerial());
 }
 
 void ConfiguratorWindow::on_pushButtonRevert_clicked()
@@ -805,9 +805,9 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
         displayConfiguration(editedConfiguration_, PARTIAL_UPDATE);  // This partial update will not modify any fields that are locked
         serialGeneratorSettings_ = serialGenSettings;  // Apply serial generator settings
         if ((CP2130::LWSER & lockWord_) == CP2130::LWSER) {
-            ui->actionSerialGeneratorEnable->setChecked(serialGeneratorSettings_.genenable);  // This also enables or disables pushButtonGenerateSerial
-            if (serialGeneratorSettings_.autogen) {
-                ui->lineEditSerial->setText(serialGeneratorSettings_.serialgen.generateSerial());
+            ui->actionSerialGeneratorEnable->setChecked(serialGeneratorSettings_.enable);  // This also enables or disables pushButtonGenerateSerial
+            if (serialGeneratorSettings_.autogenerate) {
+                ui->lineEditSerial->setText(serialGeneratorSettings_.serialGenerator.generateSerial());
             }
         }
     }

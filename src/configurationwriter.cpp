@@ -38,7 +38,7 @@ void ConfigurationWriter::writeDescriptor(QString name, QString value)
 {
     xmlWriter_.writeStartElement(name);
     xmlWriter_.writeAttribute("string", value);
-    if (name == "serial" && serialGeneratorSettings_.doexport) {
+    if (name == "serial" && serialGeneratorSettings_.doExport) {
         writeGenerator();
     }
     xmlWriter_.writeEndElement();
@@ -56,10 +56,10 @@ void ConfigurationWriter::writeDivider()
 void ConfigurationWriter::writeGenerator()
 {
     xmlWriter_.writeStartElement("generator");
-    xmlWriter_.writeAttribute("prototype", serialGeneratorSettings_.serialgen.prototypeSerial());
-    xmlWriter_.writeAttribute("mode", QString::number(serialGeneratorSettings_.serialgen.replaceMode()));
-    xmlWriter_.writeAttribute("enable", (serialGeneratorSettings_.genenable ? "true" : "false"));
-    xmlWriter_.writeAttribute("auto-generate", (serialGeneratorSettings_.autogen ? "true" : "false"));
+    xmlWriter_.writeAttribute("prototype", serialGeneratorSettings_.serialGenerator.prototypeSerial());
+    xmlWriter_.writeAttribute("mode", QString::number(serialGeneratorSettings_.serialGenerator.replaceMode()));
+    xmlWriter_.writeAttribute("enable", (serialGeneratorSettings_.enable ? "true" : "false"));
+    xmlWriter_.writeAttribute("auto-generate", (serialGeneratorSettings_.autogenerate ? "true" : "false"));
     xmlWriter_.writeEndElement();
 }
 

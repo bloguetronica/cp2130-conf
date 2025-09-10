@@ -24,11 +24,11 @@
 // Includes
 #include "serialgenerator.h"
 
-struct SerialGeneratorSettings {
-    SerialGenerator serialgen;
-    bool doexport;
-    bool genenable;
-    bool autogen;
+struct SerialGeneratorSettings {  // Refactored in version 1.3.2
+    SerialGenerator serialGenerator;
+    bool doExport;
+    bool enable;
+    bool autogenerate;
 };
 
 #endif  // SERIALGENERATORSETTINGS_H

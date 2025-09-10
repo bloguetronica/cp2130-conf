@@ -110,7 +110,7 @@ void ConfigurationReader::readGenerator()
             if (!SerialGenerator::isValidPrototypeSerial(prototype)) {
                 xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"prototype\" attribute contains an invalid value. It should contain a valid prototype serial string, having at least one least one wildcard character (?) and no more than % characters.").arg(CP2130::DESCMXL_SERIAL));
             } else {
-                serialGeneratorSettings_.serialgen.setPrototypeSerial(prototype);
+                serialGeneratorSettings_.serialGenerator.setPrototypeSerial(prototype);
             }
         } else if (attr.name().toString() == "mode") {
             bool ok;
@@ -118,21 +118,21 @@ void ConfigurationReader::readGenerator()
             if (!ok || !SerialGenerator::isValidReplaceMode(mode)) {
                 xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"mode\" attribute contains an invalid value. It should be an integer between 1 and 7."));  // Corrected in version 3.1
             } else {
-                serialGeneratorSettings_.serialgen.setReplaceMode(mode);
+                serialGeneratorSettings_.serialGenerator.setReplaceMode(mode);
             }
         } else if (attr.name().toString() == "enable") {
-            QString genenable = attr.value().toString();
-            if (genenable != "true" && genenable != "false" && genenable != "1" && genenable != "0") {
+            QString enable = attr.value().toString();
+            if (enable != "true" && enable != "false" && enable != "1" && enable != "0") {
                 xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"enable\" attribute contains an invalid value. It should be \"true\", \"false\", \"1\" or \"0\"."));
             } else {
-                serialGeneratorSettings_.genenable = genenable == "true" || genenable == "1";
+                serialGeneratorSettings_.enable = enable == "true" || enable == "1";
             }
         } else if (attr.name().toString() == "auto-generate") {
-            QString autogen = attr.value().toString();
-            if (autogen != "true" && autogen != "false" && autogen != "1" && autogen != "0") {
+            QString autogenerate = attr.value().toString();
+            if (autogenerate != "true" && autogenerate != "false" && autogenerate != "1" && autogenerate != "0") {
                 xmlReader_.raiseError(QObject::tr("In \"generator\" element, the \"auto-generate\" attribute contains an invalid value. It should be \"true\", \"false\", \"1\" or \"0\"."));
             } else {
-                serialGeneratorSettings_.autogen = autogen == "true" || autogen == "1";
+                serialGeneratorSettings_.autogenerate = autogenerate == "true" || autogenerate == "1";
             }
         }
     }
@@ -313,7 +313,7 @@ void ConfigurationReader::readSerialSubElements()
 
     while (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("generator")) {
-            serialGeneratorSettings_.doexport = true;
+            serialGeneratorSettings_.doExport = true;
             readGenerator();
         } else {
             xmlReader_.skipCurrentElement();
@@ -376,10 +376,10 @@ QString ConfigurationReader::errorString() const
 // Reads the configuration from a given file, returning false in case of error or true if it succeeds
 bool ConfigurationReader::readFrom(QIODevice *device)
 {
-    serialGeneratorSettings_.serialgen = SerialGenerator();  // Default settings if no "generator" element is found (this line was added in version 3.1, so that the serial generator parameters are also set to their default values)
-    serialGeneratorSettings_.doexport = false;
-    serialGeneratorSettings_.genenable = false;
-    serialGeneratorSettings_.autogen = false;
+    serialGeneratorSettings_.serialGenerator = SerialGenerator();  // Default settings if no "generator" element is found (this line was added in version 3.1, so that the serial generator parameters are also set to their default values)
+    serialGeneratorSettings_.doExport = false;
+    serialGeneratorSettings_.enable = false;
+    serialGeneratorSettings_.autogenerate = false;
     xmlReader_.setDevice(device);
     if (xmlReader_.readNextStartElement()) {
         if (xmlReader_.name() == QLatin1String("cp2130config")) {

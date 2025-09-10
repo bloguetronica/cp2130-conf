@@ -37,18 +37,18 @@ public:
     explicit SerialGeneratorDialog(QWidget *parent = nullptr);
     ~SerialGeneratorDialog();
 
-    bool autoGenerateCheckBoxIsChecked();
+    bool autogenerateCheckBoxIsChecked();
     bool digitsCheckBoxIsChecked();
     bool enableCheckBoxIsChecked();
     bool exportToFileCheckBoxIsChecked();
     bool lowercaseCheckBoxIsChecked();
     QString prototypeSerialLineEditText();
-    void setAutoGenerateCheckBox(bool autogen);
+    void setAutogenerateCheckBox(bool autogenerate);
     void setDigitsCheckBox(bool digit);
     void setEnableCheckBox(bool enable);
-    void setExportToFileCheckBox(bool doexport);
+    void setExportToFileCheckBox(bool doExport);
     void setLowercaseCheckBox(bool lower);
-    void setPrototypeSerialLineEditText(QString prototype);
+    void setPrototypeSerialLineEditText(QString prototypeSerial);
     void setUppercaseCheckBox(bool upper);
     bool uppercaseCheckBoxIsChecked();
 
