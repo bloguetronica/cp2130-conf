@@ -20,15 +20,15 @@
 
 // Includes
 #include <QApplication>
-#include <QLocale>
 #include <QTranslator>
+#include "common.h"
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QTranslator translator;
-    if (!translator.load("cp2130-conf_" + QLocale::system().name(), ":/translations/translations")) {  // It the locale translation does not exist or cannot be loaded
+    if (!translator.load("cp2130-conf_" + systemLocale.name(), ":/translations/translations")) {  // It the locale translation does not exist or cannot be loaded (modified in version 1.3.2)
         translator.load("cp2130-conf_en_US", ":/translations/translations");  // Fall back to the en-US translation
     }
     a.installTranslator(&translator);

@@ -22,9 +22,11 @@
 #define COMMON_H
 
 // Includes
+#include <QLocale>
 #include <QString>
 
 // Global variables
+extern QLocale systemLocale;  // Added in version 1.3.2
 extern QString xmlFilePath;  // Renamed in version 1.3.2
 
 // Function prototypes
