@@ -40,6 +40,10 @@
 // Definitions
 const int ENUM_RETRIES = 10;  // Number of enumeration retries
 
+// The following values are applicable to displayConfiguration() (implemented in version 1.3.2)
+const bool FULL_UPDATE = true;
+const bool PARTIAL_UPDATE = false;
+
 ConfiguratorWindow::ConfiguratorWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ConfiguratorWindow)
@@ -76,7 +80,7 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
         serialString_ = serialstr;  // and the serial number as well
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Device (S/N: %1)").arg(serialString_));
-        displayConfiguration(deviceConfiguration_, true);  // Modified in version 3.0
+        displayConfiguration(deviceConfiguration_, FULL_UPDATE);  // Modified in version 3.0
         viewEnabled_ = true;
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not initialize libusb.\n\nThis is a critical error and execution will be aborted."));
@@ -417,7 +421,7 @@ void ConfiguratorWindow::on_pushButtonGenerateSerial_clicked()
 
 void ConfiguratorWindow::on_pushButtonRevert_clicked()
 {
-    displayConfiguration(deviceConfiguration_, false);  // Since version 3.0 and for efficiency purposes, this action will only revert unlocked fields
+    displayConfiguration(deviceConfiguration_, PARTIAL_UPDATE);  // Since version 3.0 and for efficiency purposes, this action will only revert unlocked fields
 }
 
 void ConfiguratorWindow::on_pushButtonWrite_clicked()
@@ -798,7 +802,7 @@ void ConfiguratorWindow::loadConfigurationFromFile(QFile &file)
     if (!configReader.readFrom(&file)) {
         QMessageBox::critical(this, tr("Error"), configReader.errorString());
     } else {
-        displayConfiguration(editedConfiguration_, false);  // This partial update will not modify any fields that are locked
+        displayConfiguration(editedConfiguration_, PARTIAL_UPDATE);  // This partial update will not modify any fields that are locked
         serialGeneratorSettings_ = serialGenSettings;  // Apply serial generator settings
         if ((CP2130::LWSER & lockWord_) == CP2130::LWSER) {
             ui->actionSerialGeneratorEnable->setChecked(serialGeneratorSettings_.genenable);  // This also enables or disables pushButtonGenerateSerial
@@ -895,7 +899,7 @@ void ConfiguratorWindow::resetDevice()
     if (err == CP2130::SUCCESS) {  // Device was successfully reopened
         readDeviceConfiguration();
         this->setWindowTitle(tr("CP2130 Configurator (S/N: %1)").arg(serialString_));
-        displayConfiguration(deviceConfiguration_, true);  // Modified in version 3.0
+        displayConfiguration(deviceConfiguration_, FULL_UPDATE);  // Modified in version 3.0
     } else if (err == CP2130::ERROR_INIT) {  // Failed to initialize libusb
         QMessageBox::critical(this, tr("Critical Error"), tr("Could not reinitialize libusb.\n\nThis is a critical error and execution will be aborted."));
         exit(EXIT_FAILURE);  // This error is critical because libusb failed to initialize
