@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 3.1 for Debian Linux
-   Copyright (c) 2021-2024 Samuel Lourenço
+/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+   Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -24,7 +24,7 @@
 // "Equal to" operator for Configuration
 bool Configuration::operator ==(const Configuration &other) const
 {
-    return manufacturer == other.manufacturer && product == other.product && serial == other.serial && usbconfig == other.usbconfig && pinconfig == other.pinconfig;
+    return manufacturer == other.manufacturer && product == other.product && serial == other.serial && usbConfig == other.usbConfig && pinConfig == other.pinConfig;
 }
 
 // "Not equal to" operator for SiliconVersion

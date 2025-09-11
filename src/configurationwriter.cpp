@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 3.1 for Debian Linux
-   Copyright (c) 2021-2024 Samuel Lourenço
+/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+   Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -26,10 +26,10 @@
 void ConfigurationWriter::writeBitmaps()
 {
     xmlWriter_.writeStartElement("bitmaps");
-    writeWordGeneric("suspendlevel", configuration_.pinconfig.sspndlvl);
-    writeWordGeneric("suspendmode", configuration_.pinconfig.sspndmode);
-    writeWordGeneric("resumemask", configuration_.pinconfig.wkupmask);
-    writeWordGeneric("resumematch", configuration_.pinconfig.wkupmatch);
+    writeWordGeneric("suspendlevel", configuration_.pinConfig.sspndlvl);
+    writeWordGeneric("suspendmode", configuration_.pinConfig.sspndmode);
+    writeWordGeneric("resumemask", configuration_.pinConfig.wkupmask);
+    writeWordGeneric("resumematch", configuration_.pinConfig.wkupmatch);
     xmlWriter_.writeEndElement();
 }
 
@@ -38,7 +38,7 @@ void ConfigurationWriter::writeDescriptor(QString name, QString value)
 {
     xmlWriter_.writeStartElement(name);
     xmlWriter_.writeAttribute("string", value);
-    if (name == "serial" && serialGeneratorSettings_.doexport) {
+    if (name == "serial" && serialGeneratorSettings_.doExport) {
         writeGenerator();
     }
     xmlWriter_.writeEndElement();
@@ -48,7 +48,7 @@ void ConfigurationWriter::writeDescriptor(QString name, QString value)
 void ConfigurationWriter::writeDivider()
 {
     xmlWriter_.writeStartElement("divider");
-    xmlWriter_.writeAttribute("value", QString::number(configuration_.pinconfig.divider));
+    xmlWriter_.writeAttribute("value", QString::number(configuration_.pinConfig.divider));
     xmlWriter_.writeEndElement();
 }
 
@@ -56,10 +56,10 @@ void ConfigurationWriter::writeDivider()
 void ConfigurationWriter::writeGenerator()
 {
     xmlWriter_.writeStartElement("generator");
-    xmlWriter_.writeAttribute("prototype", serialGeneratorSettings_.serialgen.prototypeSerial());
-    xmlWriter_.writeAttribute("mode", QString::number(serialGeneratorSettings_.serialgen.replaceMode()));
-    xmlWriter_.writeAttribute("enable", (serialGeneratorSettings_.genenable ? "true" : "false"));
-    xmlWriter_.writeAttribute("auto-generate", (serialGeneratorSettings_.autogen ? "true" : "false"));
+    xmlWriter_.writeAttribute("prototype", serialGeneratorSettings_.serialGenerator.prototypeSerial());
+    xmlWriter_.writeAttribute("mode", QString::number(serialGeneratorSettings_.serialGenerator.replaceMode()));
+    xmlWriter_.writeAttribute("enable", (serialGeneratorSettings_.enable ? "true" : "false"));
+    xmlWriter_.writeAttribute("auto-generate", (serialGeneratorSettings_.autogenerate ? "true" : "false"));
     xmlWriter_.writeEndElement();
 }
 
@@ -76,17 +76,17 @@ void ConfigurationWriter::writePins()
 {
     xmlWriter_.writeStartElement("pins");
     QVector<quint8> pins{
-        configuration_.pinconfig.gpio0,
-        configuration_.pinconfig.gpio1,
-        configuration_.pinconfig.gpio2,
-        configuration_.pinconfig.gpio3,
-        configuration_.pinconfig.gpio4,
-        configuration_.pinconfig.gpio5,
-        configuration_.pinconfig.gpio6,
-        configuration_.pinconfig.gpio7,
-        configuration_.pinconfig.gpio8,
-        configuration_.pinconfig.gpio9,
-        configuration_.pinconfig.gpio10
+        configuration_.pinConfig.gpio0,
+        configuration_.pinConfig.gpio1,
+        configuration_.pinConfig.gpio2,
+        configuration_.pinConfig.gpio3,
+        configuration_.pinConfig.gpio4,
+        configuration_.pinConfig.gpio5,
+        configuration_.pinConfig.gpio6,
+        configuration_.pinConfig.gpio7,
+        configuration_.pinConfig.gpio8,
+        configuration_.pinConfig.gpio9,
+        configuration_.pinConfig.gpio10
     };
     int numberOfPins = pins.size();
     for (int i = 0; i < numberOfPins; ++i) {
@@ -99,8 +99,8 @@ void ConfigurationWriter::writePins()
 void ConfigurationWriter::writePower()
 {
     xmlWriter_.writeStartElement("power");
-    xmlWriter_.writeAttribute("maximum", QString::number(configuration_.usbconfig.maxpow, 16));
-    xmlWriter_.writeAttribute("mode", QString::number(configuration_.usbconfig.powmode));
+    xmlWriter_.writeAttribute("maximum", QString::number(configuration_.usbConfig.maxpow, 16));
+    xmlWriter_.writeAttribute("mode", QString::number(configuration_.usbConfig.powmode));
     xmlWriter_.writeEndElement();
 }
 
@@ -108,8 +108,8 @@ void ConfigurationWriter::writePower()
 void ConfigurationWriter::writeRelease()
 {
     xmlWriter_.writeStartElement("release");
-    xmlWriter_.writeAttribute("major", QString::number(configuration_.usbconfig.majrel));
-    xmlWriter_.writeAttribute("minor", QString::number(configuration_.usbconfig.minrel));
+    xmlWriter_.writeAttribute("major", QString::number(configuration_.usbConfig.majrel));
+    xmlWriter_.writeAttribute("minor", QString::number(configuration_.usbConfig.minrel));
     xmlWriter_.writeEndElement();
 }
 
@@ -117,7 +117,7 @@ void ConfigurationWriter::writeRelease()
 void ConfigurationWriter::writeTransfer()
 {
     xmlWriter_.writeStartElement("transfer");
-    xmlWriter_.writeAttribute("priority", QString::number(configuration_.usbconfig.trfprio));
+    xmlWriter_.writeAttribute("priority", QString::number(configuration_.usbConfig.trfprio));
     xmlWriter_.writeEndElement();
 }
 
@@ -146,8 +146,8 @@ void ConfigurationWriter::writeTo(QIODevice *device)
     writeDescriptor("manufacturer", configuration_.manufacturer);
     writeDescriptor("product", configuration_.product);
     writeDescriptor("serial", configuration_.serial);
-    writeWordGeneric("vid", configuration_.usbconfig.vid);
-    writeWordGeneric("pid", configuration_.usbconfig.pid);
+    writeWordGeneric("vid", configuration_.usbConfig.vid);
+    writeWordGeneric("pid", configuration_.usbConfig.pid);
     writeRelease();
     writePower();
     writeTransfer();

@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 3.1 for Debian Linux
-   Copyright (c) 2021-2024 Samuel Lourenço
+/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+   Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -28,6 +28,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+// Definitions
+const int CENTRAL_HEIGHT = 171;  // Implemented in version 1.3.2
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -47,6 +50,13 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
     closeAboutDialog();  // See "common.h" and "common.cpp"
+}
+
+// Implemented in version 1.3.2
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    Q_UNUSED(event);
+    this->setFixedHeight(ui->menuBar->height() + CENTRAL_HEIGHT);
 }
 
 void MainWindow::on_actionAbout_triggered()

@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 3.1 for Debian Linux
-   Copyright (c) 2021-2024 Samuel Lourenço
+/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+   Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -22,9 +22,11 @@
 #define MAINWINDOW_H
 
 // Includes
+#include <QCloseEvent>
 #include <QMainWindow>
 #include <QMap>
 #include <QPointer>
+#include <QResizeEvent>
 #include <QString>
 #include "configuratorwindow.h"
 
@@ -42,6 +44,7 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
 private slots:
     void on_actionAbout_triggered();

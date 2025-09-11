@@ -183,7 +183,7 @@
      <string>Enable generator by default</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBoxAutoGenerate">
+   <widget class="QCheckBox" name="checkBoxAutogenerate">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -208,7 +208,7 @@
   <tabstop>checkBoxLowercase</tabstop>
   <tabstop>checkBoxExportToFile</tabstop>
   <tabstop>checkBoxEnable</tabstop>
-  <tabstop>checkBoxAutoGenerate</tabstop>
+  <tabstop>checkBoxAutogenerate</tabstop>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>

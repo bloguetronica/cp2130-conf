@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 3.1 for Debian Linux
-   Copyright (c) 2021-2024 Samuel Lourenço
+/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+   Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -24,11 +24,11 @@
 // Includes
 #include "serialgenerator.h"
 
-struct SerialGeneratorSettings {
-    SerialGenerator serialgen;
-    bool doexport;
-    bool genenable;
-    bool autogen;
+struct SerialGeneratorSettings {  // Refactored in version 1.3.2
+    SerialGenerator serialGenerator;
+    bool doExport;
+    bool enable;
+    bool autogenerate;
 };
 
 #endif  // SERIALGENERATORSETTINGS_H

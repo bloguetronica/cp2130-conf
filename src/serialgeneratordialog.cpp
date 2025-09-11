@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 3.1 for Debian Linux
-   Copyright (c) 2021-2024 Samuel Lourenço
+/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+   Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -34,10 +34,10 @@ SerialGeneratorDialog::~SerialGeneratorDialog()
     delete ui;
 }
 
-// Returns the state of "checkBoxAutoGenerate"
-bool SerialGeneratorDialog::autoGenerateCheckBoxIsChecked()
+// Returns the state of "checkBoxAutogenerate"
+bool SerialGeneratorDialog::autogenerateCheckBoxIsChecked()
 {
-    return ui->checkBoxAutoGenerate->isChecked();
+    return ui->checkBoxAutogenerate->isChecked();
 }
 
 // Returns the state of "checkBoxDigits"
@@ -70,10 +70,10 @@ QString SerialGeneratorDialog::prototypeSerialLineEditText()
     return ui->lineEditPrototypeSerial->text();
 }
 
-// Sets the state of "checkBoxAutoGenerate"
-void SerialGeneratorDialog::setAutoGenerateCheckBox(bool overwrite)
+// Sets the state of "checkBoxAutogenerate" (renamed in version 1.3.2)
+void SerialGeneratorDialog::setAutogenerateCheckBox(bool autogenerate)
 {
-    ui->checkBoxAutoGenerate->setChecked(overwrite);
+    ui->checkBoxAutogenerate->setChecked(autogenerate);
 }
 
 // Sets the state of "checkBoxDigits"
@@ -89,9 +89,9 @@ void SerialGeneratorDialog::setEnableCheckBox(bool enable)
 }
 
 // Sets the state of "checkBoxExportToFile"
-void SerialGeneratorDialog::setExportToFileCheckBox(bool doexport)
+void SerialGeneratorDialog::setExportToFileCheckBox(bool doExport)
 {
-    ui->checkBoxExportToFile->setChecked(doexport);
+    ui->checkBoxExportToFile->setChecked(doExport);
 }
 
 // Sets the state of "checkBoxLowercase"
@@ -101,9 +101,9 @@ void SerialGeneratorDialog::setLowercaseCheckBox(bool lower)
 }
 
 // Sets the text of "lineEditPrototypeSerial"
-void SerialGeneratorDialog::setPrototypeSerialLineEditText(QString prototype)
+void SerialGeneratorDialog::setPrototypeSerialLineEditText(QString prototypeSerial)
 {
-    ui->lineEditPrototypeSerial->setText(prototype);
+    ui->lineEditPrototypeSerial->setText(prototypeSerial);
 }
 
 // Sets the state of "checkBoxUppercase"
@@ -118,12 +118,13 @@ bool SerialGeneratorDialog::uppercaseCheckBoxIsChecked()
     return ui->checkBoxUppercase->isChecked();
 }
 
+// Renamed in version 1.3.2
 void SerialGeneratorDialog::on_checkBoxExportToFile_stateChanged(int state)
 {
     ui->checkBoxEnable->setEnabled(!state == Qt::Unchecked);
-    ui->checkBoxAutoGenerate->setEnabled(!state == Qt::Unchecked);
+    ui->checkBoxAutogenerate->setEnabled(!state == Qt::Unchecked);
     if (state == Qt::Unchecked) {
         ui->checkBoxEnable->setChecked(false);
-        ui->checkBoxAutoGenerate->setChecked(false);
+        ui->checkBoxAutogenerate->setChecked(false);
     }
 }

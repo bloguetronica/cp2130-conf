@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 3.1 for Debian Linux
-   Copyright (c) 2021-2024 Samuel Lourenço
+/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+   Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -37,18 +37,18 @@ public:
     explicit SerialGeneratorDialog(QWidget *parent = nullptr);
     ~SerialGeneratorDialog();
 
-    bool autoGenerateCheckBoxIsChecked();
+    bool autogenerateCheckBoxIsChecked();
     bool digitsCheckBoxIsChecked();
     bool enableCheckBoxIsChecked();
     bool exportToFileCheckBoxIsChecked();
     bool lowercaseCheckBoxIsChecked();
     QString prototypeSerialLineEditText();
-    void setAutoGenerateCheckBox(bool autogen);
+    void setAutogenerateCheckBox(bool autogenerate);
     void setDigitsCheckBox(bool digit);
     void setEnableCheckBox(bool enable);
-    void setExportToFileCheckBox(bool doexport);
+    void setExportToFileCheckBox(bool doExport);
     void setLowercaseCheckBox(bool lower);
-    void setPrototypeSerialLineEditText(QString prototype);
+    void setPrototypeSerialLineEditText(QString prototypeSerial);
     void setUppercaseCheckBox(bool upper);
     bool uppercaseCheckBoxIsChecked();
 

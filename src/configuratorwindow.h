@@ -1,5 +1,5 @@
-/* CP2130 Configurator - Version 3.1 for Debian Linux
-   Copyright (c) 2021-2024 Samuel Lourenço
+/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+   Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -25,6 +25,7 @@
 #include <QFile>
 #include <QMainWindow>
 #include <QPointer>
+#include <QResizeEvent>
 #include <QString>
 #include <QStringList>
 #include "configuration.h"
@@ -47,6 +48,9 @@ public:
 
     bool isViewEnabled();
     void openDevice(quint16 vid, quint16 pid, const QString &serialstr);
+
+protected:
+    void resizeEvent(QResizeEvent *event);
 
 private slots:
     void lockOTP();
@@ -96,22 +100,22 @@ private slots:
 
 private:
     Ui::ConfiguratorWindow *ui;
-    Configuration deviceConfig_, editedConfig_;
+    Configuration deviceConfiguration_, editedConfiguration_;
     CP2130 cp2130_;
     QPointer<InformationDialog> informationDialog_;
     QPointer<OTPROMViewerDialog> otpromViewerDialog_;
-    QString errmsg_, serialstr_;
-    SerialGeneratorSettings serialGenSettings_;
+    QString errmsg_, serialString_;
+    SerialGeneratorSettings serialGeneratorSettings_;
     quint16 lockWord_, pid_, vid_;
     bool err_, requiresReset_, viewEnabled_ = false;
 
     void configureDevice();
     void disableView();
-    void displayConfiguration(const Configuration &config, bool fullUpdate);
+    void displayConfiguration(const Configuration &configuration, bool fullUpdate);
     void displayManufacturer(const QString &manufacturer);
     void displayMaxPower(quint8 maxpow);
     void displayPID(quint16 pid);
-    void displayPinConfig(const CP2130::PinConfig &pinconfig);
+    void displayPinConfig(const CP2130::PinConfig &pinConfig);
     void displayPowerMode(quint8 powmode);
     void displayProduct(const QString &product);
     void displayReleaseVersion(quint8 majrel, quint8 minrel);
@@ -121,7 +125,6 @@ private:
     void getEditedConfiguration();
     void handleError();
     void loadConfigurationFromFile(QFile &file);
-    void opCheck(const QString &op, int errcnt, QString errstr);
     QStringList prepareTaskList();
     void readDeviceConfiguration();
     void resetDevice();
@@ -138,6 +141,7 @@ private:
     void setVIDEnabled(bool value);
     void setWriteEnabled(bool value);
     bool showInvalidInput();
+    void validateOperation(const QString &operation, int errcnt, QString errstr);
 };
 
 #endif  // CONFIGURATORWINDOW_H
