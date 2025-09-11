@@ -38,6 +38,7 @@
 #include "ui_configuratorwindow.h"
 
 // Definitions
+const int CENTRAL_HEIGHT = 591;  // Implemented in version 1.3.2
 const int ENUM_RETRIES = 10;  // Number of enumeration retries
 
 // The following values are applicable to displayConfiguration() (implemented in version 1.3.2)
@@ -93,6 +94,13 @@ void ConfiguratorWindow::openDevice(quint16 vid, quint16 pid, const QString &ser
         }
         this->deleteLater();  // Close window after the subsequent show() call
     }
+}
+
+// Implemented in version 1.3.2
+void ConfiguratorWindow::resizeEvent(QResizeEvent *event)
+{
+    Q_UNUSED(event);
+    this->setFixedHeight(ui->menuBar->height() + CENTRAL_HEIGHT);
 }
 
 // Locks the CP2130 OTP ROM, preventing further changes
