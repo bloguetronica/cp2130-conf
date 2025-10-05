@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+/* CP2130 Configurator - Version 1.3.3 for Debian Linux
    Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -39,7 +39,7 @@
 
 // Definitions
 const int CENTRAL_HEIGHT = 591;  // Implemented in version 1.3.2
-const int ENUM_RETRIES = 10;  // Number of enumeration retries
+const int ENUM_RETRIES = 10;     // Number of enumeration retries
 
 // The following values are applicable to displayConfiguration() (implemented in version 1.3.2)
 const bool FULL_UPDATE = true;
@@ -236,11 +236,11 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
     }
 }
 
-// Implemented in version 1.6
-void ConfiguratorWindow::on_lineEditManufacturer_textEdited()
+// Implemented in version 1.6 and refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditManufacturer_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (refactored in version 1.3.3)
 {
     int curPosition = ui->lineEditManufacturer->cursorPosition();
-    ui->lineEditManufacturer->setText(ui->lineEditManufacturer->text().replace('\n', ' '));
+    ui->lineEditManufacturer->setText(text.replace('\n', ' '));
     ui->lineEditManufacturer->setCursorPosition(curPosition);
 }
 
@@ -315,11 +315,11 @@ void ConfiguratorWindow::on_lineEditPID_textEdited()
     ui->lineEditPID->setCursorPosition(curPosition);
 }
 
-// Implemented in version 1.6
-void ConfiguratorWindow::on_lineEditProduct_textEdited()
+// Implemented in version 1.6 and refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditProduct_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (refactored in version 1.3.3)
 {
     int curPosition = ui->lineEditProduct->cursorPosition();
-    ui->lineEditProduct->setText(ui->lineEditProduct->text().replace('\n', ' '));
+    ui->lineEditProduct->setText(text.replace('\n', ' '));
     ui->lineEditProduct->setCursorPosition(curPosition);
 }
 

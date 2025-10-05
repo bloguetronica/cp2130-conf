@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+/* CP2130 Configurator - Version 1.3.3 for Debian Linux
    Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -61,7 +61,7 @@ private slots:
     void on_actionSaveConfiguration_triggered();
     void on_actionSerialGeneratorEnable_toggled(bool checked);
     void on_actionSerialGeneratorSettings_triggered();
-    void on_lineEditManufacturer_textEdited();
+    void on_lineEditManufacturer_textEdited(QString text);
     void on_lineEditMaxPower_editingFinished();
     void on_lineEditMaxPower_textChanged();
     void on_lineEditMaxPower_textEdited();
@@ -70,7 +70,7 @@ private slots:
     void on_lineEditMaxPowerHex_textEdited();
     void on_lineEditPID_textChanged();
     void on_lineEditPID_textEdited();
-    void on_lineEditProduct_textEdited();
+    void on_lineEditProduct_textEdited(QString text);
     void on_lineEditResumeMask_textChanged();
     void on_lineEditResumeMask_textEdited();
     void on_lineEditResumeMatch_textChanged();
