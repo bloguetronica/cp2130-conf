@@ -68,8 +68,8 @@ private slots:
     void on_lineEditMaxPowerHex_editingFinished();
     void on_lineEditMaxPowerHex_textChanged();
     void on_lineEditMaxPowerHex_textEdited();
-    void on_lineEditPID_textChanged();
-    void on_lineEditPID_textEdited();
+    void on_lineEditPID_textChanged(const QString &text);
+    void on_lineEditPID_textEdited(const QString &text);
     void on_lineEditProduct_textEdited(QString text);
     void on_lineEditResumeMask_textChanged();
     void on_lineEditResumeMask_textEdited();
@@ -81,8 +81,8 @@ private slots:
     void on_lineEditSuspendLevel_textEdited();
     void on_lineEditSuspendMode_textChanged();
     void on_lineEditSuspendMode_textEdited();
-    void on_lineEditVID_textChanged();
-    void on_lineEditVID_textEdited();
+    void on_lineEditVID_textChanged(const QString &text);
+    void on_lineEditVID_textEdited(const QString &text);
     void on_pushButtonGenerateSerial_clicked();
     void on_pushButtonRevert_clicked();
     void on_pushButtonWrite_clicked();

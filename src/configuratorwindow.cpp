@@ -299,19 +299,21 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited()
     ui->lineEditMaxPower->setText(QString::number(2 * maxPowerHex));
 }
 
-void ConfiguratorWindow::on_lineEditPID_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditPID_textChanged(const QString &text)
 {
-    if (ui->lineEditPID->text().size() < 4 || ui->lineEditPID->text() == "0000") {
+    if (text.size() < 4 || ui->lineEditPID->text() == "0000") {
         ui->lineEditPID->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditPID->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditPID_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditPID_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditPID->cursorPosition();
-    ui->lineEditPID->setText(ui->lineEditPID->text().toLower());
+    ui->lineEditPID->setText(text.toLower());
     ui->lineEditPID->setCursorPosition(curPosition);
 }
 
@@ -405,19 +407,21 @@ void ConfiguratorWindow::on_lineEditSuspendMode_textEdited()
     ui->lineEditSuspendMode->setCursorPosition(curPosition);
 }
 
-void ConfiguratorWindow::on_lineEditVID_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditVID_textChanged(const QString &text)
 {
-    if (ui->lineEditVID->text().size() < 4 || ui->lineEditVID->text() == "0000") {
+    if (text.size() < 4 || ui->lineEditVID->text() == "0000") {
         ui->lineEditVID->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditVID->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditVID_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditVID_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditVID->cursorPosition();
-    ui->lineEditVID->setText(ui->lineEditVID->text().toLower());
+    ui->lineEditVID->setText(text.toLower());
     ui->lineEditVID->setCursorPosition(curPosition);
 }
 
