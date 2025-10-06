@@ -237,7 +237,7 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
 }
 
 // Implemented in version 1.6 and refactored in version 1.3.3
-void ConfiguratorWindow::on_lineEditManufacturer_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (refactored in version 1.3.3)
+void ConfiguratorWindow::on_lineEditManufacturer_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (version 1.3.3 implementation)
 {
     int curPosition = ui->lineEditManufacturer->cursorPosition();
     ui->lineEditManufacturer->setText(text.replace('\n', ' '));
@@ -258,13 +258,13 @@ void ConfiguratorWindow::on_lineEditMaxPower_textChanged()
     }
 }
 
-void ConfiguratorWindow::on_lineEditMaxPower_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditMaxPower_textEdited(QString text)
 {
-    QString maxPowerStr = ui->lineEditMaxPower->text();
-    int maxPower = maxPowerStr.toInt();
+    int maxPower = text.toInt();
     if (maxPower > 2 * CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
-        maxPowerStr.chop(1);
-        ui->lineEditMaxPower->setText(maxPowerStr);
+        text.chop(1);
+        ui->lineEditMaxPower->setText(text);
         maxPower /= 10;
     }
     ui->lineEditMaxPowerHex->setText(QString("%1").arg(maxPower / 2, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
@@ -318,7 +318,7 @@ void ConfiguratorWindow::on_lineEditPID_textEdited(const QString &text)
 }
 
 // Implemented in version 1.6 and refactored in version 1.3.3
-void ConfiguratorWindow::on_lineEditProduct_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (refactored in version 1.3.3)
+void ConfiguratorWindow::on_lineEditProduct_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (version 1.3.3 implementation)
 {
     int curPosition = ui->lineEditProduct->cursorPosition();
     ui->lineEditProduct->setText(text.replace('\n', ' '));
@@ -367,11 +367,11 @@ void ConfiguratorWindow::on_lineEditSerial_textChanged()
     }
 }
 
-// Implemented in version 1.6
-void ConfiguratorWindow::on_lineEditSerial_textEdited()
+// Implemented in version 1.6 and refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSerial_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (version 1.3.3 implementation)
 {
     int curPosition = ui->lineEditSerial->cursorPosition();
-    ui->lineEditSerial->setText(ui->lineEditSerial->text().replace('\n', ' '));
+    ui->lineEditSerial->setText(text.replace('\n', ' '));
     ui->lineEditSerial->setCursorPosition(curPosition);
 }
 

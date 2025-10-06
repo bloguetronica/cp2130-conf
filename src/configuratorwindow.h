@@ -64,7 +64,7 @@ private slots:
     void on_lineEditManufacturer_textEdited(QString text);
     void on_lineEditMaxPower_editingFinished();
     void on_lineEditMaxPower_textChanged();
-    void on_lineEditMaxPower_textEdited();
+    void on_lineEditMaxPower_textEdited(QString text);
     void on_lineEditMaxPowerHex_editingFinished();
     void on_lineEditMaxPowerHex_textChanged();
     void on_lineEditMaxPowerHex_textEdited();
@@ -76,7 +76,7 @@ private slots:
     void on_lineEditResumeMatch_textChanged();
     void on_lineEditResumeMatch_textEdited();
     void on_lineEditSerial_textChanged();
-    void on_lineEditSerial_textEdited();
+    void on_lineEditSerial_textEdited(QString text);
     void on_lineEditSuspendLevel_textChanged();
     void on_lineEditSuspendLevel_textEdited();
     void on_lineEditSuspendMode_textChanged();
