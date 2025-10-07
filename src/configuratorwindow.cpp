@@ -144,7 +144,7 @@ void ConfiguratorWindow::on_actionInformation_triggered()
 // Implemented in version 3.0
 void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), configurationFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.2
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), configurationFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.3
     if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -152,7 +152,7 @@ void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
         } else {
             loadConfigurationFromFile(file);
             file.close();
-            configurationFilePath = fileName;
+            configurationFilePath = fileName;  // Modified in version 1.3.3
         }
     }
 }
@@ -188,7 +188,7 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
     if(showInvalidInput()) {
         QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
     } else {
-        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), configurationFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.2
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), configurationFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.3
         if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
             QFile file(fileName);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -196,7 +196,7 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
             } else {
                 saveConfigurationToFile(file);
                 file.close();
-                configurationFilePath = fileName;
+                configurationFilePath = fileName;  // Modified in version 1.3.3
             }
         }
     }
@@ -293,7 +293,7 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditMaxPowerHex->cursorPosition();
     ui->lineEditMaxPowerHex->setText(text.toLower());
-    int maxPowerHex = text.toInt(nullptr, 16);  // Modified in version 3.1
+    int maxPowerHex = text.toInt(nullptr, 16);  // Modified in version 1.3.3
     if (maxPowerHex > CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
         maxPowerHex = CP2130Limits::MAXPOW_MAX;
         ui->lineEditMaxPowerHex->setText(QString("%1").arg(CP2130Limits::MAXPOW_MAX, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
