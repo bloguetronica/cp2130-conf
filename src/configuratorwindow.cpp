@@ -144,7 +144,7 @@ void ConfiguratorWindow::on_actionInformation_triggered()
 // Implemented in version 3.0
 void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), xmlFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.2
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), configurationFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.2
     if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -152,7 +152,7 @@ void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
         } else {
             loadConfigurationFromFile(file);
             file.close();
-            xmlFilePath = fileName;
+            configurationFilePath = fileName;
         }
     }
 }
@@ -188,7 +188,7 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
     if(showInvalidInput()) {
         QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
     } else {
-        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), xmlFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.2
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), configurationFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.2
         if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
             QFile file(fileName);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -196,7 +196,7 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
             } else {
                 saveConfigurationToFile(file);
                 file.close();
-                xmlFilePath = fileName;
+                configurationFilePath = fileName;
             }
         }
     }
@@ -328,35 +328,39 @@ void ConfiguratorWindow::on_lineEditProduct_textEdited(QString text)  // The var
     ui->lineEditProduct->setCursorPosition(curPosition);
 }
 
-void ConfiguratorWindow::on_lineEditResumeMask_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditResumeMask_textChanged(const QString &text)
 {
-    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > CP2130Limits::WKUPMASK) {  // Extra condition added in version 1.1 (and modified in version 3.1)
+    if (text.size() < 4 || text.toInt(nullptr, 16) > CP2130Limits::WKUPMASK) {  // Extra condition added in version 1.1 (and modified in version 1.3.3)
         ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMask->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditResumeMask_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditResumeMask_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditResumeMask->cursorPosition();
-    ui->lineEditResumeMask->setText(ui->lineEditResumeMask->text().toLower());
+    ui->lineEditResumeMask->setText(text.toLower());
     ui->lineEditResumeMask->setCursorPosition(curPosition);
 }
 
-void ConfiguratorWindow::on_lineEditResumeMatch_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditResumeMatch_textChanged(const QString &text)
 {
-    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > CP2130Limits::WKUPMATCH) {  // Extra condition added in version 1.1 (and modified in version 3.1)
+    if (text.size() < 4 || text.toInt(nullptr, 16) > CP2130Limits::WKUPMATCH) {  // Extra condition added in version 1.1 (and modified in version 1.3.3)
         ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMatch->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditResumeMatch_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditResumeMatch_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditResumeMatch->cursorPosition();
-    ui->lineEditResumeMatch->setText(ui->lineEditResumeMatch->text().toLower());
+    ui->lineEditResumeMatch->setText(text.toLower());
     ui->lineEditResumeMatch->setCursorPosition(curPosition);
 }
 

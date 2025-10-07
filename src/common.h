@@ -26,8 +26,8 @@
 #include <QString>
 
 // Global variables
-extern QLocale systemLocale;  // Added in version 1.3.2
-extern QString xmlFilePath;  // Renamed in version 1.3.2
+extern QLocale systemLocale;           // Added in version 1.3.2
+extern QString configurationFilePath;  // Renamed in version 1.3.3
 
 // Function prototypes
 void closeAboutDialog();
