@@ -249,9 +249,10 @@ void ConfiguratorWindow::on_lineEditMaxPower_editingFinished()
     ui->lineEditMaxPower->setText(QString::number(2 * (ui->lineEditMaxPower->text().toInt() / 2)));  // This removes any leading zeros and also rounds to the previous even number, if the value is odd
 }
 
-void ConfiguratorWindow::on_lineEditMaxPower_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditMaxPower_textChanged(const QString &text)
 {
-    if (ui->lineEditMaxPower->text().isEmpty()) {
+    if (text.isEmpty()) {
         ui->lineEditMaxPower->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditMaxPower->setStyleSheet("");
@@ -277,20 +278,22 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_editingFinished()
     }
 }
 
-void ConfiguratorWindow::on_lineEditMaxPowerHex_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditMaxPowerHex_textChanged(const QString &text)
 {
-    if (ui->lineEditMaxPowerHex->text().isEmpty()) {
+    if (text.isEmpty()) {
         ui->lineEditMaxPowerHex->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditMaxPowerHex->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditMaxPowerHex->cursorPosition();
-    ui->lineEditMaxPowerHex->setText(ui->lineEditMaxPowerHex->text().toLower());
-    int maxPowerHex = ui->lineEditMaxPowerHex->text().toInt(nullptr, 16);  // Modified in version 3.1
+    ui->lineEditMaxPowerHex->setText(text.toLower());
+    int maxPowerHex = text.toInt(nullptr, 16);  // Modified in version 3.1
     if (maxPowerHex > CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
         maxPowerHex = CP2130Limits::MAXPOW_MAX;
         ui->lineEditMaxPowerHex->setText(QString("%1").arg(CP2130Limits::MAXPOW_MAX, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
@@ -357,10 +360,10 @@ void ConfiguratorWindow::on_lineEditResumeMatch_textEdited()
     ui->lineEditResumeMatch->setCursorPosition(curPosition);
 }
 
-// Implemented in version 3.0
-void ConfiguratorWindow::on_lineEditSerial_textChanged()
+// Implemented in version 3.0 and refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSerial_textChanged(const QString &text)
 {
-    if (ui->lineEditSerial->text().isEmpty()) {
+    if (text.isEmpty()) {
         ui->lineEditSerial->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditSerial->setStyleSheet("");

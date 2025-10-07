@@ -63,11 +63,11 @@ private slots:
     void on_actionSerialGeneratorSettings_triggered();
     void on_lineEditManufacturer_textEdited(QString text);
     void on_lineEditMaxPower_editingFinished();
-    void on_lineEditMaxPower_textChanged();
+    void on_lineEditMaxPower_textChanged(const QString &text);
     void on_lineEditMaxPower_textEdited(QString text);
     void on_lineEditMaxPowerHex_editingFinished();
-    void on_lineEditMaxPowerHex_textChanged();
-    void on_lineEditMaxPowerHex_textEdited();
+    void on_lineEditMaxPowerHex_textChanged(const QString &text);
+    void on_lineEditMaxPowerHex_textEdited(const QString &text);
     void on_lineEditPID_textChanged(const QString &text);
     void on_lineEditPID_textEdited(const QString &text);
     void on_lineEditProduct_textEdited(QString text);
@@ -75,7 +75,7 @@ private slots:
     void on_lineEditResumeMask_textEdited();
     void on_lineEditResumeMatch_textChanged();
     void on_lineEditResumeMatch_textEdited();
-    void on_lineEditSerial_textChanged();
+    void on_lineEditSerial_textChanged(const QString &text);
     void on_lineEditSerial_textEdited(QString text);
     void on_lineEditSuspendLevel_textChanged();
     void on_lineEditSuspendLevel_textEdited();
