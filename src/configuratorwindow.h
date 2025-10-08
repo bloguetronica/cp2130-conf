@@ -77,10 +77,10 @@ private slots:
     void on_lineEditResumeMatch_textEdited(const QString &text);
     void on_lineEditSerial_textChanged(const QString &text);
     void on_lineEditSerial_textEdited(QString text);
-    void on_lineEditSuspendLevel_textChanged();
-    void on_lineEditSuspendLevel_textEdited();
-    void on_lineEditSuspendMode_textChanged();
-    void on_lineEditSuspendMode_textEdited();
+    void on_lineEditSuspendLevel_textChanged(const QString &text);
+    void on_lineEditSuspendLevel_textEdited(const QString &text);
+    void on_lineEditSuspendMode_textChanged(const QString &text);
+    void on_lineEditSuspendMode_textEdited(const QString &text);
     void on_lineEditVID_textChanged(const QString &text);
     void on_lineEditVID_textEdited(const QString &text);
     void on_pushButtonGenerateSerial_clicked();

@@ -240,7 +240,7 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
 void ConfiguratorWindow::on_lineEditManufacturer_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (version 1.3.3 implementation)
 {
     int curPosition = ui->lineEditManufacturer->cursorPosition();
-    ui->lineEditManufacturer->setText(text.replace('\n', ' '));
+    ui->lineEditManufacturer->setText(text.replace('\n', ' '));  // Modified in version 1.3.3
     ui->lineEditManufacturer->setCursorPosition(curPosition);
 }
 
@@ -252,7 +252,7 @@ void ConfiguratorWindow::on_lineEditMaxPower_editingFinished()
 // Refactored in version 1.3.3
 void ConfiguratorWindow::on_lineEditMaxPower_textChanged(const QString &text)
 {
-    if (text.isEmpty()) {
+    if (text.isEmpty()) {  // Modified in version 1.3.3
         ui->lineEditMaxPower->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditMaxPower->setStyleSheet("");
@@ -281,7 +281,7 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_editingFinished()
 // Refactored in version 1.3.3
 void ConfiguratorWindow::on_lineEditMaxPowerHex_textChanged(const QString &text)
 {
-    if (text.isEmpty()) {
+    if (text.isEmpty()) {  // Modified in version 1.3.3
         ui->lineEditMaxPowerHex->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditMaxPowerHex->setStyleSheet("");
@@ -292,7 +292,7 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_textChanged(const QString &text)
 void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditMaxPowerHex->cursorPosition();
-    ui->lineEditMaxPowerHex->setText(text.toLower());
+    ui->lineEditMaxPowerHex->setText(text.toLower());  // Modified in version 1.3.3
     int maxPowerHex = text.toInt(nullptr, 16);  // Modified in version 1.3.3
     if (maxPowerHex > CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
         maxPowerHex = CP2130Limits::MAXPOW_MAX;
@@ -305,7 +305,7 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited(const QString &text)
 // Refactored in version 1.3.3
 void ConfiguratorWindow::on_lineEditPID_textChanged(const QString &text)
 {
-    if (text.size() < 4 || ui->lineEditPID->text() == "0000") {
+    if (text.size() < 4 || ui->lineEditPID->text() == "0000") {  // Modified in version 1.3.3
         ui->lineEditPID->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditPID->setStyleSheet("");
@@ -316,7 +316,7 @@ void ConfiguratorWindow::on_lineEditPID_textChanged(const QString &text)
 void ConfiguratorWindow::on_lineEditPID_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditPID->cursorPosition();
-    ui->lineEditPID->setText(text.toLower());
+    ui->lineEditPID->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditPID->setCursorPosition(curPosition);
 }
 
@@ -324,7 +324,7 @@ void ConfiguratorWindow::on_lineEditPID_textEdited(const QString &text)
 void ConfiguratorWindow::on_lineEditProduct_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (version 1.3.3 implementation)
 {
     int curPosition = ui->lineEditProduct->cursorPosition();
-    ui->lineEditProduct->setText(text.replace('\n', ' '));
+    ui->lineEditProduct->setText(text.replace('\n', ' '));  // Modified in version 1.3.3
     ui->lineEditProduct->setCursorPosition(curPosition);
 }
 
@@ -342,7 +342,7 @@ void ConfiguratorWindow::on_lineEditResumeMask_textChanged(const QString &text)
 void ConfiguratorWindow::on_lineEditResumeMask_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditResumeMask->cursorPosition();
-    ui->lineEditResumeMask->setText(text.toLower());
+    ui->lineEditResumeMask->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditResumeMask->setCursorPosition(curPosition);
 }
 
@@ -360,14 +360,14 @@ void ConfiguratorWindow::on_lineEditResumeMatch_textChanged(const QString &text)
 void ConfiguratorWindow::on_lineEditResumeMatch_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditResumeMatch->cursorPosition();
-    ui->lineEditResumeMatch->setText(text.toLower());
+    ui->lineEditResumeMatch->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditResumeMatch->setCursorPosition(curPosition);
 }
 
 // Implemented in version 3.0 and refactored in version 1.3.3
 void ConfiguratorWindow::on_lineEditSerial_textChanged(const QString &text)
 {
-    if (text.isEmpty()) {
+    if (text.isEmpty()) {  // Modified in version 1.3.3
         ui->lineEditSerial->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditSerial->setStyleSheet("");
@@ -378,46 +378,50 @@ void ConfiguratorWindow::on_lineEditSerial_textChanged(const QString &text)
 void ConfiguratorWindow::on_lineEditSerial_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (version 1.3.3 implementation)
 {
     int curPosition = ui->lineEditSerial->cursorPosition();
-    ui->lineEditSerial->setText(text.replace('\n', ' '));
+    ui->lineEditSerial->setText(text.replace('\n', ' '));  // Modified in version 1.3.3
     ui->lineEditSerial->setCursorPosition(curPosition);
 }
 
-void ConfiguratorWindow::on_lineEditSuspendLevel_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSuspendLevel_textChanged(const QString &text)
 {
-    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > CP2130Limits::SSPNDLVL_MAX) {  // Extra condition added in version 1.1 (and modified in version 3.1)
+    if (text.size() < 4 || text.toInt(nullptr, 16) > CP2130Limits::SSPNDLVL_MAX) {  // Extra condition added in version 1.1 (and modified in version 1.3.3)
         ui->lineEditSuspendLevel->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditSuspendLevel->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditSuspendLevel_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSuspendLevel_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditSuspendLevel->cursorPosition();
-    ui->lineEditSuspendLevel->setText(ui->lineEditSuspendLevel->text().toLower());
+    ui->lineEditSuspendLevel->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditSuspendLevel->setCursorPosition(curPosition);
 }
 
-void ConfiguratorWindow::on_lineEditSuspendMode_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSuspendMode_textChanged(const QString &text)
 {
-    if (ui->lineEditSuspendMode->text().size() < 4) {
+    if (text.size() < 4) {  // Modified in version 1.3.3
         ui->lineEditSuspendMode->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditSuspendMode->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditSuspendMode_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSuspendMode_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditSuspendMode->cursorPosition();
-    ui->lineEditSuspendMode->setText(ui->lineEditSuspendMode->text().toLower());
+    ui->lineEditSuspendMode->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditSuspendMode->setCursorPosition(curPosition);
 }
 
 // Refactored in version 1.3.3
 void ConfiguratorWindow::on_lineEditVID_textChanged(const QString &text)
 {
-    if (text.size() < 4 || ui->lineEditVID->text() == "0000") {
+    if (text.size() < 4 || ui->lineEditVID->text() == "0000") {  // Modified in version 1.3.3
         ui->lineEditVID->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditVID->setStyleSheet("");
@@ -428,7 +432,7 @@ void ConfiguratorWindow::on_lineEditVID_textChanged(const QString &text)
 void ConfiguratorWindow::on_lineEditVID_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditVID->cursorPosition();
-    ui->lineEditVID->setText(text.toLower());
+    ui->lineEditVID->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditVID->setCursorPosition(curPosition);
 }
 
