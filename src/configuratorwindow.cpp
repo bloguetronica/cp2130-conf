@@ -262,9 +262,9 @@ void ConfiguratorWindow::on_lineEditMaxPower_textChanged(const QString &text)
 // Refactored in version 1.3.3
 void ConfiguratorWindow::on_lineEditMaxPower_textEdited(QString text)
 {
-    int maxPower = text.toInt();
+    int maxPower = text.toInt();  // Modified in version 1.3.3
     if (maxPower > 2 * CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
-        text.chop(1);
+        text.chop(1);  // Modified in version 1.3.3
         ui->lineEditMaxPower->setText(text);
         maxPower /= 10;
     }
