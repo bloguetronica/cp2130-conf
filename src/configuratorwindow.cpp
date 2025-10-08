@@ -265,7 +265,7 @@ void ConfiguratorWindow::on_lineEditMaxPower_textEdited(QString text)
     int maxPower = text.toInt();  // Modified in version 1.3.3
     if (maxPower > 2 * CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
         text.chop(1);  // Modified in version 1.3.3
-        ui->lineEditMaxPower->setText(text);
+        ui->lineEditMaxPower->setText(text);  // Modified in version 1.3.3
         maxPower /= 10;
     }
     ui->lineEditMaxPowerHex->setText(QString("%1").arg(maxPower / 2, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
