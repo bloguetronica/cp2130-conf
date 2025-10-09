@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+/* CP2130 Configurator - Version 1.3.3 for Debian Linux
    Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -26,8 +26,8 @@
 #include <QString>
 
 // Global variables
-extern QLocale systemLocale;  // Added in version 1.3.2
-extern QString xmlFilePath;  // Renamed in version 1.3.2
+extern QLocale systemLocale;           // Added in version 1.3.2
+extern QString configurationFilePath;  // Renamed in version 1.3.3
 
 // Function prototypes
 void closeAboutDialog();

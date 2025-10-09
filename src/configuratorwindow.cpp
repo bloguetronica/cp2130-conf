@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+/* CP2130 Configurator - Version 1.3.3 for Debian Linux
    Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -39,7 +39,7 @@
 
 // Definitions
 const int CENTRAL_HEIGHT = 591;  // Implemented in version 1.3.2
-const int ENUM_RETRIES = 10;  // Number of enumeration retries
+const int ENUM_RETRIES = 10;     // Number of enumeration retries
 
 // The following values are applicable to displayConfiguration() (implemented in version 1.3.2)
 const bool FULL_UPDATE = true;
@@ -144,7 +144,7 @@ void ConfiguratorWindow::on_actionInformation_triggered()
 // Implemented in version 3.0
 void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), xmlFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.2
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Configuration from File"), configurationFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.3
     if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -152,7 +152,7 @@ void ConfiguratorWindow::on_actionLoadConfiguration_triggered()
         } else {
             loadConfigurationFromFile(file);
             file.close();
-            xmlFilePath = fileName;
+            configurationFilePath = fileName;  // Modified in version 1.3.3
         }
     }
 }
@@ -188,7 +188,7 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
     if(showInvalidInput()) {
         QMessageBox::critical(this, tr("Error"), tr("One or more fields have invalid information.\n\nPlease correct the information in the fields highlighted in red."));
     } else {
-        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), xmlFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.2
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Configuration to File"), configurationFilePath, tr("XML files (*.xml);;All files (*)"));  // Modified in version 1.3.3
         if (!fileName.isEmpty()) {  // Note that the previous dialog will return an empty string if the user cancels it
             QFile file(fileName);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -196,7 +196,7 @@ void ConfiguratorWindow::on_actionSaveConfiguration_triggered()
             } else {
                 saveConfigurationToFile(file);
                 file.close();
-                xmlFilePath = fileName;
+                configurationFilePath = fileName;  // Modified in version 1.3.3
             }
         }
     }
@@ -236,11 +236,11 @@ void ConfiguratorWindow::on_actionSerialGeneratorSettings_triggered()
     }
 }
 
-// Implemented in version 1.6
-void ConfiguratorWindow::on_lineEditManufacturer_textEdited()
+// Implemented in version 1.6 and refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditManufacturer_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (version 1.3.3 implementation)
 {
     int curPosition = ui->lineEditManufacturer->cursorPosition();
-    ui->lineEditManufacturer->setText(ui->lineEditManufacturer->text().replace('\n', ' '));
+    ui->lineEditManufacturer->setText(text.replace('\n', ' '));  // Modified in version 1.3.3
     ui->lineEditManufacturer->setCursorPosition(curPosition);
 }
 
@@ -249,22 +249,23 @@ void ConfiguratorWindow::on_lineEditMaxPower_editingFinished()
     ui->lineEditMaxPower->setText(QString::number(2 * (ui->lineEditMaxPower->text().toInt() / 2)));  // This removes any leading zeros and also rounds to the previous even number, if the value is odd
 }
 
-void ConfiguratorWindow::on_lineEditMaxPower_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditMaxPower_textChanged(const QString &text)
 {
-    if (ui->lineEditMaxPower->text().isEmpty()) {
+    if (text.isEmpty()) {  // Modified in version 1.3.3
         ui->lineEditMaxPower->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditMaxPower->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditMaxPower_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditMaxPower_textEdited(QString text)
 {
-    QString maxPowerStr = ui->lineEditMaxPower->text();
-    int maxPower = maxPowerStr.toInt();
+    int maxPower = text.toInt();  // Modified in version 1.3.3
     if (maxPower > 2 * CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
-        maxPowerStr.chop(1);
-        ui->lineEditMaxPower->setText(maxPowerStr);
+        text.chop(1);  // Modified in version 1.3.3
+        ui->lineEditMaxPower->setText(text);  // Modified in version 1.3.3
         maxPower /= 10;
     }
     ui->lineEditMaxPowerHex->setText(QString("%1").arg(maxPower / 2, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
@@ -277,20 +278,22 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_editingFinished()
     }
 }
 
-void ConfiguratorWindow::on_lineEditMaxPowerHex_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditMaxPowerHex_textChanged(const QString &text)
 {
-    if (ui->lineEditMaxPowerHex->text().isEmpty()) {
+    if (text.isEmpty()) {  // Modified in version 1.3.3
         ui->lineEditMaxPowerHex->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditMaxPowerHex->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditMaxPowerHex->cursorPosition();
-    ui->lineEditMaxPowerHex->setText(ui->lineEditMaxPowerHex->text().toLower());
-    int maxPowerHex = ui->lineEditMaxPowerHex->text().toInt(nullptr, 16);  // Modified in version 3.1
+    ui->lineEditMaxPowerHex->setText(text.toLower());  // Modified in version 1.3.3
+    int maxPowerHex = text.toInt(nullptr, 16);  // Modified in version 1.3.3
     if (maxPowerHex > CP2130Limits::MAXPOW_MAX) {  // Modified in version 3.1
         maxPowerHex = CP2130Limits::MAXPOW_MAX;
         ui->lineEditMaxPowerHex->setText(QString("%1").arg(CP2130Limits::MAXPOW_MAX, 2, 16, QChar('0')));  // This will autofill with up to two leading zeros
@@ -299,125 +302,137 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited()
     ui->lineEditMaxPower->setText(QString::number(2 * maxPowerHex));
 }
 
-void ConfiguratorWindow::on_lineEditPID_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditPID_textChanged(const QString &text)
 {
-    if (ui->lineEditPID->text().size() < 4 || ui->lineEditPID->text() == "0000") {
+    if (text.size() < 4 || ui->lineEditPID->text() == "0000") {  // Modified in version 1.3.3
         ui->lineEditPID->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditPID->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditPID_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditPID_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditPID->cursorPosition();
-    ui->lineEditPID->setText(ui->lineEditPID->text().toLower());
+    ui->lineEditPID->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditPID->setCursorPosition(curPosition);
 }
 
-// Implemented in version 1.6
-void ConfiguratorWindow::on_lineEditProduct_textEdited()
+// Implemented in version 1.6 and refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditProduct_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (version 1.3.3 implementation)
 {
     int curPosition = ui->lineEditProduct->cursorPosition();
-    ui->lineEditProduct->setText(ui->lineEditProduct->text().replace('\n', ' '));
+    ui->lineEditProduct->setText(text.replace('\n', ' '));  // Modified in version 1.3.3
     ui->lineEditProduct->setCursorPosition(curPosition);
 }
 
-void ConfiguratorWindow::on_lineEditResumeMask_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditResumeMask_textChanged(const QString &text)
 {
-    if (ui->lineEditResumeMask->text().size() < 4 || ui->lineEditResumeMask->text().toInt(nullptr, 16) > CP2130Limits::WKUPMASK) {  // Extra condition added in version 1.1 (and modified in version 3.1)
+    if (text.size() < 4 || text.toInt(nullptr, 16) > CP2130Limits::WKUPMASK) {  // Extra condition added in version 1.1 (and modified in version 1.3.3)
         ui->lineEditResumeMask->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMask->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditResumeMask_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditResumeMask_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditResumeMask->cursorPosition();
-    ui->lineEditResumeMask->setText(ui->lineEditResumeMask->text().toLower());
+    ui->lineEditResumeMask->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditResumeMask->setCursorPosition(curPosition);
 }
 
-void ConfiguratorWindow::on_lineEditResumeMatch_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditResumeMatch_textChanged(const QString &text)
 {
-    if (ui->lineEditResumeMatch->text().size() < 4 || ui->lineEditResumeMatch->text().toInt(nullptr, 16) > CP2130Limits::WKUPMATCH) {  // Extra condition added in version 1.1 (and modified in version 3.1)
+    if (text.size() < 4 || text.toInt(nullptr, 16) > CP2130Limits::WKUPMATCH) {  // Extra condition added in version 1.1 (and modified in version 1.3.3)
         ui->lineEditResumeMatch->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditResumeMatch->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditResumeMatch_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditResumeMatch_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditResumeMatch->cursorPosition();
-    ui->lineEditResumeMatch->setText(ui->lineEditResumeMatch->text().toLower());
+    ui->lineEditResumeMatch->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditResumeMatch->setCursorPosition(curPosition);
 }
 
-// Implemented in version 3.0
-void ConfiguratorWindow::on_lineEditSerial_textChanged()
+// Implemented in version 3.0 and refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSerial_textChanged(const QString &text)
 {
-    if (ui->lineEditSerial->text().isEmpty()) {
+    if (text.isEmpty()) {  // Modified in version 1.3.3
         ui->lineEditSerial->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditSerial->setStyleSheet("");
     }
 }
 
-// Implemented in version 1.6
-void ConfiguratorWindow::on_lineEditSerial_textEdited()
+// Implemented in version 1.6 and refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSerial_textEdited(QString text)  // The variable "text" is passed by value here, because it needs to be modified locally! (version 1.3.3 implementation)
 {
     int curPosition = ui->lineEditSerial->cursorPosition();
-    ui->lineEditSerial->setText(ui->lineEditSerial->text().replace('\n', ' '));
+    ui->lineEditSerial->setText(text.replace('\n', ' '));  // Modified in version 1.3.3
     ui->lineEditSerial->setCursorPosition(curPosition);
 }
 
-void ConfiguratorWindow::on_lineEditSuspendLevel_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSuspendLevel_textChanged(const QString &text)
 {
-    if (ui->lineEditSuspendLevel->text().size() < 4 || ui->lineEditSuspendLevel->text().toInt(nullptr, 16) > CP2130Limits::SSPNDLVL_MAX) {  // Extra condition added in version 1.1 (and modified in version 3.1)
+    if (text.size() < 4 || text.toInt(nullptr, 16) > CP2130Limits::SSPNDLVL_MAX) {  // Extra condition added in version 1.1 (and modified in version 1.3.3)
         ui->lineEditSuspendLevel->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditSuspendLevel->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditSuspendLevel_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSuspendLevel_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditSuspendLevel->cursorPosition();
-    ui->lineEditSuspendLevel->setText(ui->lineEditSuspendLevel->text().toLower());
+    ui->lineEditSuspendLevel->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditSuspendLevel->setCursorPosition(curPosition);
 }
 
-void ConfiguratorWindow::on_lineEditSuspendMode_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSuspendMode_textChanged(const QString &text)
 {
-    if (ui->lineEditSuspendMode->text().size() < 4) {
+    if (text.size() < 4) {  // Modified in version 1.3.3
         ui->lineEditSuspendMode->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditSuspendMode->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditSuspendMode_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditSuspendMode_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditSuspendMode->cursorPosition();
-    ui->lineEditSuspendMode->setText(ui->lineEditSuspendMode->text().toLower());
+    ui->lineEditSuspendMode->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditSuspendMode->setCursorPosition(curPosition);
 }
 
-void ConfiguratorWindow::on_lineEditVID_textChanged()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditVID_textChanged(const QString &text)
 {
-    if (ui->lineEditVID->text().size() < 4 || ui->lineEditVID->text() == "0000") {
+    if (text.size() < 4 || ui->lineEditVID->text() == "0000") {  // Modified in version 1.3.3
         ui->lineEditVID->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditVID->setStyleSheet("");
     }
 }
 
-void ConfiguratorWindow::on_lineEditVID_textEdited()
+// Refactored in version 1.3.3
+void ConfiguratorWindow::on_lineEditVID_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditVID->cursorPosition();
-    ui->lineEditVID->setText(ui->lineEditVID->text().toLower());
+    ui->lineEditVID->setText(text.toLower());  // Modified in version 1.3.3
     ui->lineEditVID->setCursorPosition(curPosition);
 }
 

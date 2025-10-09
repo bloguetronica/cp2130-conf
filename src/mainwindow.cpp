@@ -1,4 +1,4 @@
-/* CP2130 Configurator - Version 1.3.2 for Debian Linux
+/* CP2130 Configurator - Version 1.3.3 for Debian Linux
    Copyright (c) 2021-2025 Samuel Lourenço
 
    This program is free software: you can redistribute it and/or modify it
@@ -69,18 +69,20 @@ void MainWindow::on_comboBoxDevices_currentIndexChanged(int index)
     ui->pushButtonOpen->setEnabled(index != 0);  // Simplified in version 1.4
 }
 
-void MainWindow::on_lineEditPID_textEdited()
+// Refactored in version 1.3.3
+void MainWindow::on_lineEditPID_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditPID->cursorPosition();
-    ui->lineEditPID->setText(ui->lineEditPID->text().toLower());
+    ui->lineEditPID->setText(text.toLower());
     ui->lineEditPID->setCursorPosition(curPosition);
     validateInput();
 }
 
-void MainWindow::on_lineEditVID_textEdited()
+// Refactored in version 1.3.3
+void MainWindow::on_lineEditVID_textEdited(const QString &text)
 {
     int curPosition = ui->lineEditVID->cursorPosition();
-    ui->lineEditVID->setText(ui->lineEditVID->text().toLower());
+    ui->lineEditVID->setText(text.toLower());
     ui->lineEditVID->setCursorPosition(curPosition);
     validateInput();
 }
