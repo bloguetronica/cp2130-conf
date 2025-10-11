@@ -305,7 +305,7 @@ void ConfiguratorWindow::on_lineEditMaxPowerHex_textEdited(const QString &text)
 // Refactored in version 1.3.3
 void ConfiguratorWindow::on_lineEditPID_textChanged(const QString &text)
 {
-    if (text.size() < 4 || ui->lineEditPID->text() == "0000") {  // Modified in version 1.3.3
+    if (text.size() < 4 || text == "0000") {  // Corrected in version 1.3.4
         ui->lineEditPID->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditPID->setStyleSheet("");
@@ -421,7 +421,7 @@ void ConfiguratorWindow::on_lineEditSuspendMode_textEdited(const QString &text)
 // Refactored in version 1.3.3
 void ConfiguratorWindow::on_lineEditVID_textChanged(const QString &text)
 {
-    if (text.size() < 4 || ui->lineEditVID->text() == "0000") {  // Modified in version 1.3.3
+    if (text.size() < 4 || text == "0000") {  // Corrected in version 1.3.4
         ui->lineEditVID->setStyleSheet("background: rgb(255, 204, 0);");
     } else {
         ui->lineEditVID->setStyleSheet("");
